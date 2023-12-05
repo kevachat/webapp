@@ -26,11 +26,11 @@ class ModuleController extends AbstractController
                 'wallet' =>
                 [
                     'balance' => (float) $client->getBalance(),
-                    'block'   => (int) $client->getBlockCount(),
-                    'address' => $this->getParameter('app.kevacoin.address')
+                    'block'   => (int) $client->getBlockCount()
                 ],
                 'mine' =>
                 [
+                    'address' => $this->getParameter('app.kevacoin.mine.address'),
                     'pool' =>
                     [
                         'url' => $this->getParameter('app.kevacoin.mine.pool.url')

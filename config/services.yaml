@@ -12,8 +12,8 @@ parameters:
     app.kevacoin.port: '%env(APP_KEVACOIN_PORT)%'
     app.kevacoin.username: '%env(APP_KEVACOIN_USERNAME)%'
     app.kevacoin.password: '%env(APP_KEVACOIN_PASSWORD)%'
-    app.kevacoin.namespace: '%env(APP_KEVACOIN_NAMESPACE)%'
-    app.kevacoin.address: '%env(APP_KEVACOIN_ADDRESS)%'
+    app.kevacoin.room.namespaces: '%env(APP_KEVACOIN_ROOM_NAMESPACES)%'
+    app.kevacoin.mine.address: '%env(APP_KEVACOIN_MINE_ADDRESS)%'
     app.kevacoin.mine.pool.url: '%env(APP_KEVACOIN_MINE_POOL_URL)%'
     app.kevacoin.mine.solo.url: '%env(APP_KEVACOIN_MINE_SOLO_URL)%'
 

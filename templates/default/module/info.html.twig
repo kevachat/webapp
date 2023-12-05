@@ -2,10 +2,10 @@
     {{ 'block:' | trans }} {{ wallet.block }}
     /
     {{ 'balance:' | trans }} {{ wallet.balance }}
-    {% if wallet.address %}
+    {% if mine.address %}
         /
         {{ 'charge:' | trans }}
-        <pre>{{ wallet.address }}</pre>
+        <pre>{{ mine.address }}</pre>
     {% endif %}
     {% if mine.pool %}
         /
