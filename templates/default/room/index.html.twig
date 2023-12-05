@@ -15,9 +15,13 @@
             {% for post in feed %}
                 <li>
                     <a name="{{ post.txid }}"></a>
-                    <strong>
-                        @{{ post.key }}
-                    </strong>
+                    {% if post.icon %}
+                        <img src="{{ post.icon }}" alt="icon" />
+                    {% else %}
+                        <strong>
+                            @{{ 'anonymous' | trans }}
+                        </strong>
+                    {% endif %}
                     <a href="#{{ post.txid }}" title="{{ 'time:' | trans }} {{ post.transaction.time }} / {{ 'block:' | trans }} {{ post.height }}{# / {{ 'confirmations:' | trans }} {{ post.transaction.confirmations }}#}">
                         {{ post.transaction.timestamp | format_ago }}
                     </a>

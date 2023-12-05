@@ -58,6 +58,32 @@ class RoomController extends AbstractController
 
         foreach ((array) $client->kevaFilter($request->get('namespace')) as $post)
         {
+            // Set identicon if not anonymous user
+            if ($post['key'] === 'anonymous')
+            {
+                $icon = false;
+            }
+
+            else
+            {
+                $identicon = new \Jdenticon\Identicon();
+
+                $identicon->setValue(
+                    $post['key']
+                );
+
+                $identicon->setSize(12);
+
+                $identicon->setStyle(
+                    [
+                        'backgroundColor' => 'rgba(255, 255, 255, 0)',
+                        'padding' => 0
+                    ]
+                );
+
+                $icon = $identicon->getImageDataUri('webp');
+            }
+
             // Skip values with meta keys
             if (false !== stripos($post['key'], '_KEVA_'))
             {
@@ -69,7 +95,7 @@ class RoomController extends AbstractController
             {
                 $feed[] =
                 [
-                    'key'    => $post['key'],
+                  # 'key'    => $post['key'],
                     'value'  => $post['value'],
                     'height' => $post['height'],
                   # 'vout'   => $post['vout'],
@@ -80,7 +106,8 @@ class RoomController extends AbstractController
                         'timestamp'     => $transaction['time'],
                         'confirmations' => $transaction['confirmations'],
                     ],
-                    'sort'   => $transaction['time'] // sort order field
+                    'icon' => $icon,
+                    'sort' => $transaction['time'] // sort order field
                 ];
             }
         }
