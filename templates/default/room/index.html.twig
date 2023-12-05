@@ -10,6 +10,15 @@
             )
         )
     }}
+    {% if posts %}
+        <ul>
+            {% for post in posts %}
+                <li>
+                    {{ post.value }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}
 {% block footer_content %}
     {{

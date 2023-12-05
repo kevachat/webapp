@@ -53,24 +53,27 @@ class RoomController extends AbstractController
             $this->getParameter('app.kevacoin.password')
         );
 
-        // Get room messages
-        $messages = [];
+        // Get room posts
+        $posts = [];
 
         foreach ((array) $client->kevaFilter($request->get('namespace')) as $message)
         {
-            $messages[] = $message;
+            $posts[] =
+            [
+                'key'    => $message['key'],
+                'value'  => $message['value'],
+                'height' => $message['height'],
+                'vout'   => $message['vout'],
+                'txid'   => $message['txid'],
+            ];
         }
 
         // Return result
         return $this->render(
             'default/room/index.html.twig',
             [
-                'room' =>
-                [
-                    'namespace' => $request->get('namespace')
-                ],
-                'messages' => $messages,
-                'request'  => $request
+                'posts'   => $posts,
+                'request' => $request
             ]
         );
     }

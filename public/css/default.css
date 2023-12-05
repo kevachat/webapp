@@ -70,6 +70,7 @@ main > h1
     font-weight: normal;
     margin: 16px 0;
     padding: 0 4px;
+    text-align: right;
 }
 
 main > form > input[type="text"]
@@ -89,6 +90,7 @@ main > ul
 main > ul > li
 {
     margin: 8px 0;
+    word-wrap: break-word;
 }
 
 footer
