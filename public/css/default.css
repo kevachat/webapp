@@ -1,0 +1,105 @@
+*
+{
+    /* apply defaults */
+    margin: 0;
+    padding: 0;
+
+    /* allow draw */
+    font-family: monospace;
+
+    /* adaptive */
+    color-scheme: light dark;
+
+    /* vars */
+    --container-max-width: 740px;
+}
+
+*::placeholder
+{
+    font-size: 12px;
+}
+
+a, a:active, a:visited
+{
+    text-decoration: none;
+}
+
+a:hover
+{
+    text-decoration: underline;
+}
+
+body
+{
+    font-size: 12px;
+    padding: 0 16px;
+}
+
+header
+{
+    max-width: var(--container-max-width);
+    margin: 16px auto;
+    display: block;
+}
+
+header > strong
+{
+    font-size: 14px;
+}
+
+header > div
+{
+    margin: 8px 0;
+}
+
+header > div > pre
+{
+    display: inline-block;
+}
+
+main
+{
+    max-width: var(--container-max-width);
+    margin: 16px auto;
+    display: block;
+}
+
+main > form > input[type="text"]
+{
+    box-sizing: border-box;
+    padding: 4px;
+    width: 100%;
+}
+
+footer
+{
+    display: block;
+    margin: 16px auto;
+    max-width: var(--container-max-width);
+}
+
+footer > form
+{
+    bottom: 16px;
+    display: block;
+    max-width: var(--container-max-width);
+    position: fixed;
+    width: 100%;
+}
+
+footer > form > textarea
+{
+    box-sizing: border-box;
+    display: block;
+    margin: 8px 0;
+    max-width: var(--container-max-width);
+    padding: 4px;
+    width: 100%;
+}
+
+footer > form > button
+{
+    cursor: pointer;
+    float: right;
+    padding: 2px 8px;
+}

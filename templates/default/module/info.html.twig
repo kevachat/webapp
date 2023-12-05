@@ -1,0 +1,14 @@
+<div>
+    {{ 'Block:' | trans }} {{ wallet.block }}
+    /
+    {{ 'Balance:' | trans }} {{ wallet.balance }}
+    {% if wallet.address %}
+        /
+        {% if pool.url %}
+            <a href="{{ pool.url }}" target="_blank">{{ 'Charge' | trans }}</a>:
+        {% else %}
+            {{ 'Charge:' | trans }}
+        {% endif %}
+        <pre>{{ wallet.address }}</pre>
+    {% endif %}
+</div>

@@ -1,0 +1,22 @@
+{% if enabled %}
+    <form name="post" action="{{ path('room_post', { namespace : namespace }) }}" method="post">
+        <textarea name="message" placeholder="{{ 'enter your message...' | trans }}">{{ message }}</textarea>
+        {% if user == 'anonymous' or user != 'ip' %}
+            <input type="radio" name="user" value="anonymous" id="form-post-user-anonymous" checked="checked" />
+        {% else %}
+            <input type="radio" name="user" value="anonymous" id="form-post-user-anonymous" />
+        {% endif %}
+        <label for="form-post-user-anonymous">
+            {{ 'anonymous' | trans }}
+        </label>
+        {% if user == 'ip' %}
+            <input type="radio" name="user" value="ip" id="form-post-user-ip" checked="checked" />
+        {% else %}
+            <input type="radio" name="user" value="ip" id="form-post-user-ip" />
+        {% endif %}
+        <label for="form-post-user-ip">
+            @{{ ip }}
+        </label>
+        <button type="submit">{{ 'send' | trans }}</button>
+    </form>
+{% endif %}

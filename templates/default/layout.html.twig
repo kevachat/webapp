@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block head_title %}{{ 'KevaChat' | trans }}{% endblock %}</title>
+        <link rel="stylesheet" type="text/css" href="/css/default.css?{{ app.version }}"/>
+    </head>
+    <body>
+        <header>
+            <strong>
+                {{ app.name }}
+            </strong>
+            <sup>
+                <a href="https://github.com/kevachat/webapp" target="_blank" title="Source">{{ app.version }}</a>
+            </sup>
+            {% block header_module_info %}
+                {{
+                    render(
+                        controller(
+                            'App\\Controller\\ModuleController::info'
+                        )
+                    )
+                }}
+            {% endblock %}
+        </header>
+        <main>
+            {% block main_content %}{% endblock %}
+        </main>
+        <footer>
+            {% block footer_content %}{% endblock %}
+        </footer>
+    </body>
+</html>
