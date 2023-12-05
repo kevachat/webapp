@@ -148,7 +148,7 @@ class RoomController extends AbstractController
     }
 
     #[Route(
-        '/room/{namespace}/post',
+        '/room/{namespace}',
         name: 'room_post',
         requirements:
         [
@@ -172,7 +172,7 @@ class RoomController extends AbstractController
             $this->getParameter('app.kevacoin.password')
         );
 
-        // Check namespace exist for this wallet
+        // Get local namespaces
         $namespaces = [];
 
         foreach ((array) $client->kevaListNamespaces() as $value)
@@ -180,14 +180,45 @@ class RoomController extends AbstractController
             $namespaces[] = $value['namespaceId'];
         }
 
+        // Check namespace exist for this wallet
         if (!in_array($request->get('namespace'), $namespaces))
         {
             exit('Namespace not related with this node!');
         }
 
-        // @TODO
+        // Check namespace writable
+        if (!in_array($request->get('namespace'), (array) explode('|', $this->getParameter('app.kevacoin.room.namespaces'))))
+        {
+            exit('Namespace not listed in settings!');
+        }
 
-        // Redirect back to the room
+        // Validate access to the room namespace
+        if
+        (
+            // Ignore this rule for is moderators
+            !in_array(
+                (array) explode('|', $this->getParameter('app.add.post.remote.ip.moderators'))
+            ) &&
+
+            // Check namespace writable or user is moderator
+            in_array(
+                $request->get('namespace'),
+                (array) explode('|', $this->getParameter('app.kevacoin.room.namespaces.readonly'))
+            )
+        )
+        {
+            exit('Namespace for read only!');
+        }
+
+        // Validate remote IP regex
+
+        // Validate remote IP limits
+
+        // Validate funds
+
+        // @TODO Send message to DHT
+
+        // Redirect back to room
         return $this->redirectToRoute(
             'room_namespace',
             [
