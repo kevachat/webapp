@@ -68,7 +68,7 @@ main > h2
 {
     display: inline-block;
     font-size: 12px;
-    margin: 16px 4px;
+    margin: 16px 0;
 }
 
 main > form > input[type="text"]
@@ -93,7 +93,7 @@ main ul ul
 main ul > li
 {
     margin: 8px 0;
-    padding: 8px 6px;
+    padding: 8px 0;
     word-wrap: break-word;
     border-bottom: 1px #999 solid;
 }
