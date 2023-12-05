@@ -1,13 +1,13 @@
 <div>
-    {{ 'Block:' | trans }} {{ wallet.block }}
+    {{ 'block:' | trans }} {{ wallet.block }}
     /
-    {{ 'Balance:' | trans }} {{ wallet.balance }}
+    {{ 'balance:' | trans }} {{ wallet.balance }}
     {% if wallet.address %}
         /
         {% if pool.url %}
-            <a href="{{ pool.url }}" target="_blank">{{ 'Charge' | trans }}</a>:
+            <a href="{{ pool.url }}" target="_blank">{{ 'charge' | trans }}</a>:
         {% else %}
-            {{ 'Charge:' | trans }}
+            {{ 'charge:' | trans }}
         {% endif %}
         <pre>{{ wallet.address }}</pre>
     {% endif %}
