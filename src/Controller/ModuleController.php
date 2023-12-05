@@ -72,9 +72,9 @@ class ModuleController extends AbstractController
         // Get wallet namespaces (to enable post module there)
         $namespaces = [];
 
-        foreach ((array) $client->kevaListNamespaces() as $key => $value)
+        foreach ((array) $client->kevaListNamespaces() as $value)
         {
-            $namespaces[] = $key;
+            $namespaces[] = $value['namespaceId'];
         }
 
         return $this->render(
