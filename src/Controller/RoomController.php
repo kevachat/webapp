@@ -85,7 +85,7 @@ class RoomController extends AbstractController
             }
 
             // Set identicon if not anonymous user
-            if ($post['key'] === 'anonymous')
+            if ($post['key'] === '@anonymous')
             {
                 $icon = false;
             }
@@ -331,22 +331,43 @@ class RoomController extends AbstractController
             );
         }
 
-        // @TODO Send message to DHT
+        // Send message to DHT
+        if (
+            $client->kevaPut(
+                $request->get('namespace'),
+                sprintf(
+                    '@%s',
+                    $request->get('user') === 'ip' ? $request->getClientIp() : 'anonymous'
+                ),
+                $request->get('message')
+            )
+        )
+        {
+            // Register event time
+            $memcached->set(
+                $memory['app.add.post.remote.ip.delay'],
+                time(),
+                (int) $this->getParameter('app.add.post.remote.ip.delay')
+            );
 
-        // Register event time
-        $memcached->set(
-            $memory['app.add.post.remote.ip.delay'],
-            time(),
-            (int) $this->getParameter('app.add.post.remote.ip.delay')
-        );
+            // Redirect back to room
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'namespace' => $request->get('namespace'),
+                    'error'     => null,
+                    'message'   => null
+                ]
+            );
+        }
 
-        // Redirect back to room
+        // Something went wrong, return error message
         return $this->redirectToRoute(
             'room_namespace',
             [
                 'namespace' => $request->get('namespace'),
-                'error'     => null,
-                'message'   => null
+                'message'   => $request->get('message'),
+                'error'     => $translator->trans('Internal error! Please feedback')
             ]
         );
     }
