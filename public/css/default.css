@@ -11,7 +11,7 @@
     color-scheme: light dark;
 
     /* vars */
-    --container-max-width: 740px;
+    --container-max-width: 768px;
 }
 
 *::placeholder

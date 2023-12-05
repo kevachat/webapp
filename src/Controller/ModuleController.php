@@ -29,8 +29,16 @@ class ModuleController extends AbstractController
                     'block'   => (int) $client->getBlockCount(),
                     'address' => $this->getParameter('app.kevacoin.address')
                 ],
-                'pool' => [
-                    'url' => $this->getParameter('app.kevacoin.pool.url')
+                'mine' =>
+                [
+                    'pool' =>
+                    [
+                        'url' => $this->getParameter('app.kevacoin.mine.pool.url')
+                    ],
+                    'solo' =>
+                    [
+                        'url' => $this->getParameter('app.kevacoin.mine.solo.url')
+                    ]
                 ]
             ]
         );

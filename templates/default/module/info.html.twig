@@ -4,11 +4,18 @@
     {{ 'balance:' | trans }} {{ wallet.balance }}
     {% if wallet.address %}
         /
-        {% if pool.url %}
-            <a href="{{ pool.url }}" target="_blank">{{ 'charge' | trans }}</a>:
-        {% else %}
-            {{ 'charge:' | trans }}
-        {% endif %}
+        {{ 'charge:' | trans }}
         <pre>{{ wallet.address }}</pre>
+    {% endif %}
+    {% if mine.pool %}
+        /
+        {{ 'mine:' | trans }}
+        {% if mine.pool.url %}
+            <a href="{{ mine.pool.url }}" target="_blank">{{ 'pool' | trans }}</a>
+        {% endif %}
+        {% if mine.solo.url %}
+            |
+            <a href="{{ mine.solo.url }}" target="_blank">{{ 'solo' | trans }}</a>
+        {% endif %}
     {% endif %}
 </div>
