@@ -48,11 +48,17 @@ class ModuleController extends AbstractController
             $this->getParameter('app.kevacoin.password')
         );
 
+        $list = [];
+        foreach ((array) $client->kevaListNamespaces() as $value)
+        {
+            $list[$value['namespaceId']] = $value['displayName'];
+        }
+
         return $this->render(
             'default/module/room.html.twig',
             [
                 'room' => $request->get('room'),
-                'list' => (array) $client->kevaListNamespaces()
+                'list' => $list
             ]
         );
     }

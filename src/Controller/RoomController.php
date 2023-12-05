@@ -99,9 +99,9 @@ class RoomController extends AbstractController
         // Check namespace exist for this wallet
         $namespaces = [];
 
-        foreach ((array) $client->kevaListNamespaces() as $key => $value)
+        foreach ((array) $client->kevaListNamespaces() as $value)
         {
-            $namespaces[] = $key;
+            $namespaces[] = $value['namespaceId'];
         }
 
         if (!in_array($request->get('namespace'), $namespaces))
