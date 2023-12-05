@@ -29,11 +29,16 @@ class RoomController extends AbstractController
     }
 
     #[Route(
-        '/room/{namespace}',
+        '/room/{namespace}/{txid}',
         name: 'room_namespace',
         requirements:
         [
             'namespace' => '^[A-z0-9]{34}$',
+            'txid' => '^[A-z0-9]{64}$',
+        ],
+        defaults:
+        [
+            'txid' => null,
         ],
         methods:
         [

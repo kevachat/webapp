@@ -23,9 +23,10 @@
                             @{{ 'anonymous' | trans }}
                         </strong>
                     {% endif %}
-                    <a href="#{{ post.txid }}" title="{{ 'time:' | trans }} {{ post.transaction.time }} / {{ 'confirmations:' | trans }} {{ post.transaction.confirmations }}">
-                        {{ post.transaction.timestamp | format_ago }}
-                    </a>
+                    &bull;
+                    <a href="#{{ post.txid }}" title="{{ 'time:' | trans }} {{ post.transaction.time }} / {{ 'confirmations:' | trans }} {{ post.transaction.confirmations }}">{{ post.transaction.timestamp | format_ago }}</a>
+                    &bull;
+                    <a href="{{ path('room_namespace', { namespace : request.get('namespace'), txid : post.txid }) }}#{{ post.txid }}">{{ 'quote' | trans }}</a>
                     <p>
                         {{ post.value }}
                     </p>
