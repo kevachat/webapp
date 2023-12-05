@@ -156,8 +156,9 @@ class ModuleController extends AbstractController
             [
                 'enabled'   => in_array($request->get('namespace'), $public),
                 'namespace' => $request->get('namespace'),
-                'message'   => $message,
                 'user'      => $request->get('user'),
+                'error'     => $request->get('error'),
+                'message'   => $message,
                 'ip'        => $request->getClientIp()
             ]
         );

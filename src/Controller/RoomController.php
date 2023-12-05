@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -165,9 +166,27 @@ class RoomController extends AbstractController
         ]
     )]
     public function post(
-        Request $request
+        Request $request,
+        TranslatorInterface $translator
     ): Response
     {
+        // Connect memcached
+        $memcached = new \Memcached();
+        $memcached->addServer(
+            $this->getParameter('app.memcached.host'),
+            $this->getParameter('app.memcached.port')
+        );
+
+        $memory = [
+            'app.add.post.remote.ip.delay' => md5(
+                sprintf(
+                    'kevachat.app.add.post.remote.ip.delay:%s.%s',
+                    $this->getParameter('app.name'),
+                    $request->getClientIp(),
+                ),
+            ),
+        ];
+
         // Connect kevacoin
         $client = new \Kevachat\Kevacoin\Client(
             $this->getParameter('app.kevacoin.protocol'),
@@ -188,13 +207,27 @@ class RoomController extends AbstractController
         // Check namespace exist for this wallet
         if (!in_array($request->get('namespace'), $namespaces))
         {
-            exit('Namespace not related with this node!');
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'namespace' => $request->get('namespace'),
+                    'message'   => $request->get('message'),
+                    'error'     => $translator->trans('Namespace not related with this node!')
+                ]
+            );
         }
 
         // Check namespace writable
         if (!in_array($request->get('namespace'), (array) explode('|', $this->getParameter('app.kevacoin.room.namespaces'))))
         {
-            exit('Namespace not listed in settings!');
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'namespace' => $request->get('namespace'),
+                    'message'   => $request->get('message'),
+                    'error'     => $translator->trans('Namespace not listed in settings!')
+                ]
+            );
         }
 
         // Validate access to the room namespace
@@ -202,6 +235,7 @@ class RoomController extends AbstractController
         (
             // Ignore this rule for is moderators
             !in_array(
+                $request->getClientIp(),
                 (array) explode('|', $this->getParameter('app.add.post.remote.ip.moderators'))
             ) &&
 
@@ -212,22 +246,107 @@ class RoomController extends AbstractController
             )
         )
         {
-            exit('Namespace for read only!');
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'namespace' => $request->get('namespace'),
+                    'message'   => $request->get('message'),
+                    'error'     => $translator->trans('Namespace for read only!')
+                ]
+            );
+        }
+
+        // Deny requests from banned remote hosts
+        if (in_array($request->getClientIp(), (array) explode('|', $this->getParameter('app.add.post.remote.ip.denied'))))
+        {
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'namespace' => $request->get('namespace'),
+                    'message'   => $request->get('message'),
+                    'error'     => $translator->trans('Access denied for this IP!')
+                ]
+            );
         }
 
         // Validate remote IP regex
+        if (!preg_match($this->getParameter('app.add.post.remote.ip.regex'), $request->getClientIp()))
+        {
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'namespace' => $request->get('namespace'),
+                    'message'   => $request->get('message'),
+                    'error'     => $translator->trans('Access not allowed for this IP!')
+                ]
+            );
+        }
 
-        // Validate remote IP limits
+        // Validate message regex
+        if (!preg_match($this->getParameter('app.add.post.value.regex'), $request->get('message')))
+        {
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'namespace' => $request->get('namespace'),
+                    'message'   => $request->get('message'),
+                    'error'     => sprintf(
+                        $translator->trans('Message does not match node requirements: %s'),
+                        $this->getParameter('app.add.post.value.regex')
+                    )
+                ]
+            );
+        }
 
-        // Validate funds
+        /// Validate remote IP limits
+        if ($delay = (int) $memcached->get($memory['app.add.post.remote.ip.delay']))
+        {
+            // Error
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'namespace' => $request->get('namespace'),
+                    'message'   => $request->get('message'),
+                    'error'     => sprintf(
+                        $translator->trans('Please wait for %s seconds before post new message!'),
+                        (int) $this->getParameter('app.add.post.remote.ip.delay') - (time() - $delay)
+                    )
+                ]
+            );
+        }
+
+        /// Validate funds available yet
+        if (1 > $client->getBalance())
+        {
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'namespace' => $request->get('namespace'),
+                    'message'   => $request->get('message'),
+                    'error'     => sprintf(
+                        $translator->trans('Insufficient funds, wallet: %s'),
+                        $this->getParameter('app.kevacoin.mine.address')
+                    )
+                ]
+            );
+        }
 
         // @TODO Send message to DHT
+
+        // Register event time
+        $memcached->set(
+            $memory['app.add.post.remote.ip.delay'],
+            time(),
+            (int) $this->getParameter('app.add.post.remote.ip.delay')
+        );
 
         // Redirect back to room
         return $this->redirectToRoute(
             'room_namespace',
             [
-                'namespace' => $request->get('namespace')
+                'namespace' => $request->get('namespace'),
+                'error'     => null,
+                'message'   => null
             ]
         );
     }

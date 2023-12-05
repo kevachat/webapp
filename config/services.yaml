@@ -6,7 +6,8 @@
 parameters:
     app.version: '%env(APP_VERSION)%'
     app.name: '%env(APP_NAME)%'
-
+    app.memcached.host: '%env(APP_MEMCACHED_HOST)%'
+    app.memcached.port: '%env(APP_MEMCACHED_PORT)%'
     app.kevacoin.protocol: '%env(APP_KEVACOIN_PROTOCOL)%'
     app.kevacoin.host: '%env(APP_KEVACOIN_HOST)%'
     app.kevacoin.port: '%env(APP_KEVACOIN_PORT)%'
@@ -22,6 +23,7 @@ parameters:
     app.add.post.remote.ip.regex: '%env(APP_ADD_POST_REMOTE_IP_REGEX)%'
     app.add.post.remote.ip.delay: '%env(APP_ADD_POST_REMOTE_IP_DELAY)%'
     app.add.post.remote.ip.moderators: '%env(APP_ADD_POST_REMOTE_IP_MODERATORS)%'
+    app.add.post.remote.ip.denied: '%env(APP_ADD_POST_REMOTE_IP_DENIED)%'
     app.add.post.value.regex: '%env(APP_ADD_POST_VALUE_REGEX)%'
 
 services:

@@ -147,3 +147,11 @@ footer > form > button
     float: right;
     padding: 2px 8px;
 }
+
+footer > form > output
+{
+    color: #ff6363;
+    display: block;
+    font-weight: bolder;
+    margin-bottom: 16px;
+}
