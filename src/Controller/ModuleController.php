@@ -60,14 +60,21 @@ class ModuleController extends AbstractController
 
         $list = [];
 
+        $rooms = explode('|', $this->getParameter('app.kevacoin.room.namespaces'));
+
         foreach ((array) $client->kevaListNamespaces() as $value)
         {
+            // Get current room namespace (could be third-party)
             if ($value['namespaceId'] == $request->get('namespace'))
             {
                 $name = $value['displayName'];
             }
 
-            $list[$value['namespaceId']] = $value['displayName'];
+            // Check namespace enabled as room in settings
+            if (in_array($value['namespaceId'], $rooms))
+            {
+                $list[$value['namespaceId']] = $value['displayName'];
+            }
         }
 
         asort($list);

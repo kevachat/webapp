@@ -1,10 +1,24 @@
 <form name="room" action="{{ path('room_index') }}" method="get">
     <input type="text" name="namespace" value="{{ room.namespace }}" placeholder="{{ 'join room by kevacoin namespace...' | trans }}" />
 </form>
+{% if list %}
+    {% set i = 0 %}
+    {% for namespace, name in list %}
+        {% if i %}&bull;{% endif %}
+        <h2>
+            {% if room.namespace == namespace %}
+                {{ name }}
+            {% else %}
+                <a href="{{ namespace }}">{{ name }}</a>
+            {% endif %}
+        </h2>
+        {% set i = i + 1 %}
+    {% endfor %}
+{% endif %}
+{# @TODO alternative implementation draft
 {% if room.name %}
     <h1>{{ room.name }}</h1>
 {% endif %}
-{# @TODO
 {% if list %}
     <ul>
         {% for namespace, name in list %}

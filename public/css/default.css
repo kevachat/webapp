@@ -64,13 +64,11 @@ main
     display: block;
 }
 
-main > h1
+main > h2
 {
-    font-size: 14px;
-    font-weight: normal;
-    margin: 16px 0;
-    padding: 0 4px;
-    text-align: right;
+    display: inline-block;
+    font-size: 12px;
+    margin: 16px 4px;
 }
 
 main > form > input[type="text"]
