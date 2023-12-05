@@ -64,11 +64,31 @@ main
     display: block;
 }
 
+main > h1
+{
+    font-size: 14px;
+    font-weight: normal;
+    margin: 16px 0;
+    padding: 0 4px;
+}
+
 main > form > input[type="text"]
 {
     box-sizing: border-box;
     padding: 4px;
     width: 100%;
+}
+
+main > ul
+{
+    margin-bottom: 16px;
+    margin-left: 16px;
+    margin-top: 16px;
+}
+
+main > ul > li
+{
+    margin: 8px 0;
 }
 
 footer

@@ -65,6 +65,10 @@ class RoomController extends AbstractController
         return $this->render(
             'default/room/index.html.twig',
             [
+                'room' =>
+                [
+                    'namespace' => $request->get('namespace')
+                ],
                 'messages' => $messages,
                 'request'  => $request
             ]
