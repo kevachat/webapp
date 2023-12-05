@@ -59,9 +59,10 @@ header > div > pre
 
 main
 {
-    max-width: var(--container-max-width);
-    margin: 16px auto;
     display: block;
+    margin: 16px auto 0 auto;
+    max-width: var(--container-max-width);
+    padding-bottom: 115px;
 }
 
 main > h2
@@ -110,17 +111,23 @@ main ul > li > p
 
 footer
 {
+    /*backdrop-filter: blur(100px);*/
+    background-color: Canvas;
+    bottom: 0;
     display: block;
-    margin: 16px auto;
-    max-width: var(--container-max-width);
+    left: 0;
+    position: fixed;
+    right: 0;
+    z-index:2;
 }
 
 footer > form
 {
     bottom: 16px;
     display: block;
+    margin: 16px auto;
     max-width: var(--container-max-width);
-    position: fixed;
+    overflow: hidden;
     width: 100%;
 }
 
@@ -128,7 +135,7 @@ footer > form > textarea
 {
     box-sizing: border-box;
     display: block;
-    margin: 8px 0;
+    margin-bottom: 10px;
     max-width: var(--container-max-width);
     padding: 4px;
     width: 100%;
