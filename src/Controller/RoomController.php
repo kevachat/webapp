@@ -53,11 +53,31 @@ class RoomController extends AbstractController
             $this->getParameter('app.kevacoin.password')
         );
 
+        // Set title
+        $name = $request->get('namespace');
+
+        foreach ((array) $client->kevaListNamespaces() as $namespace)
+        {
+            // Get current room namespace (could be third-party)
+            if ($namespace['namespaceId'] == $request->get('namespace'))
+            {
+                $name = $namespace['displayName'];
+
+                break;
+            }
+        }
+
         // Get room feed
         $feed = [];
 
         foreach ((array) $client->kevaFilter($request->get('namespace')) as $post)
         {
+            // Skip values with meta keys
+            if (false !== stripos($post['key'], '_KEVA_'))
+            {
+                continue;
+            }
+
             // Set identicon if not anonymous user
             if ($post['key'] === 'anonymous')
             {
@@ -82,12 +102,6 @@ class RoomController extends AbstractController
                 );
 
                 $icon = $identicon->getImageDataUri('webp');
-            }
-
-            // Skip values with meta keys
-            if (false !== stripos($post['key'], '_KEVA_'))
-            {
-                continue;
             }
 
             // Get more info
@@ -126,6 +140,7 @@ class RoomController extends AbstractController
         return $this->render(
             'default/room/index.html.twig',
             [
+                'name'    => $name,
                 'feed'    => $feed,
                 'request' => $request
             ]
