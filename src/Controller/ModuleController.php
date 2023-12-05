@@ -70,7 +70,7 @@ class ModuleController extends AbstractController
                 $name = $value['displayName'];
             }
 
-            // Check namespace enabled as room in settings
+            // Check namespace enabled as room in .env
             if (in_array($value['namespaceId'], $rooms))
             {
                 $list[$value['namespaceId']] = $value['displayName'];
@@ -95,6 +95,7 @@ class ModuleController extends AbstractController
         Request $request
     ): Response
     {
+        // Connect wallet
         $client = new \Kevachat\Kevacoin\Client(
             $this->getParameter('app.kevacoin.protocol'),
             $this->getParameter('app.kevacoin.host'),
@@ -103,18 +104,26 @@ class ModuleController extends AbstractController
             $this->getParameter('app.kevacoin.password')
         );
 
+        // Get room settings
+        $rooms    = explode('|', $this->getParameter('app.kevacoin.room.namespaces'));
+        $readonly = explode('|', $this->getParameter('app.kevacoin.room.namespaces.readonly'));
+
         // Get wallet namespaces (to enable post module there)
-        $namespaces = [];
+        $public = [];
 
         foreach ((array) $client->kevaListNamespaces() as $value)
         {
-            $namespaces[] = $value['namespaceId'];
+            // Check namespace enabled as room in .env
+            if (in_array($value['namespaceId'], $rooms) && !in_array($value['namespaceId'], $readonly))
+            {
+                $public[] = $value['namespaceId'];
+            }
         }
 
         return $this->render(
             'default/module/post.html.twig',
             [
-                'enabled'   => in_array($request->get('namespace'), $namespaces),
+                'enabled'   => in_array($request->get('namespace'), $public),
                 'namespace' => $request->get('namespace'),
                 'message'   => $request->get('message'),
                 'user'      => $request->get('user'),

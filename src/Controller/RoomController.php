@@ -23,7 +23,7 @@ class RoomController extends AbstractController
         return $this->redirectToRoute(
             'room_namespace',
             [
-                'namespace' => explode('|', $this->getParameter('app.kevacoin.room.namespaces'))[0]
+                'namespace' => $this->getParameter('app.kevacoin.room.namespace.default')
             ]
         );
     }
@@ -176,7 +176,7 @@ class RoomController extends AbstractController
         return $this->redirectToRoute(
             'room_namespace',
             [
-                'namespace' => explode('|', $this->getParameter('app.kevacoin.room.namespaces'))[0]
+                'namespace' => $request->get('namespace')
             ]
         );
     }
