@@ -53,26 +53,53 @@ class RoomController extends AbstractController
             $this->getParameter('app.kevacoin.password')
         );
 
-        // Get room posts
-        $posts = [];
+        // Get room feed
+        $feed = [];
 
-        foreach ((array) $client->kevaFilter($request->get('namespace')) as $message)
+        foreach ((array) $client->kevaFilter($request->get('namespace')) as $post)
         {
-            $posts[] =
-            [
-                'key'    => $message['key'],
-                'value'  => $message['value'],
-                'height' => $message['height'],
-                'vout'   => $message['vout'],
-                'txid'   => $message['txid'],
-            ];
+            // Skip values with meta keys
+            if (false !== stripos($post['key'], '_KEVA_'))
+            {
+                continue;
+            }
+
+            // Get more info
+            if ($transaction = $client->getRawTransaction($post['txid']))
+            {
+                $feed[] =
+                [
+                    'key'    => $post['key'],
+                    'value'  => $post['value'],
+                    'height' => $post['height'],
+                  # 'vout'   => $post['vout'],
+                    'txid'   => $post['txid'],
+                    'transaction' =>
+                    [
+                        'time'          => date('c', $transaction['time']),
+                        'timestamp'     => $transaction['time'],
+                        'confirmations' => $transaction['confirmations'],
+                    ],
+                    'sort'   => $transaction['time'] // sort order field
+                ];
+            }
         }
+
+        // Sort posts by newest on top
+        array_multisort(
+            array_column(
+                $feed,
+                'sort'
+            ),
+            SORT_DESC,
+            $feed
+        );
 
         // Return result
         return $this->render(
             'default/room/index.html.twig',
             [
-                'posts'   => $posts,
+                'feed'    => $feed,
                 'request' => $request
             ]
         );

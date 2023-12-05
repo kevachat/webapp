@@ -10,11 +10,20 @@
             )
         )
     }}
-    {% if posts %}
+    {% if feed %}
         <ul>
-            {% for post in posts %}
+            {% for post in feed %}
                 <li>
-                    {{ post.value }}
+                    <a name="{{ post.txid }}"></a>
+                    <strong>
+                        @{{ post.key }}
+                    </strong>
+                    <a href="#{{ post.txid }}" title="{{ 'time:' | trans }} {{ post.transaction.time }} / {{ 'block:' | trans }} {{ post.height }}{# / {{ 'confirmations:' | trans }} {{ post.transaction.confirmations }}#}">
+                        {{ post.transaction.timestamp | format_ago }}
+                    </a>
+                    <p>
+                        {{ post.value }}
+                    </p>
                 </li>
             {% endfor %}
         </ul>
