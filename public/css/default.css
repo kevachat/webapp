@@ -12,6 +12,9 @@
 
     /* vars */
     --container-max-width: 768px;
+    --color-warning: #ee784e;
+    --color-error: #ff6363;
+    --color-default: #999;
 }
 
 *::placeholder
@@ -50,6 +53,17 @@ header > strong
 header > div
 {
     margin: 8px 0;
+}
+
+header > div > code
+{
+    color: var(--color-error);
+    font-weight: bold;
+}
+
+header > div > sub > svg
+{
+    fill: var(--color-error);
 }
 
 main
@@ -91,7 +105,7 @@ main ul > li
     margin: 8px 0;
     padding: 8px 0;
     word-wrap: break-word;
-    border-bottom: 1px #999 solid;
+    border-bottom: 1px var(--color-default) solid;
 }
 
 main ul > li:last-child
@@ -107,13 +121,13 @@ main ul > li p
 main ul li > span > svg
 {
     cursor: default;
-    fill: #999;
+    fill: var(--color-default);
     float: right;
 }
 
 main > sup > a > svg
 {
-    fill: #ee784e;
+    fill: var(--color-warning);
 }
 
 footer
@@ -157,7 +171,7 @@ footer > form > button
 
 footer > form > output
 {
-    color: #ff6363;
+    color: var(--color-error);
     display: block;
     font-weight: bolder;
     margin-bottom: 16px;

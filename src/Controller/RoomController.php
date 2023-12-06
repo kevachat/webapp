@@ -68,7 +68,7 @@ class RoomController extends AbstractController
                 (array) explode('|', $this->getParameter('app.kevacoin.room.namespaces'))
             )
             &&
-            $this->getParameter('app.kevacoin.room.namespace.external') === 'false'
+            $this->getParameter('app.kevacoin.room.namespaces.external')
         ) {
             // @TODO process to error page instead of redirect to default room
             return $this->redirectToRoute(
@@ -198,6 +198,19 @@ class RoomController extends AbstractController
         TranslatorInterface $translator
     ): Response
     {
+        // Check maintenance mode disabled
+        if ($this->getParameter('app.maintenance'))
+        {
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'namespace' => $request->get('namespace'),
+                    'message'   => $request->get('message'),
+                    'error'     => $this->getParameter('app.maintenance')
+                ]
+            );
+        }
+
         // Connect memcached
         $memcached = new \Memcached();
         $memcached->addServer(

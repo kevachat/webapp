@@ -6,6 +6,7 @@
 parameters:
     app.version: '%env(APP_VERSION)%'
     app.name: '%env(APP_NAME)%'
+    app.maintenance: '%env(APP_MAINTENANCE)%'
     app.memcached.host: '%env(APP_MEMCACHED_HOST)%'
     app.memcached.port: '%env(APP_MEMCACHED_PORT)%'
     app.memcached.timeout: '%env(APP_MEMCACHED_TIMEOUT)%'
@@ -16,8 +17,8 @@ parameters:
     app.kevacoin.password: '%env(APP_KEVACOIN_PASSWORD)%'
     app.kevacoin.room.namespaces: '%env(APP_KEVACOIN_ROOM_NAMESPACES)%'
     app.kevacoin.room.namespaces.readonly: '%env(APP_KEVACOIN_ROOM_NAMESPACES_READONLY)%'
+    app.kevacoin.room.namespaces.external: '%env(APP_KEVACOIN_ROOM_NAMESPACES_EXTERNAL)%'
     app.kevacoin.room.namespace.default: '%env(APP_KEVACOIN_ROOM_NAMESPACE_DEFAULT)%'
-    app.kevacoin.room.namespace.external: '%env(APP_KEVACOIN_ROOM_NAMESPACE_EXTERNAL)%'
     app.kevacoin.boost.address: '%env(APP_KEVACOIN_BOOST_ADDRESS)%'
     app.kevacoin.explorer.url: '%env(APP_KEVACOIN_EXPLORER_URL)%'
     app.kevacoin.mine.pool.url: '%env(APP_KEVACOIN_MINE_POOL_URL)%'

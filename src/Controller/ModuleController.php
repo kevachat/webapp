@@ -46,7 +46,8 @@ class ModuleController extends AbstractController
                 'explorer' =>
                 [
                     'url' => $this->getParameter('app.kevacoin.explorer.url')
-                ]
+                ],
+                'maintenance' => $this->getParameter('app.maintenance')
             ]
         );
     }
@@ -133,6 +134,8 @@ class ModuleController extends AbstractController
                         $request->get('namespace'),
                         explode('|', $this->getParameter('app.kevacoin.room.namespaces.readonly'))
                     )
+                    &&
+                    !$this->getParameter('app.maintenance')
                 )
             ]
         );
