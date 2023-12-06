@@ -26,7 +26,7 @@
                     &bull;
                     <a href="{{ path('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.id }}" title="{{ post.time }}">{{ post.timestamp | format_ago }}</a>
                     &bull;
-                    <a href="{{ path('room_namespace', { namespace : request.get('namespace'), id : post.id }) }}#{{ post.id }}">{{ 'reply' | trans }}</a>
+                    <a href="{{ path('room_namespace', { namespace : request.get('namespace'), txid : post.id }) }}#{{ post.id }}">{{ 'reply' | trans }}</a>
                     {% if post.pending %}
                         <span title="{{ 'pending in DHT' | trans }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 16 16">
