@@ -109,14 +109,14 @@ class ModuleController extends AbstractController
         $readonly = explode('|', $this->getParameter('app.kevacoin.room.namespaces.readonly'));
 
         // Get wallet namespaces (to enable post module there)
-        $public = [];
+        $namespaces = [];
 
         foreach ((array) $client->kevaListNamespaces() as $value)
         {
             // Check namespace enabled as room in .env
             if (in_array($value['namespaceId'], $rooms) && !in_array($value['namespaceId'], $readonly))
             {
-                $public[] = $value['namespaceId'];
+                $namespaces[] = $value['namespaceId'];
             }
         }
 
@@ -154,7 +154,7 @@ class ModuleController extends AbstractController
         return $this->render(
             'default/module/post.html.twig',
             [
-                'enabled'   => in_array($request->get('namespace'), $public),
+                'enabled'   => in_array($request->get('namespace'), $namespaces),
                 'namespace' => $request->get('namespace'),
                 'sign'      => $request->get('sign'),
                 'error'     => $request->get('error'),
