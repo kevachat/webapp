@@ -19,12 +19,14 @@ class RoomController extends AbstractController
             'GET'
         ]
     )]
-    public function index(): Response
+    public function index(
+        ?Request $request
+    ): Response
     {
         return $this->redirectToRoute(
             'room_namespace',
             [
-                'namespace' => $this->getParameter('app.kevacoin.room.namespace.default')
+                'namespace' => $request->get('namespace') ? $request->get('namespace') : $this->getParameter('app.kevacoin.room.namespace.default')
             ]
         );
     }
