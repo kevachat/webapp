@@ -32,10 +32,24 @@ class AppExtension extends AbstractExtension
                 ]
             ),
             new TwigFilter(
+                'message_to_markdown',
+                [
+                    $this,
+                    'messageToMarkdown'
+                ]
+            ),
+            new TwigFilter(
                 'url_to_markdown',
                 [
                     $this,
                     'urlToMarkdown'
+                ]
+            ),
+            new TwigFilter(
+                'mention_to_markdown',
+                [
+                    $this,
+                    'mentionToMarkdown'
                 ]
             ),
             new TwigFilter(
@@ -119,6 +133,21 @@ class AppExtension extends AbstractExtension
         }
     }
 
+    public function messageToMarkdown(
+        string $text
+    ): string
+    {
+        $text = $this->urlToMarkdown(
+            $text
+        );
+
+        $text = $this->mentionToMarkdown(
+            $text
+        );
+
+        return $text;
+    }
+
     public function urlToMarkdown(
         string $text
     ): string
@@ -126,6 +155,17 @@ class AppExtension extends AbstractExtension
         return preg_replace(
             '~(https?://(?:www\.)?[^\(\s\)]+)~i',
             '[$1]($1)',
+            $text
+        );
+    }
+
+    public function mentionToMarkdown(
+        string $text
+    ): string
+    {
+        return preg_replace(
+            '~(@[A-z0-9]{64})~i',
+            '[$1](#$1)',
             $text
         );
     }

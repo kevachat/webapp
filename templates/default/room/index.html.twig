@@ -35,7 +35,7 @@
                         </span>
                     {% endif %}
                     <p>
-                        {{ post.message }}
+                        {{ post.message | message_to_markdown | markdown_to_html }}
                     </p>
                 </li>
             {% endfor %}
