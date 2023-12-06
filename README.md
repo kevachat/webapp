@@ -6,7 +6,7 @@ KevaChat is distributed web chat platform for open, uncensored and privacy respe
 
 ## Tech
 
-Instance require connection to the [Kevacoin](https://github.com/kevacoin-project/) wallet, `memcached` server and uses [Symfony](https://github.com/symfony/symfony) for web interface.
+Instance require connection to the [Kevacoin](https://github.com/kevacoin-project/) wallet, `memcached` server and [Symfony](https://github.com/symfony/symfony) for web interface.
 
 ## Model
 
