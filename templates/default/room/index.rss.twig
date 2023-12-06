@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <atom:link href="{{ url('room_namespace', { namespace : request.get('namespace') }) }}" rel="self" type="application/rss+xml"></atom:link>
+        <title>{{ name }} - {{ app.name }}</title>
+        <link>{{ url('room_namespace', { namespace : request.get('namespace') }) }}</link>
+        {% for post in feed %}
+            <item>
+                <title>{{ post.user }}</title>
+                <author>#{{ post.user }}</author>
+                <pubDate>{{ post.timestamp | date('D, d M Y h:i:s O') }}</pubDate>
+                <guid>{{ url('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.id }}</guid>
+                <link>{{ url('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.id }}</link>
+            </item>
+        {% endfor %}
+    </channel>
+</rss>
