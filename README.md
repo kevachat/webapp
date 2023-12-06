@@ -2,6 +2,8 @@
 
 KevaChat - is platform for open, uncensored and privacy respectable communication with permanent database stored in  blockchain.
 
+![KevaChat](https://github.com/kevachat/webapp/assets/108541346/747d4000-7bc3-401b-a190-8e46719c61ae)
+
 Instance require connection to the [Kevacoin](https://github.com/kevacoin-project/) server, `memcached` and `php`.
 
 ## Model
