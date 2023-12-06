@@ -61,20 +61,6 @@ class RoomController extends AbstractController
             $this->getParameter('app.kevacoin.password')
         );
 
-        // Set title
-        $name = $request->get('namespace');
-
-        foreach ((array) $client->kevaListNamespaces() as $namespace)
-        {
-            // Get current room namespace (could be third-party)
-            if ($namespace['namespaceId'] == $request->get('namespace'))
-            {
-                $name = $namespace['displayName'];
-
-                break;
-            }
-        }
-
         // Check for external rooms reading allowed in config
         if (
             !in_array(
@@ -178,7 +164,6 @@ class RoomController extends AbstractController
             return $this->render(
                 'default/room/index.rss.twig',
                 [
-                    'name'    => $name,
                     'feed'    => $feed,
                     'request' => $request
                 ],
@@ -190,7 +175,6 @@ class RoomController extends AbstractController
         return $this->render(
             'default/room/index.html.twig',
             [
-                'name'    => $name,
                 'feed'    => $feed,
                 'request' => $request
             ]
@@ -221,15 +205,13 @@ class RoomController extends AbstractController
             $this->getParameter('app.memcached.port')
         );
 
-        $memory = [
-            'app.add.post.remote.ip.delay' => md5(
-                sprintf(
-                    'kevachat.app.add.post.remote.ip.delay:%s.%s',
-                    $this->getParameter('app.name'),
-                    $request->getClientIp(),
-                ),
+        $memory = md5(
+            sprintf(
+                '%s.RoomController::post:add.post.remote.ip.delay:%s',
+                __DIR__,
+                $request->getClientIp(),
             ),
-        ];
+        );
 
         // Connect kevacoin
         $client = new \Kevachat\Kevacoin\Client(
@@ -322,7 +304,7 @@ class RoomController extends AbstractController
         }
 
         /// Validate remote IP limits
-        if ($delay = (int) $memcached->get($memory['app.add.post.remote.ip.delay']))
+        if ($delay = (int) $memcached->get($memory))
         {
             // Error
             return $this->redirectToRoute(
@@ -369,9 +351,9 @@ class RoomController extends AbstractController
         {
             // Register event time
             $memcached->set(
-                $memory['app.add.post.remote.ip.delay'],
+                $memory,
                 time(),
-                (int) $this->getParameter('app.add.post.remote.ip.delay')
+                (int) $this->getParameter('app.add.post.remote.ip.delay') // auto remove on cache expire
             );
 
             // Redirect back to room

@@ -37,6 +37,13 @@ class AppExtension extends AbstractExtension
                     $this,
                     'urlToMarkdown'
                 ]
+            ),
+            new TwigFilter(
+                'keva_namespace_value',
+                [
+                    $this,
+                    'kevaNamespaceValue'
+                ]
             )
         ];
     }
@@ -128,5 +135,70 @@ class AppExtension extends AbstractExtension
         $cases = [2, 0, 1, 1, 1, 2];
 
         return $texts[(($number % 100) > 4 && ($number % 100) < 20) ? 2 : $cases[min($number % 10, 5)]];
+    }
+
+    // @TODO
+    // this is fix of keva magic with Kevachat\Kevacoin\Client::kevaListNamespaces results (on pending transactions exist in the namespaces)
+    // let's extract it from latest_KEVA_NS_ value and temporarily store results in memory cache
+    public function kevaNamespaceValue(
+        string $namespace
+    ): string
+    {
+        // Connect kevacoin
+        $client = new \Kevachat\Kevacoin\Client(
+            $this->container->getParameter('app.kevacoin.protocol'),
+            $this->container->getParameter('app.kevacoin.host'),
+            $this->container->getParameter('app.kevacoin.port'),
+            $this->container->getParameter('app.kevacoin.username'),
+            $this->container->getParameter('app.kevacoin.password')
+        );
+
+        // Connect memcached
+        $memcached = new \Memcached();
+        $memcached->addServer(
+            $this->container->getParameter('app.memcached.host'),
+            $this->container->getParameter('app.memcached.port')
+        );
+
+        // Generate unique cache key
+        $key = md5(
+            sprintf(
+                '%s.AppExtension::kevaNamespaceValue:%s',
+                __DIR__,
+                $namespace
+            )
+        );
+
+        // Return cached value if exists
+        if ($value = $memcached->get($key))
+        {
+            return $value;
+        }
+
+        // Find related room names
+        $_keva_ns = [];
+        foreach ((array) $client->kevaFilter($namespace) as $data)
+        {
+            if ($data['key'] == '_KEVA_NS_')
+            {
+                $_keva_ns[$data['height']] = $data['value'];
+            }
+        }
+
+        // Get last by it block height
+        if (!empty($_keva_ns))
+        {
+            $value = reset(
+                $_keva_ns
+            );
+
+            if ($memcached->set($key, $value, $this->container->getParameter('app.memcached.timeout')))
+            {
+                return (string) $value;
+            }
+        }
+
+        // Return original hash
+        return $namespace;
     }
 }
