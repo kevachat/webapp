@@ -76,6 +76,49 @@ class RoomController extends AbstractController
         // Get room feed
         $feed = [];
 
+        // Get pending paradise
+        foreach ((array) $client->kevaPending() as $pending)
+        {
+            // Ignore pending posts from other rooms
+            if ($pending['namespace'] !== $request->get('namespace'))
+            {
+                continue;
+            }
+
+            // Ignore everything in pending queue but keva_put nodes
+            if ($pending['op'] !== 'keva_put')
+            {
+                continue;
+            }
+
+            // Skip values with meta keys
+            if (false !== stripos($pending['key'], '_KEVA_'))
+            {
+                continue;
+            }
+
+            // Get more info
+            if ($transaction = $client->getRawTransaction($pending['txid']))
+            {
+                $feed[] =
+                [
+                    'pending' => true,
+                    'key'     => $pending['key'],
+                    'value'   => $pending['value'],
+                    'txid'    => $pending['txid'],
+                    'transaction' =>
+                    [
+                        'time'          => date('c', $transaction['time']),
+                        'timestamp'     => $transaction['time'],
+                        'confirmations' => $transaction['confirmations'],
+                    ],
+                    'icon' => $this->_identicon($pending['key']),
+                    'sort' => 0//$transaction['time'] // sort order field
+                ];
+            }
+        }
+
+        // Get regular posts
         foreach ((array) $client->kevaFilter($request->get('namespace')) as $post)
         {
             // Skip values with meta keys
@@ -84,49 +127,24 @@ class RoomController extends AbstractController
                 continue;
             }
 
-            // Set identicon if not anonymous user
-            if ($post['key'] === '@anonymous')
-            {
-                $icon = false;
-            }
-
-            else
-            {
-                $identicon = new \Jdenticon\Identicon();
-
-                $identicon->setValue(
-                    $post['key']
-                );
-
-                $identicon->setSize(12);
-
-                $identicon->setStyle(
-                    [
-                        'backgroundColor' => 'rgba(255, 255, 255, 0)',
-                        'padding' => 0
-                    ]
-                );
-
-                $icon = $identicon->getImageDataUri('webp');
-            }
-
             // Get more info
             if ($transaction = $client->getRawTransaction($post['txid']))
             {
                 $feed[] =
                 [
-                  # 'key'    => $post['key'],
-                    'value'  => $post['value'],
-                    'height' => $post['height'],
-                  # 'vout'   => $post['vout'],
-                    'txid'   => $post['txid'],
+                    'pending' => false,
+                    'key'     => $post['key'],
+                    'value'   => $post['value'],
+                    'height'  => $post['height'],
+                  # 'vout'    => $post['vout'],
+                    'txid'    => $post['txid'],
                     'transaction' =>
                     [
                         'time'          => date('c', $transaction['time']),
                         'timestamp'     => $transaction['time'],
                         'confirmations' => $transaction['confirmations'],
                     ],
-                    'icon' => $icon,
+                    'icon' => $this->_identicon($post['key']),
                     'sort' => $transaction['time'] // sort order field
                 ];
             }
@@ -370,5 +388,31 @@ class RoomController extends AbstractController
                 'error'     => $translator->trans('Internal error! Please feedback')
             ]
         );
+    }
+
+    private function _identicon(string $key)
+    {
+        if ($key === 'anonymous')
+        {
+            return false;
+        }
+
+        else
+        {
+            $identicon = new \Jdenticon\Identicon();
+
+            $identicon->setValue($key);
+
+            $identicon->setSize(12);
+
+            $identicon->setStyle(
+                [
+                    'backgroundColor' => 'rgba(255, 255, 255, 0)',
+                    'padding' => 0
+                ]
+            );
+
+            return $identicon->getImageDataUri('webp');
+        }
     }
 }

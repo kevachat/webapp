@@ -104,9 +104,16 @@ main ul > li:last-child
     border-bottom: none;
 }
 
-main ul > li > p
+main ul > li p
 {
     padding: 8px 0;
+}
+
+main ul li > span > svg
+{
+    cursor: default;
+    fill: #999;
+    float: right;
 }
 
 footer
