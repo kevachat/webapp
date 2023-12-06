@@ -1,14 +1,16 @@
-# Web Application for KevaChat
+# KevaChat Web Application
 
-KevaChat - is platform for open, uncensored and privacy respectable communication with permanent database stored in  blockchain.
+KevaChat - is platform for open, uncensored and privacy respectable communication with permanent database storage in blockchain.
 
 ![KevaChat](https://github.com/kevachat/webapp/assets/108541346/747d4000-7bc3-401b-a190-8e46719c61ae)
 
-Instance require connection to the [Kevacoin](https://github.com/kevacoin-project/) server, `memcached` and `php`.
+## Tech
+
+Instance require connection to the [Kevacoin](https://github.com/kevacoin-project/) wallet, `memcached` server and uses [Symfony](https://github.com/symfony/symfony) for web interface.
 
 ## Model
 
-KevaChat following open wallet model, where community boost the ballance for talks.
+KevaChat following open wallet model, where community boost shared ballance for talks.
 
 Administrators have flexible settings of access levels explained in the `.env` file: read-only rooms, connection and post limits, etc.
 
