@@ -15,7 +15,7 @@
         <ul>
             {% for post in feed %}
                 <li>
-                    <a name="{{ post.txid }}"></a>
+                    <a name="{{ post.id }}"></a>
                     {% if post.icon %}
                         <img src="{{ post.icon }}" alt="icon" />
                     {% else %}
@@ -24,9 +24,9 @@
                         </strong>
                     {% endif %}
                     &bull;
-                    <a href="{{ path('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.txid }}" title="{{ 'time:' | trans }} {{ post.transaction.time }} / {{ 'confirmations:' | trans }} {{ post.transaction.confirmations }}">{{ post.transaction.timestamp | format_ago }}</a>
+                    <a href="{{ path('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.id }}" title="{{ post.time }}">{{ post.timestamp | format_ago }}</a>
                     &bull;
-                    <a href="{{ path('room_namespace', { namespace : request.get('namespace'), txid : post.txid }) }}#{{ post.txid }}">{{ 'reply' | trans }}</a>
+                    <a href="{{ path('room_namespace', { namespace : request.get('namespace'), id : post.id }) }}#{{ post.id }}">{{ 'reply' | trans }}</a>
                     {% if post.pending %}
                         <span title="{{ 'pending in DHT' | trans }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 16 16">
@@ -35,7 +35,7 @@
                         </span>
                     {% endif %}
                     <p>
-                        {{ post.value }}
+                        {{ post.message }}
                     </p>
                 </li>
             {% endfor %}

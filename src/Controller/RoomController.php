@@ -97,23 +97,18 @@ class RoomController extends AbstractController
                 continue;
             }
 
-            // Get more info
-            if ($transaction = $client->getRawTransaction($pending['txid']))
+            // Require valid kevachat meta
+            if ($data = $this->_post($pending))
             {
                 $feed[] =
                 [
-                    'pending' => true,
-                    'key'     => $pending['key'],
-                    'value'   => $pending['value'],
-                    'txid'    => $pending['txid'],
-                    'transaction' =>
-                    [
-                        'time'          => date('c', $transaction['time']),
-                        'timestamp'     => $transaction['time'],
-                        'confirmations' => $transaction['confirmations'],
-                    ],
-                    'icon' => $this->_identicon($pending['key']),
-                    'sort' => 0//$transaction['time'] // sort order field
+                    'id'        => $data->id,
+                    'user'      => $data->user,
+                    'icon'      => $data->icon,
+                    'message'   => $data->message,
+                    'timestamp' => $data->time,
+                    'time'      => date('c', $data->time),
+                    'pending'   => true
                 ];
             }
         }
@@ -127,25 +122,18 @@ class RoomController extends AbstractController
                 continue;
             }
 
-            // Get more info
-            if ($transaction = $client->getRawTransaction($post['txid']))
+            // Require valid kevachat meta
+            if ($data = $this->_post($post))
             {
                 $feed[] =
                 [
-                    'pending' => false,
-                    'key'     => $post['key'],
-                    'value'   => $post['value'],
-                    'height'  => $post['height'],
-                  # 'vout'    => $post['vout'],
-                    'txid'    => $post['txid'],
-                    'transaction' =>
-                    [
-                        'time'          => date('c', $transaction['time']),
-                        'timestamp'     => $transaction['time'],
-                        'confirmations' => $transaction['confirmations'],
-                    ],
-                    'icon' => $this->_identicon($post['key']),
-                    'sort' => $transaction['time'] // sort order field
+                    'id'        => $data->id,
+                    'user'      => $data->user,
+                    'icon'      => $data->icon,
+                    'message'   => $data->message,
+                    'timestamp' => $data->time,
+                    'time'      => date('c', $data->time),
+                    'pending'   => false
                 ];
             }
         }
@@ -154,7 +142,7 @@ class RoomController extends AbstractController
         array_multisort(
             array_column(
                 $feed,
-                'sort'
+                'time'
             ),
             SORT_DESC,
             $feed
@@ -354,7 +342,8 @@ class RoomController extends AbstractController
             $client->kevaPut(
                 $request->get('namespace'),
                 sprintf(
-                    '@%s',
+                    '%s@%s',
+                    time(), // @TODO save timestamp as part of key to keep timing actual for the chat feature
                     $request->get('user') === 'ip' ? $request->getClientIp() : 'anonymous'
                 ),
                 $request->get('message')
@@ -390,29 +379,53 @@ class RoomController extends AbstractController
         );
     }
 
-    private function _identicon(string $key)
+    private function _post(array $data): ?object
     {
-        if ($key === 'anonymous')
+        if (false === preg_match('/^([\d]+)@(.*)$/', $data['key'], $matches))
         {
-            return false;
+            return null;
         }
 
-        else
+        if (empty($matches[1]))
         {
-            $identicon = new \Jdenticon\Identicon();
-
-            $identicon->setValue($key);
-
-            $identicon->setSize(12);
-
-            $identicon->setStyle(
-                [
-                    'backgroundColor' => 'rgba(255, 255, 255, 0)',
-                    'padding' => 0
-                ]
-            );
-
-            return $identicon->getImageDataUri('webp');
+            return null;
         }
+
+        if (empty($matches[2]))
+        {
+            return null;
+        }
+
+        return (object)
+        [
+            'id'      => $data['txid'],
+            'time'    => $matches[1],
+            'user'    => $matches[2],
+            'icon'    => $this->_identicon($matches[2]),
+            'message' => $data['value']
+        ];
+    }
+
+    private function _identicon(mixed $value): ?string
+    {
+        if ($value === 'anonymous')
+        {
+            return null;
+        }
+
+        $identicon = new \Jdenticon\Identicon();
+
+        $identicon->setValue($value);
+
+        $identicon->setSize(12);
+
+        $identicon->setStyle(
+            [
+                'backgroundColor' => 'rgba(255, 255, 255, 0)',
+                'padding' => 0
+            ]
+        );
+
+        return $identicon->getImageDataUri('webp');
     }
 }
