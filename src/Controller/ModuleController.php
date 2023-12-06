@@ -95,31 +95,6 @@ class ModuleController extends AbstractController
         Request $request
     ): Response
     {
-        // Connect wallet
-        $client = new \Kevachat\Kevacoin\Client(
-            $this->getParameter('app.kevacoin.protocol'),
-            $this->getParameter('app.kevacoin.host'),
-            $this->getParameter('app.kevacoin.port'),
-            $this->getParameter('app.kevacoin.username'),
-            $this->getParameter('app.kevacoin.password')
-        );
-
-        // Get room settings
-        $rooms    = explode('|', $this->getParameter('app.kevacoin.room.namespaces'));
-        $readonly = explode('|', $this->getParameter('app.kevacoin.room.namespaces.readonly'));
-
-        // Get wallet namespaces (to enable post module there)
-        $namespaces = [];
-
-        foreach ((array) $client->kevaListNamespaces() as $value)
-        {
-            // Check namespace enabled as room in .env
-            if (in_array($value['namespaceId'], $rooms) && !in_array($value['namespaceId'], $readonly))
-            {
-                $namespaces[] = $value['namespaceId'];
-            }
-        }
-
         // Format quoted message
         if (preg_match('/^[A-z0-9]{64}$/', $request->get('txid')))
         {
@@ -154,12 +129,24 @@ class ModuleController extends AbstractController
         return $this->render(
             'default/module/post.html.twig',
             [
-                'enabled'   => in_array($request->get('namespace'), $namespaces),
                 'namespace' => $request->get('namespace'),
                 'sign'      => $request->get('sign'),
                 'error'     => $request->get('error'),
                 'message'   => $message,
-                'ip'        => $request->getClientIp()
+                'ip'        => $request->getClientIp(),
+
+                'enabled'   =>
+                (
+                    in_array(
+                        $request->get('namespace'),
+                        explode('|', $this->getParameter('app.kevacoin.room.namespaces'))
+                    )
+                    &&
+                    !in_array(
+                        $request->get('namespace'),
+                        explode('|', $this->getParameter('app.kevacoin.room.namespaces.readonly'))
+                    )
+                )
             ]
         );
     }
