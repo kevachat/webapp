@@ -2,10 +2,14 @@
     {{ 'block:' | trans }} {{ wallet.block }}
     /
     {{ 'balance:' | trans }} {{ wallet.balance }}
-    {% if mine.address %}
+    {% if boost.address %}
         /
         {{ 'charge:' | trans }}
-        <pre>{{ mine.address }}</pre>
+        {% if explorer.url %}
+            <a href="{{ explorer.url }}{{ boost.address }}" target="_blank">{{ boost.address }}</a>
+        {% else %}
+            {{ boost.address }}
+        {% endif %}
     {% endif %}
     {% if mine.pool %}
         /
