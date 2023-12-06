@@ -26,7 +26,7 @@ class ModuleController extends AbstractController
                 'wallet' =>
                 [
                     'balance' => (float) $client->getBalance(),
-                    'block'   => (int) $client->getBlockCount()
+                    'block'   => (int)   $client->getBlockCount()
                 ],
                 'mine' =>
                 [
@@ -56,37 +56,40 @@ class ModuleController extends AbstractController
             $this->getParameter('app.kevacoin.password')
         );
 
-        $name = null;
-
         $list = [];
 
-        $rooms = explode('|', $this->getParameter('app.kevacoin.room.namespaces'));
-
-        foreach ((array) $client->kevaListNamespaces() as $value)
+        // Get configured rooms list
+        foreach ((array) explode('|', $this->getParameter('app.kevacoin.room.namespaces')) as $namespace)
         {
-            // Get current room namespace (could be third-party)
-            if ($value['namespaceId'] == $request->get('namespace'))
-            {
-                $name = $value['displayName'];
-            }
-
-            // Check namespace enabled as room in .env
-            if (in_array($value['namespaceId'], $rooms))
-            {
-                $list[$value['namespaceId']] = $value['displayName'];
-            }
+            $list[$namespace] = [
+                'name'      => $namespace,
+                'namespace' => $namespace,
+                'active'    => $namespace === $request->get('namespace')
+            ];
         }
 
-        asort($list);
+        // Find related room names
+        foreach ((array) $client->kevaListNamespaces() as $value)
+        {
+            if (isset($list[$value['namespaceId']]))
+            {
+                $list[$value['namespaceId']]['name'] = $value['displayName'];
+            }
+        }
 
         return $this->render(
             'default/module/room.html.twig',
             [
-                'room' => [
-                    'name'      => $name,
-                    'namespace' => $request->get('namespace')
-                ],
-                'list' => $list
+                'list' => array_values(
+                    $list
+                ),
+                'form' =>
+                [
+                    'namespace' =>
+                    [
+                        'value' => $request->get('namespace')
+                    ]
+                ]
             ]
         );
     }
