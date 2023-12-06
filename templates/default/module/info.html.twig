@@ -4,7 +4,7 @@
     {{ 'balance:' | trans }} {{ wallet.balance }}
     {% if boost.address %}
         /
-        {{ 'charge:' | trans }}
+        {{ 'boost:' | trans }}
         {% if explorer.url %}
             <a href="{{ explorer.url }}{{ boost.address }}" target="_blank">{{ boost.address }}</a>
         {% else %}
