@@ -240,27 +240,6 @@ class RoomController extends AbstractController
             $this->getParameter('app.kevacoin.password')
         );
 
-        // Get local namespaces
-        $namespaces = [];
-
-        foreach ((array) $client->kevaListNamespaces() as $value)
-        {
-            $namespaces[] = $value['namespaceId'];
-        }
-
-        // Check namespace exist for this wallet
-        if (!in_array($request->get('namespace'), $namespaces))
-        {
-            return $this->redirectToRoute(
-                'room_namespace',
-                [
-                    'namespace' => $request->get('namespace'),
-                    'message'   => $request->get('message'),
-                    'error'     => $translator->trans('Namespace not related with this node!')
-                ]
-            );
-        }
-
         // Check namespace defined in config
         if (!in_array($request->get('namespace'), (array) explode('|', $this->getParameter('app.kevacoin.room.namespaces'))))
         {
