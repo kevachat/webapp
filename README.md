@@ -1,6 +1,6 @@
 # KevaChat Web Application
 
-KevaChat - is platform for open, uncensored and privacy respectable communication with permanent database storage in blockchain.
+KevaChat - is chat platform for open, uncensored and privacy respectable communication with permanent database storage in blockchain.
 
 ![KevaChat](https://github.com/kevachat/webapp/assets/108541346/747d4000-7bc3-401b-a190-8e46719c61ae)
 
@@ -28,4 +28,4 @@ All messages related to their room `namespaces`.
 
 ## Contribution
 
-Project created from people for people, feel free to use it for your own needs, join the development or make your feedback!
+Project created from people and for people, feel free to use it for your own needs, join the development or make your feedback!
