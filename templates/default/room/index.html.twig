@@ -40,6 +40,12 @@
                 </li>
             {% endfor %}
         </ul>
+    {% else %}
+        <ul>
+            <li>
+                {{ 'room not contain valid messages' | trans }}
+            </li>
+        </ul>
     {% endif %}
 {% endblock %}
 {% block footer_content %}
