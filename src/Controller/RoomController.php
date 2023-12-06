@@ -75,6 +75,21 @@ class RoomController extends AbstractController
             }
         }
 
+        // Check for external rooms reading allowed in config
+        if (
+            !in_array(
+                $request->get('namespace'),
+                (array) explode('|', $this->getParameter('app.kevacoin.room.namespaces'))
+            )
+            &&
+            $this->getParameter('app.kevacoin.room.namespace.external') === 'false'
+        ) {
+            // @TODO process to error page instead of redirect to default room
+            return $this->redirectToRoute(
+                'room_index'
+            );
+        }
+
         // Get room feed
         $feed = [];
 
@@ -225,7 +240,7 @@ class RoomController extends AbstractController
             );
         }
 
-        // Check namespace writable
+        // Check namespace defined in config
         if (!in_array($request->get('namespace'), (array) explode('|', $this->getParameter('app.kevacoin.room.namespaces'))))
         {
             return $this->redirectToRoute(
