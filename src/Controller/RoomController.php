@@ -166,15 +166,23 @@ class RoomController extends AbstractController
         );
 
         // RSS
-        if ('RSS' === $request->get('feed'))
+        if ('rss' === $request->get('feed'))
         {
+            $response = new Response();
+
+            $response->headers->set(
+                'Content-Type',
+                'text/xml'
+            );
+
             return $this->render(
                 'default/room/index.rss.twig',
                 [
                     'name'    => $name,
                     'feed'    => $feed,
                     'request' => $request
-                ]
+                ],
+                $response
             );
         }
 

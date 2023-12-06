@@ -6,8 +6,8 @@
         <link>{{ url('room_namespace', { namespace : request.get('namespace') }) }}</link>
         {% for post in feed %}
             <item>
-                <title>{{ post.user }}</title>
-                <author>#{{ post.user }}</author>
+                <title>@{{ post.user }}</title>
+                <author>@{{ post.user }}</author>
                 <pubDate>{{ post.timestamp | date('D, d M Y h:i:s O') }}</pubDate>
                 <guid>{{ url('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.id }}</guid>
                 <link>{{ url('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.id }}</link>

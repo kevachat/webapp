@@ -116,6 +116,11 @@ main ul li > span > svg
     float: right;
 }
 
+main > sup > a > svg
+{
+    fill: #ee784e;
+}
+
 footer
 {
     /*backdrop-filter: blur(100px);*/
