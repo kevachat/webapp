@@ -164,8 +164,8 @@ class AppExtension extends AbstractExtension
     ): string
     {
         return preg_replace(
-            '~(@[A-z0-9]{64})~i',
-            '[$1](#$1)',
+            '~@([A-z0-9]{64})~i',
+            '[@$1](#$1)',
             $text
         );
     }
