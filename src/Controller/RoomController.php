@@ -344,7 +344,7 @@ class RoomController extends AbstractController
                 sprintf(
                     '%s@%s',
                     time(), // @TODO save timestamp as part of key to keep timing actual for the chat feature
-                    $request->get('user') === 'ip' ? $request->getClientIp() : 'anonymous'
+                    $request->get('user') === 'ip' ? $request->getClientIp() : 'guest'
                 ),
                 $request->get('message')
             )
@@ -408,7 +408,7 @@ class RoomController extends AbstractController
 
     private function _identicon(mixed $value): ?string
     {
-        if ($value === 'anonymous')
+        if ($value === 'guest')
         {
             return null;
         }

@@ -4,13 +4,13 @@
             <output name="error" for="form-post-message">{{ error }}</output>
         {% endif %}
         <textarea name="message" id="form-post-message" placeholder="{{ 'enter your message...' | trans }}">{{ message }}</textarea>
-        {% if user == 'anonymous' or user != 'ip' %}
-            <input type="radio" name="user" value="anonymous" id="form-post-user-anonymous" checked="checked" />
+        {% if user == 'guest' or user != 'ip' %}
+            <input type="radio" name="user" value="guest" id="form-post-user-guest" checked="checked" />
         {% else %}
-            <input type="radio" name="user" value="anonymous" id="form-post-user-anonymous" />
+            <input type="radio" name="user" value="guest" id="form-post-user-guest" />
         {% endif %}
-        <label for="form-post-user-anonymous">
-            {{ 'anonymous' | trans }}
+        <label for="form-post-user-guest">
+            {{ 'guest' | trans }}
         </label>
         {% if user == 'ip' %}
             <input type="radio" name="user" value="ip" id="form-post-user-ip" checked="checked" />
