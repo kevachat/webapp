@@ -1,6 +1,6 @@
 # KevaChat Web Application
 
-KevaChat - is chat platform for open, uncensored and privacy respectable communication with permanent database storage in blockchain.
+KevaChat is distributed chat platform for open, uncensored and privacy respectable communication with permanent database storage in blockchain.
 
 ![KevaChat](https://github.com/kevachat/webapp/assets/108541346/747d4000-7bc3-401b-a190-8e46719c61ae)
 
