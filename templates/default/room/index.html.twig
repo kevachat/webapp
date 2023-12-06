@@ -24,9 +24,9 @@
                         </strong>
                     {% endif %}
                     &bull;
-                    <a href="{{ path('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.id }}" title="{{ post.time }}">{{ post.timestamp | format_ago }}</a>
+                    <a rel="nofollow" href="{{ path('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.id }}" title="{{ post.time }}">{{ post.timestamp | format_ago }}</a>
                     &bull;
-                    <a href="{{ path('room_namespace', { namespace : request.get('namespace'), txid : post.id }) }}#{{ post.id }}">{{ 'reply' | trans }}</a>
+                    <a rel="nofollow" href="{{ path('room_namespace', { namespace : request.get('namespace'), txid : post.id }) }}#{{ post.id }}">{{ 'reply' | trans }}</a>
                     {% if post.pending %}
                         <span title="{{ 'pending in pool' | trans }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 16 16">
