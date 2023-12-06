@@ -4,20 +4,20 @@
             <output name="error" for="form-post-message">{{ error }}</output>
         {% endif %}
         <textarea name="message" id="form-post-message" placeholder="{{ 'enter your message...' | trans }}">{{ message }}</textarea>
-        {% if user == 'anon' or user != 'ip' %}
-            <input type="radio" name="user" value="anon" id="form-post-user-anon" checked="checked" />
+        {% if sign == 'anon' or sign != 'ip' %}
+            <input type="radio" name="sign" value="anon" id="form-post-sign-anon" checked="checked" />
         {% else %}
-            <input type="radio" name="user" value="anon" id="form-post-user-anon" />
+            <input type="radio" name="sign" value="anon" id="form-post-sign-anon" />
         {% endif %}
-        <label for="form-post-user-anon">
+        <label for="form-post-sign-anon">
             {{ 'anon' | trans }}
         </label>
-        {% if user == 'ip' %}
-            <input type="radio" name="user" value="ip" id="form-post-user-ip" checked="checked" />
+        {% if sign == 'ip' %}
+            <input type="radio" name="sign" value="ip" id="form-post-sign-ip" checked="checked" />
         {% else %}
-            <input type="radio" name="user" value="ip" id="form-post-user-ip" />
+            <input type="radio" name="sign" value="ip" id="form-post-sign-ip" />
         {% endif %}
-        <label for="form-post-user-ip">
+        <label for="form-post-sign-ip">
             @{{ ip }}
         </label>
         <button type="submit">{{ 'send' | trans }}</button>

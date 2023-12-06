@@ -382,7 +382,7 @@ class RoomController extends AbstractController
                 sprintf(
                     '%s@%s',
                     time(), // @TODO save timestamp as part of key to keep timing actual for the chat feature
-                    $request->get('user') === 'ip' ? $request->getClientIp() : 'anon'
+                    $request->get('sign') === 'ip' ? $request->getClientIp() : 'anon'
                 ),
                 $request->get('message')
             )
