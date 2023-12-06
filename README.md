@@ -26,6 +26,18 @@ KevaChat protocol following native Kevacoin's `key`/`value` model, where `key` -
 
 All messages related to their room `namespaces`.
 
+## Install
+
+### Production
+
+`composer create-project kevachat/webapp KevaChat`
+
+### Development
+
+* `git clone https://github.com/kevachat/webapp.git KevaChat`
+* `cd KevaChat`
+* `composer install`
+
 ## Contribution
 
 Project created from people and for people, feel free to use it for your own needs, join the development or make your feedback!
