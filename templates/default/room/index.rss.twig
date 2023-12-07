@@ -11,6 +11,7 @@
                 <pubDate>{{ post.timestamp | date('D, d M Y h:i:s O') }}</pubDate>
                 <guid>{{ url('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.id }}</guid>
                 <link>{{ url('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.id }}</link>
+                <description>{{ post.message }}</description>
             </item>
         {% endfor %}
     </channel>
