@@ -52,6 +52,6 @@ Application package contain settings preset, just few steps required to launch:
 
 ## Contribution
 
-Project created by people for people: MIT License to use it for other needs e.g. new chat instance or Kevacoin blockchain explorer.
+Project created by people for people: MIT License to use it for other needs e.g. new fork, chat instance or Kevacoin blockchain explorer.
 
 Join the development and make your feedback!
