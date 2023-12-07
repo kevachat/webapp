@@ -34,9 +34,8 @@
                             </svg>
                         </span>
                     {% endif %}
-                    <p>
-                        {{ post.message | message_to_markdown | markdown_to_html }}
-                    </p>
+                    <br />
+                    {{ post.message | message_to_markdown | markdown_to_html }}
                 </li>
             {% endfor %}
         </ul>
