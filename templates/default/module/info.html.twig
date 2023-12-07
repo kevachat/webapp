@@ -8,7 +8,7 @@
         /
         {{ 'boost:' | trans }}
         {% if explorer.url %}
-            <a href="{{ explorer.url }}{{ boost.address }}" target="_blank">{{ boost.address }}</a>
+            <a href="{{ explorer.url }}{{ boost.address }}" title="{{ boost.address }}" target="_blank">{{ 'address' | trans }}</a>
         {% else %}
             {{ boost.address }}
         {% endif %}
