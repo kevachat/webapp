@@ -38,6 +38,20 @@ All messages related to their room `namespaces`.
 * `cd KevaChat`
 * `composer install`
 
+## Setup
+
+Application package contain settings preset, just few steps required to launch:
+
+* Make sure `memcached` server enabled
+* Setup Kevacoin server connection with `rpcuser`/`rpcpassword` in `~/.kevacoin/kevacoin.conf`
+* Copy `rpcuser` to `env`.`APP_KEVACOIN_USERNAME` and `rpcpassword` to `env`.`APP_KEVACOIN_PASSWORD`
+* Generate new address using CLI `kevacoin-cli getnewaddress` and copy to `env`.`APP_KEVACOIN_BOOST_ADDRESS`
+* Send few coins to this address and wait for new block to continue
+* Create namespace for the chat room with `kevacoin-cli keva_namespace "sandbox"` and add it hash to `env`.`APP_KEVACOIN_ROOM_NAMESPACES`
+* Also Provide at least one namespace for default chat room to `env`.`APP_KEVACOIN_ROOM_NAMESPACE_DEFAULT` (for homepage redirects)
+
 ## Contribution
 
-Project created from people and for people, feel free to use it for your own needs, join the development or make your feedback!
+Project created from people to people: MIT License to use it for other needs e.g. new chat instance or Kevacoin blockchain explorer.
+
+Join the development and make your feedback!
