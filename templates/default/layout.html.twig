@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block head_title_content %}{{ 'KevaChat' | trans }}{% endblock %}</title>
-        <link rel="stylesheet" type="text/css" href="/css/default.css?{{ app.version }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ url('room_index') }}css/default.css?{{ app.version }}"/>
     </head>
     <body>
         <header>
