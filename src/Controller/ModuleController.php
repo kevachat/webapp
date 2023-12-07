@@ -10,8 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ModuleController extends AbstractController
 {
-    public function info(): Response
+    public function info(
+        Request $request
+    ): Response
     {
+        // Connect kevacoin
         $client = new \Kevachat\Kevacoin\Client(
             $this->getParameter('app.kevacoin.protocol'),
             $this->getParameter('app.kevacoin.host'),
@@ -20,9 +23,49 @@ class ModuleController extends AbstractController
             $this->getParameter('app.kevacoin.password')
         );
 
+        // Connect memcached
+        $memcached = new \Memcached();
+        $memcached->addServer(
+            $this->getParameter('app.memcached.host'),
+            $this->getParameter('app.memcached.port')
+        );
+
+        // Get sessions registry
+        $online = md5(
+            sprintf(
+                '%s.ModuleController::info:sessions',
+                __DIR__
+            )
+        );
+
+        // Drop offline sessions
+        $sessions = [];
+
+        foreach ((array) $memcached->get($online) as $ip => $time)
+        {
+            if (time() - $time < $this->getParameter('app.session.online.timeout'))
+            {
+                $sessions[$ip] = $time;
+            }
+        }
+
+        // Update current session time
+        $sessions[$request->getClientIp()] = time();
+
+        // Update session registry
+        $memcached->set(
+            $online,
+            $sessions,
+            $this->getParameter('app.session.online.timeout')
+        );
+
+        // Render the template
         return $this->render(
             'default/module/info.html.twig',
             [
+                'online' => count(
+                    $sessions
+                ),
                 'wallet' =>
                 [
                     'balance' => (float) $client->getBalance(),

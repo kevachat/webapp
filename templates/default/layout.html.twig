@@ -20,7 +20,10 @@
                 {{
                     render(
                         controller(
-                            'App\\Controller\\ModuleController::info'
+                            'App\\Controller\\ModuleController::info',
+                            {
+                                request : request
+                            }
                         )
                     )
                 }}

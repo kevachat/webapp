@@ -23,6 +23,7 @@ parameters:
     app.kevacoin.explorer.url: '%env(APP_KEVACOIN_EXPLORER_URL)%'
     app.kevacoin.mine.pool.url: '%env(APP_KEVACOIN_MINE_POOL_URL)%'
     app.kevacoin.mine.solo.url: '%env(APP_KEVACOIN_MINE_SOLO_URL)%'
+    app.session.online.timeout: '%env(APP_SESSION_ONLINE_TIMEOUT)%'
     app.add.room.remote.ip.regex: '%env(APP_ADD_ROOM_REMOTE_IP_REGEX)%'
     app.add.post.remote.ip.regex: '%env(APP_ADD_POST_REMOTE_IP_REGEX)%'
     app.add.post.remote.ip.delay: '%env(APP_ADD_POST_REMOTE_IP_DELAY)%'
