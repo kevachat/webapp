@@ -39,7 +39,7 @@
                     {{ post.message | message_to_markdown | markdown_to_html }}
                     #}
                     <p>
-                        {{ post.message | trim | nl2br | url_to_html | mention_to_html }}
+                        {{ post.message | trim | nl2br }}
                     </p>
                 </li>
             {% endfor %}
