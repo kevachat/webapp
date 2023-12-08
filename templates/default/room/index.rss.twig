@@ -8,10 +8,10 @@
             <item>
                 <title>#{{ post.id }}</title>
                 <author>@{{ post.user }}</author>
-                <pubDate>{{ post.timestamp | date('D, d M Y h:i:s O') }}</pubDate>
+                <pubDate>{{ post.time | date('D, d M Y h:i:s O') }}</pubDate>
                 <guid>{{ url('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.id }}</guid>
                 <link>{{ url('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.id }}</link>
-                <description>{{ post.message }}</description>
+                <description>{{ post.message | striptags | markdown_to_html | striptags | trim }}</description>
             </item>
         {% endfor %}
     </channel>
