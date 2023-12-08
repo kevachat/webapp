@@ -71,7 +71,7 @@ main
     display: block;
     margin: 16px auto 0 auto;
     max-width: var(--container-max-width);
-    padding-bottom: 136px;
+    padding-bottom: 164px;
 }
 
 main > h2
