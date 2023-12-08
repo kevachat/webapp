@@ -34,13 +34,16 @@
                             </svg>
                         </span>
                     {% endif %}
-                    {# markdown filter enabled could deanon chat users by external image request, disabled
                     <br />
-                    {{ post.message | message_to_markdown | markdown_to_html }}
-                    #}
-                    <p>
-                        {{ post.message | trim | nl2br }}
-                    </p>
+                    {# apply markdown whitelist filters only to prevent ping from remote includes #}
+                    {{
+                        post.message | trim
+                                     | striptags
+                                     | markdown_to_html
+                                     | striptags
+                                     | message_to_markdown
+                                     | markdown_to_html
+                    }}
                 </li>
             {% endfor %}
         </ul>
