@@ -71,7 +71,7 @@ main
     display: block;
     margin: 16px auto 0 auto;
     max-width: var(--container-max-width);
-    padding-bottom: 115px;
+    padding-bottom: 136px;
 }
 
 main > h2
@@ -149,6 +149,7 @@ footer > form
     margin: 16px auto;
     max-width: var(--container-max-width);
     overflow: hidden;
+    padding: 0 4px;
     width: 100%;
 }
 
@@ -160,6 +161,11 @@ footer > form > textarea
     max-width: var(--container-max-width);
     padding: 4px;
     width: 100%;
+}
+
+footer > form > textarea:focus
+{
+    min-height: 100px;
 }
 
 footer > form > button
