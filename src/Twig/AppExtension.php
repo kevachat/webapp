@@ -53,20 +53,6 @@ class AppExtension extends AbstractExtension
                 ]
             ),
             new TwigFilter(
-                'url_to_html',
-                [
-                    $this,
-                    'urlToHtml'
-                ]
-            ),
-            new TwigFilter(
-                'mention_to_html',
-                [
-                    $this,
-                    'mentionToHtml'
-                ]
-            ),
-            new TwigFilter(
                 'keva_namespace_value',
                 [
                     $this,
@@ -180,28 +166,6 @@ class AppExtension extends AbstractExtension
         return preg_replace(
             '~@([A-z0-9]{64})~i',
             '[@$1](#$1)',
-            $text
-        );
-    }
-
-    public function urlToHtml(
-        string $text
-    ): string
-    {
-        return preg_replace(
-            '~(https?://(?:www\.)?[^\(\s\)]+)~i',
-            '<a href="$1">$1</a>',
-            $text
-        );
-    }
-
-    public function mentionToHtml(
-        string $text
-    ): string
-    {
-        return preg_replace(
-            '~@([A-z0-9]{64})~i',
-            '<a href="#$1">@$1</a>',
             $text
         );
     }
