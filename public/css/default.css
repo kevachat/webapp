@@ -149,7 +149,7 @@ footer > form
     margin: 16px auto;
     max-width: var(--container-max-width);
     overflow: hidden;
-    padding: 0 4px;
+    padding: 4px;
     width: 100%;
 }
 
