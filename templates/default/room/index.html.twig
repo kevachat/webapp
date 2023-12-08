@@ -36,13 +36,13 @@
                     {% endif %}
                     {# apply markdown whitelist filters only to prevent ping from remote includes #}
                     {{
-                        post.message | trim
-                                     | striptags
+                        post.message | striptags
                                      | markdown_to_html
                                      | striptags
                                      | message_to_markdown
-                                     | markdown_to_html
+                                     | trim
                                      | nl2br
+                                     | markdown_to_html
                     }}
                 </li>
             {% endfor %}
