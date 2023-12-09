@@ -642,10 +642,10 @@ class RoomController extends AbstractController
 
         foreach ((array) $client->kevaListNamespaces() as $value)
         {
-            $rooms[$value['namespaceId']] = $value['displayName'];
+            $rooms[$value['namespaceId']] = mb_strtolower($value['displayName']);
         }
 
-        if (in_array($name, $rooms))
+        if (in_array(mb_strtolower($name), $rooms))
         {
             return $this->redirectToRoute(
                 'room_list',
