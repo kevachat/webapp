@@ -512,17 +512,26 @@ class RoomController extends AbstractController
 
     private function _post(array $data): ?object
     {
-        if (false === preg_match('/^([\d]+)@(.*)$/', $data['key'], $matches))
+        // Validate key format allowed in settings
+        if (false === preg_match((string) $this->getParameter('app.add.post.key.regex'), $data['key'], $matches))
         {
             return null;
         }
 
+        // Timestamp required in key
         if (empty($matches[1]))
         {
             return null;
         }
 
+        // Username required in key
         if (empty($matches[2]))
+        {
+            return null;
+        }
+
+        // Validate value format allowed in settings
+        if (false === preg_match((string) $this->getParameter('app.add.post.value.regex'), $data['value']))
         {
             return null;
         }
