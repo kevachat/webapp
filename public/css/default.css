@@ -95,36 +95,32 @@ main ul
 
 main ul ul
 {
-    margin-bottom: 16px;
-    margin-left: 16px;
-    margin-top: 16px;
+    margin-left: 24px;
 }
 
-main ul > li
+main ul li
 {
-    margin: 8px 0;
-    padding: 8px 0;
+    border-top: 1px var(--color-default) solid;
     word-wrap: break-word;
-    border-bottom: 1px var(--color-default) solid;
 }
 
-main ul > li:last-child
+main ul li div
 {
-    border-bottom: none;
+    padding: 16px 0;
 }
 
-main ul > li > p
+main ul li p
 {
     padding: 8px 0;
 }
 
-main ul > li > p > br /* tmp solution for current twig filters implementation */
+main ul li p > br /* tmp solution for current twig filters implementation */
 {
     display: block;
     margin: 4px 0;
 }
 
-main ul li > span > svg
+main ul li span > svg
 {
     cursor: default;
     fill: var(--color-default);

@@ -103,15 +103,24 @@ class RoomController extends AbstractController
             // Require valid kevachat meta
             if ($data = $this->_post($pending))
             {
-                $feed[] =
+                // Detect parent post
+                preg_match('/^@([A-z0-9]{64})\s/i', $data->message, $mention);
+
+                $feed[$data->id] =
                 [
-                    'id'        => $data->id,
-                    'user'      => $data->user,
-                    'icon'      => $data->icon,
-                    'message'   => $data->message,
-                    'timestamp' => $data->time,
-                    'time'      => date('c', $data->time),
-                    'pending'   => true
+                    'id'      => $data->id,
+                    'user'    => $data->user,
+                    'icon'    => $data->icon,
+                    'time'    => $data->time,
+                    'parent'  => isset($mention[1]) ? $mention[1] : null,
+                    'message' => trim(
+                        preg_replace( // remove mention from folded message
+                            '/^@([A-z0-9]{64})\s/i',
+                            '',
+                            $data->message
+                        )
+                    ),
+                    'pending' => true
                 ];
             }
         }
@@ -128,15 +137,24 @@ class RoomController extends AbstractController
             // Require valid kevachat meta
             if ($data = $this->_post($post))
             {
-                $feed[] =
+                // Detect parent post
+                preg_match('/^@([A-z0-9]{64})\s/i', $data->message, $mention);
+
+                $feed[$data->id] =
                 [
-                    'id'        => $data->id,
-                    'user'      => $data->user,
-                    'icon'      => $data->icon,
-                    'message'   => $data->message,
-                    'timestamp' => $data->time,
-                    'time'      => date('c', $data->time),
-                    'pending'   => false
+                    'id'      => $data->id,
+                    'user'    => $data->user,
+                    'icon'    => $data->icon,
+                    'time'    => $data->time,
+                    'parent'  => isset($mention[1]) ? $mention[1] : null,
+                    'message' => trim(
+                        preg_replace( // remove mention from folded message
+                            '/^@([A-z0-9]{64})\s/i',
+                            '',
+                            $data->message
+                        )
+                    ),
+                    'pending' => false
                 ];
             }
         }
@@ -149,6 +167,14 @@ class RoomController extends AbstractController
             ),
             SORT_DESC,
             $feed
+        );
+
+        // Init folding &data pool
+        $fold = $feed;
+
+        // Build threading tree
+        $tree = $this->_tree(
+            $fold
         );
 
         // RSS
@@ -176,6 +202,7 @@ class RoomController extends AbstractController
             'default/room/index.html.twig',
             [
                 'feed'    => $feed,
+                'tree'    => $tree,
                 'request' => $request
             ]
         );
@@ -439,5 +466,37 @@ class RoomController extends AbstractController
         );
 
         return $identicon->getImageDataUri('webp');
+    }
+
+    private function _tree(
+        array &$feed,
+        ?string $parent = null
+    ): array
+    {
+        $tree = [];
+
+        foreach ($feed as $post)
+        {
+            if ($post['parent'] == $parent)
+            {
+                $children = $this->_tree(
+                    $feed,
+                    $post['id']
+                );
+
+                if ($children)
+                {
+                    $post['tree'] = $children;
+                }
+
+                $tree[$post['id']] = $post;
+
+                unset(
+                    $feed[$post['id']]
+                );
+            }
+        }
+
+        return $tree;
     }
 }

@@ -1,3 +1,49 @@
+{% macro recursive_post_tree(namespace, tree) %}
+    {% import _self as self %}
+    {% if tree | length %}
+        <ul>
+            {% for post in tree %}
+                <li>
+                    <div>
+                        <a name="{{ post.id }}"></a>
+                        {% if post.icon %}
+                            <img src="{{ post.icon }}" alt="icon" />
+                        {% else %}
+                            <strong>
+                                @{{ 'anon' | trans }}
+                            </strong>
+                        {% endif %}
+                        &bull;
+                        <a rel="nofollow" href="{{ path('room_namespace', { namespace : namespace }) }}#{{ post.id }}" title="{{ post.time | date('c') }}">{{ post.time | format_ago }}</a>
+                        &bull;
+                        <a rel="nofollow" href="{{ path('room_namespace', { namespace : namespace, txid : post.id }) }}#{{ post.id }}">{{ 'reply' | trans }}</a>
+                        {% if post.pending %}
+                            <span title="{{ 'pending in pool' | trans }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                                </svg>
+                            </span>
+                        {% endif %}
+                        {# apply markdown whitelist filters only to prevent ping from remote includes #}
+                        {{
+                            post.message | striptags
+                                         | markdown_to_html
+                                         | striptags
+                                         | message_to_markdown
+                                         | trim
+                                         | nl2br
+                                         | markdown_to_html
+                        }}
+                    </div>
+                    {% if post.tree | length %}
+                        {{ self.recursive_post_tree(namespace, post.tree) }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+{% from _self import recursive_post_tree %}
 {% extends 'default/layout.html.twig' %}
 {% block head_title_content %}{{ request.get('namespace') | keva_namespace_value }} - {{ 'KevaChat' | trans }}{% endblock %}
 {% block main_content %}
@@ -11,46 +57,14 @@
             )
         )
     }}
-    {% if feed %}
-        <ul>
-            {% for post in feed %}
-                <li>
-                    <a name="{{ post.id }}"></a>
-                    {% if post.icon %}
-                        <img src="{{ post.icon }}" alt="icon" />
-                    {% else %}
-                        <strong>
-                            @{{ 'anon' | trans }}
-                        </strong>
-                    {% endif %}
-                    &bull;
-                    <a rel="nofollow" href="{{ path('room_namespace', { namespace : request.get('namespace') }) }}#{{ post.id }}" title="{{ post.time }}">{{ post.timestamp | format_ago }}</a>
-                    &bull;
-                    <a rel="nofollow" href="{{ path('room_namespace', { namespace : request.get('namespace'), txid : post.id }) }}#{{ post.id }}">{{ 'reply' | trans }}</a>
-                    {% if post.pending %}
-                        <span title="{{ 'pending in pool' | trans }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 16 16">
-                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-                            </svg>
-                        </span>
-                    {% endif %}
-                    {# apply markdown whitelist filters only to prevent ping from remote includes #}
-                    {{
-                        post.message | striptags
-                                     | markdown_to_html
-                                     | striptags
-                                     | message_to_markdown
-                                     | trim
-                                     | nl2br
-                                     | markdown_to_html
-                    }}
-                </li>
-            {% endfor %}
-        </ul>
+    {% if tree %}
+        {{ recursive_post_tree(request.get('namespace'), tree) }}
     {% else %}
         <ul>
             <li>
-                {{ 'room does not contain kevachat messages' | trans }}
+                <div>
+                    {{ 'room does not contain kevachat messages' | trans }}
+                </div>
             </li>
         </ul>
     {% endif %}
