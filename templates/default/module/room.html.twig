@@ -1,0 +1,7 @@
+  <form name="room" action="{{ path('room_add') }}" method="post">
+      {% if error %}
+          <output name="error" for="form-room-name">{{ error }}</output>
+      {% endif %}
+      <input type="text" name="name" id="form-room-name" value="{{ name }}" placeholder="{{ 'enter new room name...' | trans }}" />
+      <button type="submit">{{ 'add' | trans }}</button>
+  </form>

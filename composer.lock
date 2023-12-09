@@ -132,16 +132,16 @@
         },
         {
             "name": "kevachat/kevacoin",
-            "version": "1.4.2",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kevachat/kevacoin-php.git",
-                "reference": "b6e5416c58d379fd197bbd6d1039a30042ea0481"
+                "reference": "44608e688f69ff1545f2a3103c4504bfb3294831"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kevachat/kevacoin-php/zipball/b6e5416c58d379fd197bbd6d1039a30042ea0481",
-                "reference": "b6e5416c58d379fd197bbd6d1039a30042ea0481",
+                "url": "https://api.github.com/repos/kevachat/kevacoin-php/zipball/44608e688f69ff1545f2a3103c4504bfb3294831",
+                "reference": "44608e688f69ff1545f2a3103c4504bfb3294831",
                 "shasum": ""
             },
             "type": "library",
@@ -156,9 +156,9 @@
             ],
             "support": {
                 "issues": "https://github.com/kevachat/kevacoin-php/issues",
-                "source": "https://github.com/kevachat/kevacoin-php/tree/1.4.2"
+                "source": "https://github.com/kevachat/kevacoin-php/tree/1.5.0"
             },
-            "time": "2023-12-06T09:20:08+00:00"
+            "time": "2023-12-09T18:55:04+00:00"
         },
         {
             "name": "league/commonmark",

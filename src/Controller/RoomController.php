@@ -95,9 +95,9 @@ class RoomController extends AbstractController
         array_multisort(
             array_column(
                 $list,
-                'name'
+                'total'
             ),
-            SORT_ASC,
+            SORT_DESC,
             $list
         );
 
@@ -165,7 +165,7 @@ class RoomController extends AbstractController
         $feed = [];
 
         // Get pending paradise
-        foreach ((array) $client->kevaPending() as $pending)
+        foreach ((array) $client->kevaPending() as $pending) // @TODO relate to this room
         {
             // Ignore pending posts from other rooms
             if ($pending['namespace'] !== $request->get('namespace'))
@@ -347,7 +347,7 @@ class RoomController extends AbstractController
             $this->getParameter('app.kevacoin.password')
         );
 
-        // Check namespace defined in config
+        // Check namespace available on this wallet
         $rooms = [];
 
         foreach ((array) $client->kevaListNamespaces() as $value)
@@ -373,7 +373,7 @@ class RoomController extends AbstractController
             // Ignore this rule for is moderators
             !in_array(
                 $request->getClientIp(),
-                (array) explode('|', $this->getParameter('app.add.post.remote.ip.moderators'))
+                (array) explode('|', $this->getParameter('app.moderator.remote.ip'))
             ) &&
 
             // Check namespace writable or user is moderator
@@ -401,7 +401,10 @@ class RoomController extends AbstractController
                 [
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
-                    'error'     => $translator->trans('Access denied for this IP!')
+                    'error' => sprintf(
+                        $translator->trans('Access denied for host %s!'),
+                        $request->getClientIp()
+                    )
                 ]
             );
         }
@@ -414,7 +417,10 @@ class RoomController extends AbstractController
                 [
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
-                    'error'     => $translator->trans('Access not allowed for this IP!')
+                    'error' => sprintf(
+                        $translator->trans('Access restricted for host %s!'),
+                        $request->getClientIp()
+                    )
                 ]
             );
         }
@@ -445,7 +451,7 @@ class RoomController extends AbstractController
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
                     'error'     => sprintf(
-                        $translator->trans('Please wait for %s seconds before post new message!'),
+                        $translator->trans('Please wait %s seconds before post new message!'),
                         (int) $this->getParameter('app.add.post.remote.ip.delay') - (time() - $delay)
                     )
                 ]
@@ -462,7 +468,7 @@ class RoomController extends AbstractController
                     'message'   => $request->get('message'),
                     'error'     => sprintf(
                         $translator->trans('Insufficient funds, wallet: %s'),
-                        $this->getParameter('app.kevacoin.mine.address')
+                        $this->getParameter('app.kevacoin.boost.address')
                     )
                 ]
             );
@@ -506,6 +512,187 @@ class RoomController extends AbstractController
                 'namespace' => $request->get('namespace'),
                 'message'   => $request->get('message'),
                 'error'     => $translator->trans('Internal error! Please feedback')
+            ]
+        );
+    }
+
+    #[Route(
+        '/room/add',
+        name: 'room_add',
+        methods:
+        [
+            'POST'
+        ]
+    )]
+    public function add(
+        Request $request,
+        TranslatorInterface $translator
+    ): Response
+    {
+        // Check maintenance mode disabled
+        if ($this->getParameter('app.maintenance'))
+        {
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'namespace' => $request->get('namespace'),
+                    'message'   => $request->get('message'),
+                    'error'     => $this->getParameter('app.maintenance')
+                ]
+            );
+        }
+
+        // Connect memcached
+        $memcached = new \Memcached();
+        $memcached->addServer(
+            $this->getParameter('app.memcached.host'),
+            $this->getParameter('app.memcached.port')
+        );
+
+        $memory = md5(
+            sprintf(
+                '%s.RoomController::add:add.room.remote.ip.delay:%s',
+                __DIR__,
+                $request->getClientIp(),
+            ),
+        );
+
+        // Connect kevacoin
+        $client = new \Kevachat\Kevacoin\Client(
+            $this->getParameter('app.kevacoin.protocol'),
+            $this->getParameter('app.kevacoin.host'),
+            $this->getParameter('app.kevacoin.port'),
+            $this->getParameter('app.kevacoin.username'),
+            $this->getParameter('app.kevacoin.password')
+        );
+
+        // Trim extra spaces from room name
+        $name = trim(
+            $request->get('name')
+        );
+
+        // Validate room name regex
+        if (!preg_match($this->getParameter('app.add.room.keva.ns.value.regex'), $name))
+        {
+            return $this->redirectToRoute(
+                'room_list',
+                [
+                    'name'  => $name,
+                    'error' => sprintf(
+                        $translator->trans('Room name does not match node requirements: %s'),
+                        $this->getParameter('app.add.room.keva.ns.value.regex')
+                    )
+                ]
+            );
+        }
+
+        // Check room name not added before
+        $rooms = [];
+
+        foreach ((array) $client->kevaListNamespaces() as $value)
+        {
+            $rooms[$value['namespaceId']] = $value['displayName'];
+        }
+
+        if (in_array($name, $rooms))
+        {
+            return $this->redirectToRoute(
+                'room_list',
+                [
+                    'name'  => $name,
+                    'error' => $translator->trans('Room with same name already exists on this node!')
+                ]
+            );
+        }
+
+        // Deny requests from banned remote hosts
+        if (in_array($request->getClientIp(), (array) explode('|', $this->getParameter('app.add.room.remote.ip.denied'))))
+        {
+            return $this->redirectToRoute(
+                'room_list',
+                [
+                    'name'  => $name,
+                    'error' => sprintf(
+                        $translator->trans('Access denied for host %s!'),
+                        $request->getClientIp()
+                    )
+                ]
+            );
+        }
+
+        // Validate remote IP regex
+        if (!preg_match($this->getParameter('app.add.room.remote.ip.regex'), $request->getClientIp()))
+        {
+            return $this->redirectToRoute(
+                'room_list',
+                [
+                    'name'  => $name,
+                    'error' => sprintf(
+                        $translator->trans('Access restricted for host %s!'),
+                        $request->getClientIp()
+                    )
+                ]
+            );
+        }
+
+        // Validate remote IP limits
+        if ($delay = (int) $memcached->get($memory))
+        {
+            // Error
+            return $this->redirectToRoute(
+                'room_list',
+                [
+                    'name'  => $name,
+                    'error' => sprintf(
+                        $translator->trans('Please wait for %s seconds before add new room!'),
+                        (int) $this->getParameter('app.add.room.remote.ip.delay') - (time() - $delay)
+                    )
+                ]
+            );
+        }
+
+        // Validate funds available yet
+        if (1 > $client->getBalance())
+        {
+            return $this->redirectToRoute(
+                'room_list',
+                [
+                    'name'  => $name,
+                    'error' => sprintf(
+                        $translator->trans('Insufficient funds, wallet: %s'),
+                        $this->getParameter('app.kevacoin.boost.address')
+                    )
+                ]
+            );
+        }
+
+        // Send message to DHT
+        if ($namespace = $client->kevaNamespace($name))
+        {
+            // Register event time
+            $memcached->set(
+                $memory,
+                time(),
+                (int) $this->getParameter('app.add.room.remote.ip.delay') // auto remove on cache expire
+            );
+
+            // Redirect to new room
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'namespace' => $namespace['namespaceId'],
+                    'error'     => null,
+                    'message'   => null
+                ]
+            );
+        }
+
+        // Something went wrong, return error message
+        return $this->redirectToRoute(
+            'room_list',
+            [
+                'name'  => $name,
+                'error' => $translator->trans('Internal error! Please feedback')
             ]
         );
     }

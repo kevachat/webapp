@@ -155,6 +155,7 @@ footer > form
     width: 100%;
 }
 
+footer > form > input[type="text"],
 footer > form > textarea
 {
     box-sizing: border-box;

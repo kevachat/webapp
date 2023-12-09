@@ -44,3 +44,15 @@
         </ul>
     {% endif %}
 {% endblock %}
+{% block footer_content %}
+    {{
+        render(
+            controller(
+                'App\\Controller\\ModuleController::room',
+                {
+                    request: request
+                }
+            )
+        )
+    }}
+{% endblock %}

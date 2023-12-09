@@ -99,18 +99,27 @@ class ModuleController extends AbstractController
         Request $request
     ): Response
     {
-        $client = new \Kevachat\Kevacoin\Client(
-            $this->getParameter('app.kevacoin.protocol'),
-            $this->getParameter('app.kevacoin.host'),
-            $this->getParameter('app.kevacoin.port'),
-            $this->getParameter('app.kevacoin.username'),
-            $this->getParameter('app.kevacoin.password')
-        );
+        // Create rooms list
+        $list = [];
 
+        foreach ((array) explode('|', $this->getParameter('app.kevacoin.room.namespaces.pinned')) as $room)
+        {
+            $list[] = $room;
+        }
+
+        // Append custom valid namespace to the rooms list menu
+        if (!in_array($request->get('namespace'), $list) && preg_match('/^[A-z0-9]{34}$/', $request->get('namespace')))
+        {
+            $list[] = $request->get('namespace');
+        }
+
+        // Render the template
         return $this->render(
             'default/module/rooms.html.twig',
             [
-                'list' => (array) explode('|', $this->getParameter('app.kevacoin.room.namespaces.pinned')),
+                'list' => array_unique(
+                    $list
+                ),
                 'form' =>
                 [
                     'namespace' =>
@@ -175,6 +184,19 @@ class ModuleController extends AbstractController
                     &&
                     !$this->getParameter('app.maintenance')
                 )
+            ]
+        );
+    }
+
+    public function room(
+        Request $request
+    ): Response
+    {
+        return $this->render(
+            'default/module/room.html.twig',
+            [
+                'name'  => $request->get('name'),
+                'error' => $request->get('error')
             ]
         );
     }
