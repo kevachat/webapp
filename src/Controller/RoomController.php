@@ -581,6 +581,15 @@ class RoomController extends AbstractController
             );
         }
 
+        // Connect kevacoin
+        $client = new \Kevachat\Kevacoin\Client(
+            $this->getParameter('app.kevacoin.protocol'),
+            $this->getParameter('app.kevacoin.host'),
+            $this->getParameter('app.kevacoin.port'),
+            $this->getParameter('app.kevacoin.username'),
+            $this->getParameter('app.kevacoin.password')
+        );
+
         // Connect memcached
         $memcached = new \Memcached();
         $memcached->addServer(
@@ -596,15 +605,6 @@ class RoomController extends AbstractController
             ),
         );
 
-        // Connect kevacoin
-        $client = new \Kevachat\Kevacoin\Client(
-            $this->getParameter('app.kevacoin.protocol'),
-            $this->getParameter('app.kevacoin.host'),
-            $this->getParameter('app.kevacoin.port'),
-            $this->getParameter('app.kevacoin.username'),
-            $this->getParameter('app.kevacoin.password')
-        );
-
         // Trim extra spaces from room name
         $name = trim(
             $request->get('name')
@@ -614,7 +614,7 @@ class RoomController extends AbstractController
         if (mb_strlen($name) < 1 || mb_strlen($name) > 520)
         {
             return $this->redirectToRoute(
-                'room_namespace',
+                'room_list',
                 [
                     'name'  => $name,
                     'error'     => $translator->trans('Name length out of KevaCoin protocol limits')
