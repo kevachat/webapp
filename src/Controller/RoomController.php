@@ -348,6 +348,7 @@ class RoomController extends AbstractController
         );
 
         // Check namespace available on this wallet
+        /* @TODO disabled because of namespace hidden in kevaListNamespaces on pending transactions available
         $rooms = [];
 
         foreach ((array) $client->kevaListNamespaces() as $value)
@@ -366,6 +367,7 @@ class RoomController extends AbstractController
                 ]
             );
         }
+        */
 
         // Validate access to the room namespace
         if
