@@ -22,9 +22,9 @@
     &bull;
     <h2>
         {% if form.namespace.value %}
-            <a href="{{ path('room_list') }}">{{ 'all' | trans }}</a>
+            <a href="{{ path('room_list') }}">{{ 'more...' | trans }}</a>
         {% else %}
-            {{ 'all' | trans }}
+            {{ 'more...' | trans }}
         {% endif %}
     </h2>
     <sup>
