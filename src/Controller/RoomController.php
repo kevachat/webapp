@@ -52,54 +52,78 @@ class RoomController extends AbstractController
             $this->getParameter('app.kevacoin.password')
         );
 
+        // Connect memcached
+        $memcached = new \Memcached();
+        $memcached->addServer(
+            $this->getParameter('app.memcached.host'),
+            $this->getParameter('app.memcached.port')
+        );
+
+        $memory = md5(
+            sprintf(
+                '%s.RoomController::list:rooms',
+                __DIR__
+            ),
+        );
+
         // Get room list
         $list = [];
 
-        foreach ((array) $client->kevaListNamespaces() as $value)
+        if (!$list = $memcached->get($memory))
         {
-            // Calculate room totals
-            $total = 0;
-
-            foreach ((array) $client->kevaFilter($value['namespaceId']) as $post)
+            foreach ((array) $client->kevaListNamespaces() as $value)
             {
-                // Skip values with meta keys
-                if (false !== stripos($post['key'], '_KEVA_'))
+                // Calculate room totals
+                $total = 0;
+
+                foreach ((array) $client->kevaFilter($value['namespaceId']) as $post)
                 {
-                    continue;
+                    // Skip values with meta keys
+                    if (false !== stripos($post['key'], '_KEVA_'))
+                    {
+                        continue;
+                    }
+
+                    // Require valid kevachat meta
+                    if ($this->_post($post))
+                    {
+                        $total++;
+                    }
                 }
 
-                // Require valid kevachat meta
-                if ($this->_post($post))
-                {
-                    $total++;
-                }
+                // Add to room list
+                $list[] =
+                [
+                    'namespace' => $value['namespaceId'],
+                    'name'      => $value['displayName'],
+                    'total'     => $total,
+                    'pinned'    => in_array(
+                        $value['namespaceId'],
+                        (array) explode(
+                            '|',
+                            $this->getParameter('app.kevacoin.room.namespaces.pinned')
+                        )
+                    )
+                ];
             }
 
-            // Add to room list
-            $list[] =
-            [
-                'namespace' => $value['namespaceId'],
-                'name'      => $value['displayName'],
-                'total'     => $total,
-                'pinned'    => in_array(
-                    $value['namespaceId'],
-                    (array) explode(
-                        '|',
-                        $this->getParameter('app.kevacoin.room.namespaces.pinned')
-                    )
-                )
-            ];
-        }
+            // Sort by name
+            array_multisort(
+                array_column(
+                    $list,
+                    'total'
+                ),
+                SORT_DESC,
+                $list
+            );
 
-        // Sort by name
-        array_multisort(
-            array_column(
+            // Cache rooms to memcached as kevaListNamespaces hides rooms with pending posts
+            $memcached->set(
+                $memory,
                 $list,
-                'total'
-            ),
-            SORT_DESC,
-            $list
-        );
+                (int) $this->getParameter('app.memcached.timeout')
+            );
+        }
 
         // RSS
         if ('rss' === $request->get('feed'))
@@ -701,6 +725,16 @@ class RoomController extends AbstractController
                 $memory,
                 time(),
                 (int) $this->getParameter('app.add.room.remote.ip.delay') // auto remove on cache expire
+            );
+
+            // Reset rooms list cache
+            $memcached->delete(
+                md5(
+                    sprintf(
+                        '%s.RoomController::list:rooms',
+                        __DIR__
+                    ),
+                )
             );
 
             // Redirect to new room
