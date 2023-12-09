@@ -127,7 +127,7 @@ main ul li span > svg
     float: right;
 }
 
-main > sup > a > svg
+main a > svg
 {
     fill: var(--color-warning);
 }

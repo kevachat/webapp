@@ -47,8 +47,8 @@ Application package contain settings preset, just few steps required to launch:
 * Copy `rpcuser` to `env`.`APP_KEVACOIN_USERNAME` and `rpcpassword` to `env`.`APP_KEVACOIN_PASSWORD`
 * Generate new address using CLI `kevacoin-cli getnewaddress` and copy to `env`.`APP_KEVACOIN_BOOST_ADDRESS`
 * Send few coins to this address and wait for new block to continue
-* Create namespace for the chat room with `kevacoin-cli keva_namespace "sandbox"` and add it hash to `env`.`APP_KEVACOIN_ROOM_NAMESPACES`
-* Also Provide at least one namespace for default chat room to `env`.`APP_KEVACOIN_ROOM_NAMESPACE_DEFAULT` (for homepage redirects)
+* Create at least one room namespace with Web UI or CLI `kevacoin-cli keva_namespace "sandbox"`
+* Provide at least one namespace for default chat room to `env`.`APP_KEVACOIN_ROOM_NAMESPACE_DEFAULT` (for homepage redirects)
 
 ## Contribution
 

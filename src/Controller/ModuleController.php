@@ -95,7 +95,7 @@ class ModuleController extends AbstractController
         );
     }
 
-    public function room(
+    public function rooms(
         Request $request
     ): Response
     {
@@ -108,9 +108,9 @@ class ModuleController extends AbstractController
         );
 
         return $this->render(
-            'default/module/room.html.twig',
+            'default/module/rooms.html.twig',
             [
-                'list' => (array) explode('|', $this->getParameter('app.kevacoin.room.namespaces')),
+                'list' => (array) explode('|', $this->getParameter('app.kevacoin.room.namespaces.pinned')),
                 'form' =>
                 [
                     'namespace' =>
@@ -168,11 +168,6 @@ class ModuleController extends AbstractController
 
                 'enabled'   =>
                 (
-                    in_array(
-                        $request->get('namespace'),
-                        explode('|', $this->getParameter('app.kevacoin.room.namespaces'))
-                    )
-                    &&
                     !in_array(
                         $request->get('namespace'),
                         explode('|', $this->getParameter('app.kevacoin.room.namespaces.readonly'))

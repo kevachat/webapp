@@ -32,6 +32,106 @@ class RoomController extends AbstractController
     }
 
     #[Route(
+        '/room/list',
+        name: 'room_list',
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function list(
+        ?Request $request
+    ): Response
+    {
+        // Connect kevacoin
+        $client = new \Kevachat\Kevacoin\Client(
+            $this->getParameter('app.kevacoin.protocol'),
+            $this->getParameter('app.kevacoin.host'),
+            $this->getParameter('app.kevacoin.port'),
+            $this->getParameter('app.kevacoin.username'),
+            $this->getParameter('app.kevacoin.password')
+        );
+
+        // Get room list
+        $list = [];
+
+        foreach ((array) $client->kevaListNamespaces() as $value)
+        {
+            // Calculate room totals
+            $total = 0;
+
+            foreach ((array) $client->kevaFilter($value['namespaceId']) as $post)
+            {
+                // Skip values with meta keys
+                if (false !== stripos($post['key'], '_KEVA_'))
+                {
+                    continue;
+                }
+
+                // Require valid kevachat meta
+                if ($this->_post($post))
+                {
+                    $total++;
+                }
+            }
+
+            // Add to room list
+            $list[] =
+            [
+                'namespace' => $value['namespaceId'],
+                'name'      => $value['displayName'],
+                'total'     => $total,
+                'pinned'    => in_array(
+                    $value['namespaceId'],
+                    (array) explode(
+                        '|',
+                        $this->getParameter('app.kevacoin.room.namespaces.pinned')
+                    )
+                )
+            ];
+        }
+
+        // Sort by name
+        array_multisort(
+            array_column(
+                $list,
+                'name'
+            ),
+            SORT_ASC,
+            $list
+        );
+
+        // RSS
+        if ('rss' === $request->get('feed'))
+        {
+            $response = new Response();
+
+            $response->headers->set(
+                'Content-Type',
+                'text/xml'
+            );
+
+            return $this->render(
+                'default/room/list.rss.twig',
+                [
+                    'list'    => $list,
+                    'request' => $request
+                ],
+                $response
+            );
+        }
+
+        // HTML
+        return $this->render(
+            'default/room/list.html.twig',
+            [
+                'list'    => $list,
+                'request' => $request
+            ]
+        );
+    }
+
+    #[Route(
         '/room/{namespace}/{txid}',
         name: 'room_namespace',
         requirements:
@@ -60,21 +160,6 @@ class RoomController extends AbstractController
             $this->getParameter('app.kevacoin.username'),
             $this->getParameter('app.kevacoin.password')
         );
-
-        // Check for external rooms reading allowed in config
-        if (
-            !in_array(
-                $request->get('namespace'),
-                (array) explode('|', $this->getParameter('app.kevacoin.room.namespaces'))
-            )
-            &&
-            $this->getParameter('app.kevacoin.room.namespaces.external')
-        ) {
-            // @TODO process to error page instead of redirect to default room
-            return $this->redirectToRoute(
-                'room_index'
-            );
-        }
 
         // Get room feed
         $feed = [];
@@ -263,14 +348,21 @@ class RoomController extends AbstractController
         );
 
         // Check namespace defined in config
-        if (!in_array($request->get('namespace'), (array) explode('|', $this->getParameter('app.kevacoin.room.namespaces'))))
+        $rooms = [];
+
+        foreach ((array) $client->kevaListNamespaces() as $value)
+        {
+            $rooms[] = $value['namespaceId'];
+        }
+
+        if (!in_array($request->get('namespace'), $rooms))
         {
             return $this->redirectToRoute(
                 'room_namespace',
                 [
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
-                    'error'     => $translator->trans('Namespace not listed in settings!')
+                    'error'     => $translator->trans('Namespace not not found on this node!')
                 ]
             );
         }
