@@ -184,6 +184,12 @@ class AppExtension extends AbstractExtension
         string $namespace
     ): string
     {
+        // Validate namespace supported to continue
+        if (!preg_match('/^[A-z0-9]{34}$/', $namespace))
+        {
+            return $namespace;
+        }
+
         // Connect kevacoin
         $client = new \Kevachat\Kevacoin\Client(
             $this->container->getParameter('app.kevacoin.protocol'),
