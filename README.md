@@ -1,6 +1,6 @@
-# KevaChat Web Application
+# KevaChat - Decentralized Chat in Blockchain
 
-KevaChat is distributed chat platform for open, uncensored and privacy respectable communication with permanent data storage in blockchain.
+KevaChat Web Application is distributed chat platform for open, uncensored and privacy respectable communication with permanent data storage in blockchain.
 
 ![KevaChat](https://github.com/kevachat/webapp/assets/108541346/9b286719-eafe-443f-a6e3-4b4927edde96)
 
