@@ -136,7 +136,7 @@ class RoomController extends AbstractController
         name: 'room_namespace',
         requirements:
         [
-            'namespace' => '^[A-z0-9]{34}$',
+            'namespace' => '^N[A-z0-9]{33}$',
             'txid' => '^[A-z0-9]{64}$',
         ],
         defaults:
@@ -298,7 +298,7 @@ class RoomController extends AbstractController
         name: 'room_post',
         requirements:
         [
-            'namespace' => '^[A-z0-9]{34}$',
+            'namespace' => '^N[A-z0-9]{33}$',
         ],
         methods:
         [

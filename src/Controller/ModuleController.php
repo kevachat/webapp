@@ -108,7 +108,7 @@ class ModuleController extends AbstractController
         }
 
         // Append custom valid namespace to the rooms list menu
-        if (!in_array($request->get('namespace'), $list) && preg_match('/^[A-z0-9]{34}$/', $request->get('namespace')))
+        if (!in_array($request->get('namespace'), $list) && preg_match('/^N[A-z0-9]{33}$/', $request->get('namespace')))
         {
             $list[] = $request->get('namespace');
         }

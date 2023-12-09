@@ -185,7 +185,7 @@ class AppExtension extends AbstractExtension
     ): string
     {
         // Validate namespace supported to continue
-        if (!preg_match('/^[A-z0-9]{34}$/', $namespace))
+        if (!preg_match('/^N[A-z0-9]{33}$/', $namespace))
         {
             return $namespace;
         }
