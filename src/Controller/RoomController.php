@@ -362,7 +362,7 @@ class RoomController extends AbstractController
                 [
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
-                    'error'     => $translator->trans('Namespace not not found on this node!')
+                    'error'     => $translator->trans('Namespace not found on this node!')
                 ]
             );
         }
