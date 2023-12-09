@@ -427,6 +427,19 @@ class RoomController extends AbstractController
             );
         }
 
+        // Validate kevacoin value requirements
+        if (mb_strlen($request->get('message')) < 1 || mb_strlen($request->get('message')) > 3072)
+        {
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'namespace' => $request->get('namespace'),
+                    'message'   => $request->get('message'),
+                    'error'     => $translator->trans('Message length out of KevaCoin protocol limits')
+                ]
+            );
+        }
+
         // Validate message regex
         if (!preg_match($this->getParameter('app.add.post.value.regex'), $request->get('message')))
         {
@@ -572,6 +585,18 @@ class RoomController extends AbstractController
         $name = trim(
             $request->get('name')
         );
+
+        // Validate kevacoin key requirements
+        if (mb_strlen($name) < 1 || mb_strlen($name) > 520)
+        {
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'name'  => $name,
+                    'error'     => $translator->trans('Name length out of KevaCoin protocol limits')
+                ]
+            );
+        }
 
         // Validate room name regex
         if (!preg_match($this->getParameter('app.add.room.keva.ns.value.regex'), $name))
