@@ -53,6 +53,13 @@ class AppExtension extends AbstractExtension
                 ]
             ),
             new TwigFilter(
+                'namespace_to_markdown',
+                [
+                    $this,
+                    'namespaceToMarkdown'
+                ]
+            ),
+            new TwigFilter(
                 'keva_namespace_value',
                 [
                     $this,
@@ -145,6 +152,10 @@ class AppExtension extends AbstractExtension
             $text
         );
 
+        $text = $this->namespaceToMarkdown(
+            $text
+        );
+
         return $text;
     }
 
@@ -166,6 +177,17 @@ class AppExtension extends AbstractExtension
         return preg_replace(
             '~@([A-z0-9]{64})~i',
             '[@$1](#$1)',
+            $text
+        );
+    }
+
+    public function namespaceToMarkdown(
+        string $text
+    ): string
+    {
+        return preg_replace(
+            '~(N[A-z0-9]{33})~i',
+            '[$1]($1)',
             $text
         );
     }
