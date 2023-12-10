@@ -44,7 +44,7 @@ header
     display: block;
     left: 0;
     margin: 0 auto;
-    max-width: var(--container-max-width);
+    max-width: calc(var(--container-max-width) + 2px);
     padding-top: 16px;
     position: fixed;
     right: 0;
