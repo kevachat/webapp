@@ -47,16 +47,6 @@
 {% extends 'default/layout.html.twig' %}
 {% block head_title_content %}{{ request.get('namespace') | keva_namespace_value }} - {{ 'KevaChat' | trans }}{% endblock %}
 {% block main_content %}
-    {{
-        render(
-            controller(
-                'App\\Controller\\ModuleController::rooms',
-                {
-                    request: request
-                }
-            )
-        )
-    }}
     {% if tree %}
         {{ recursive_post_tree(request.get('namespace'), tree) }}
     {% else %}

@@ -28,6 +28,18 @@
                     )
                 }}
             {% endblock %}
+            {% block header_module_rooms %}
+                {{
+                    render(
+                        controller(
+                            'App\\Controller\\ModuleController::rooms',
+                            {
+                                request: request
+                            }
+                        )
+                    )
+                }}
+            {% endblock %}
         </header>
         <main>
             {% block main_content %}{% endblock %}

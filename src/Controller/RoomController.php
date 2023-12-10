@@ -273,7 +273,7 @@ class RoomController extends AbstractController
                 $feed,
                 'time'
             ),
-            SORT_DESC,
+            SORT_ASC,
             $feed
         );
 

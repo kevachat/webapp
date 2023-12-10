@@ -40,9 +40,23 @@ body
 
 header
 {
-    max-width: var(--container-max-width);
-    margin: 16px auto;
+    background-color: Canvas;
     display: block;
+    left: 0;
+    margin: 0 auto;
+    max-width: var(--container-max-width);
+    padding-top: 16px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 2;
+}
+
+header > h2
+{
+    display: inline-block;
+    font-size: 12px;
+    margin: 16px 0;
 }
 
 header > strong
@@ -66,26 +80,20 @@ header > div > sub > svg
     fill: var(--color-error);
 }
 
+header > form > input[type="text"]
+{
+    box-sizing: border-box;
+    padding: 4px;
+    width: 100%;
+}
+
 main
 {
     display: block;
     margin: 16px auto 0 auto;
     max-width: var(--container-max-width);
+    padding-top: 124px;
     padding-bottom: 164px;
-}
-
-main > h2
-{
-    display: inline-block;
-    font-size: 12px;
-    margin: 16px 0;
-}
-
-main > form > input[type="text"]
-{
-    box-sizing: border-box;
-    padding: 4px;
-    width: 100%;
 }
 
 main ul
@@ -125,11 +133,6 @@ main ul li span > svg
     cursor: default;
     fill: var(--color-default);
     float: right;
-}
-
-main a > svg
-{
-    fill: var(--color-warning);
 }
 
 footer
