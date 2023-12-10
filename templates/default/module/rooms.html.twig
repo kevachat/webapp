@@ -8,7 +8,7 @@
             {% if namespace == form.namespace.value %}
                 {{ namespace | keva_namespace_value }}
             {% else %}
-                <a href="{{ path('room_namespace', { namespace : namespace }) }}#latest">{{ namespace | keva_namespace_value }}</a>
+                <a href="{{ path('room_namespace', { namespace : namespace, _fragment : 'latest' }) }}">{{ namespace | keva_namespace_value }}</a>
             {% endif %}
         </h2>
         <sup>
