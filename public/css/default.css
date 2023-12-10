@@ -41,6 +41,7 @@ body
 header
 {
     background-color: Canvas;
+    border-bottom: 1px var(--color-default) solid;
     display: block;
     left: 0;
     margin: 0 auto;
@@ -112,6 +113,11 @@ main ul li
     word-wrap: break-word;
 }
 
+main > ul > li:first-child
+{
+    border-top: 1px transparent solid;
+}
+
 main ul li div
 {
     padding: 16px 0;
@@ -121,7 +127,7 @@ main ul li div a[name]
 {
     display: block;
     position: relative;
-    top: -168px;
+    top: -160px;
     visibility: hidden;
 }
 
