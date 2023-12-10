@@ -95,7 +95,6 @@ class RoomController extends AbstractController
                 $list[] =
                 [
                     'namespace' => $value['namespaceId'],
-                    'name'      => $value['displayName'],
                     'total'     => $total,
                     'pinned'    => in_array(
                         $value['namespaceId'],
