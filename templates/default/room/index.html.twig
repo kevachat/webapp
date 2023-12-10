@@ -49,6 +49,7 @@
 {% block main_content %}
     {% if tree %}
         {{ recursive_post_tree(request.get('namespace'), tree) }}
+        <a name="latest"></a>
     {% else %}
         <ul>
             <li>

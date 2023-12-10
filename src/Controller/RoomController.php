@@ -26,7 +26,8 @@ class RoomController extends AbstractController
         return $this->redirectToRoute(
             'room_namespace',
             [
-                'namespace' => $request->get('namespace') ? $request->get('namespace') : $this->getParameter('app.kevacoin.room.namespace.default')
+                'namespace' => $request->get('namespace') ? $request->get('namespace') : $this->getParameter('app.kevacoin.room.namespace.default'),
+                '_fragment' => 'latest'
             ]
         );
     }
@@ -341,7 +342,8 @@ class RoomController extends AbstractController
                 [
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
-                    'error'     => $this->getParameter('app.maintenance')
+                    'error'     => $this->getParameter('app.maintenance'),
+                    '_fragment' => 'latest'
                 ]
             );
         }
@@ -386,7 +388,8 @@ class RoomController extends AbstractController
                 [
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
-                    'error'     => $translator->trans('Namespace not found on this node!')
+                    'error'     => $translator->trans('Namespace not found on this node!'),
+                    '_fragment' => 'latest'
                 ]
             );
         }
@@ -413,7 +416,8 @@ class RoomController extends AbstractController
                 [
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
-                    'error'     => $translator->trans('Namespace for read only!')
+                    'error'     => $translator->trans('Namespace for read only!'),
+                    '_fragment' => 'latest'
                 ]
             );
         }
@@ -429,7 +433,8 @@ class RoomController extends AbstractController
                     'error' => sprintf(
                         $translator->trans('Access denied for host %s!'),
                         $request->getClientIp()
-                    )
+                    ),
+                    '_fragment' => 'latest'
                 ]
             );
         }
@@ -445,7 +450,8 @@ class RoomController extends AbstractController
                     'error' => sprintf(
                         $translator->trans('Access restricted for host %s!'),
                         $request->getClientIp()
-                    )
+                    ),
+                    '_fragment' => 'latest'
                 ]
             );
         }
@@ -458,7 +464,8 @@ class RoomController extends AbstractController
                 [
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
-                    'error'     => $translator->trans('Message length out of KevaCoin protocol limits')
+                    'error'     => $translator->trans('Message length out of KevaCoin protocol limits'),
+                    '_fragment' => 'latest'
                 ]
             );
         }
@@ -474,7 +481,8 @@ class RoomController extends AbstractController
                     'error'     => sprintf(
                         $translator->trans('Message does not match node requirements: %s'),
                         $this->getParameter('app.add.post.value.regex')
-                    )
+                    ),
+                    '_fragment' => 'latest'
                 ]
             );
         }
@@ -491,7 +499,8 @@ class RoomController extends AbstractController
                     'error'     => sprintf(
                         $translator->trans('Please wait %s seconds before post new message!'),
                         (int) $this->getParameter('app.add.post.remote.ip.delay') - (time() - $delay)
-                    )
+                    ),
+                    '_fragment' => 'latest'
                 ]
             );
         }
@@ -507,7 +516,8 @@ class RoomController extends AbstractController
                     'error'     => sprintf(
                         $translator->trans('Insufficient funds, wallet: %s'),
                         $this->getParameter('app.kevacoin.boost.address')
-                    )
+                    ),
+                    '_fragment' => 'latest'
                 ]
             );
         }
@@ -538,7 +548,8 @@ class RoomController extends AbstractController
                 [
                     'namespace' => $request->get('namespace'),
                     'error'     => null,
-                    'message'   => null
+                    'message'   => null,
+                    '_fragment' => 'latest'
                 ]
             );
         }
@@ -549,7 +560,8 @@ class RoomController extends AbstractController
             [
                 'namespace' => $request->get('namespace'),
                 'message'   => $request->get('message'),
-                'error'     => $translator->trans('Internal error! Please feedback')
+                'error'     => $translator->trans('Internal error! Please feedback'),
+                '_fragment' => 'latest'
             ]
         );
     }
@@ -575,7 +587,8 @@ class RoomController extends AbstractController
                 [
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
-                    'error'     => $this->getParameter('app.maintenance')
+                    'error'     => $this->getParameter('app.maintenance'),
+                    '_fragment' => 'latest'
                 ]
             );
         }
@@ -742,7 +755,8 @@ class RoomController extends AbstractController
                 [
                     'namespace' => $namespace['namespaceId'],
                     'error'     => null,
-                    'message'   => null
+                    'message'   => null,
+                    '_fragment' => 'latest'
                 ]
             );
         }

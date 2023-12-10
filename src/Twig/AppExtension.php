@@ -187,7 +187,7 @@ class AppExtension extends AbstractExtension
     {
         return preg_replace(
             '~(N[A-z0-9]{33})~i',
-            '[$1]($1)',
+            '[$1]($1#latest)',
             $text
         );
     }
