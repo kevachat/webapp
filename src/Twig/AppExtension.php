@@ -131,7 +131,7 @@ class AppExtension extends AbstractExtension
                 return sprintf(
                     '%s %s',
                     $round,
-                    $this->plural(
+                    $this->_plural(
                         $round,
                         $value
                     )
@@ -192,13 +192,6 @@ class AppExtension extends AbstractExtension
         );
     }
 
-    private function plural(int $number, array $texts)
-    {
-        $cases = [2, 0, 1, 1, 1, 2];
-
-        return $texts[(($number % 100) > 4 && ($number % 100) < 20) ? 2 : $cases[min($number % 10, 5)]];
-    }
-
     public function kevaNamespaceValue(
         string $namespace
     ): string
@@ -226,5 +219,12 @@ class AppExtension extends AbstractExtension
 
         // Return original hash if no success
         return $namespace;
+    }
+
+    private function _plural(int $number, array $texts)
+    {
+        $cases = [2, 0, 1, 1, 1, 2];
+
+        return $texts[(($number % 100) > 4 && ($number % 100) < 20) ? 2 : $cases[min($number % 10, 5)]];
     }
 }
