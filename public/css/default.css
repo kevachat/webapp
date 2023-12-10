@@ -109,13 +109,13 @@ main ul ul
 
 main ul li
 {
-    border-top: 1px var(--color-default) solid;
+    border-top: 1px var(--color-default) dotted;
     word-wrap: break-word;
 }
 
 main > ul > li:first-child
 {
-    border-top: 1px transparent solid;
+    border-top: 1px transparent dotted;
 }
 
 main ul li div
