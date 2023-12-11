@@ -53,77 +53,53 @@ class RoomController extends AbstractController
             $this->getParameter('app.kevacoin.password')
         );
 
-        // Connect memcached
-        $memcached = new \Memcached();
-        $memcached->addServer(
-            $this->getParameter('app.memcached.host'),
-            $this->getParameter('app.memcached.port')
-        );
-
-        $memory = md5(
-            sprintf(
-                '%s.RoomController::list:rooms',
-                __DIR__
-            ),
-        );
-
         // Get room list
         $list = [];
 
-        if (!$list = $memcached->get($memory))
+        foreach ((array) $client->kevaListNamespaces() as $value)
         {
-            foreach ((array) $client->kevaListNamespaces() as $value)
+            // Calculate room totals
+            $total = 0;
+
+            foreach ((array) $client->kevaFilter($value['namespaceId']) as $post)
             {
-                // Calculate room totals
-                $total = 0;
-
-                foreach ((array) $client->kevaFilter($value['namespaceId']) as $post)
+                // Skip values with meta keys
+                if (false !== stripos($post['key'], '_KEVA_'))
                 {
-                    // Skip values with meta keys
-                    if (false !== stripos($post['key'], '_KEVA_'))
-                    {
-                        continue;
-                    }
-
-                    // Require valid kevachat meta
-                    if ($this->_post($post))
-                    {
-                        $total++;
-                    }
+                    continue;
                 }
 
-                // Add to room list
-                $list[] =
-                [
-                    'namespace' => $value['namespaceId'],
-                    'total'     => $total,
-                    'pinned'    => in_array(
-                        $value['namespaceId'],
-                        (array) explode(
-                            '|',
-                            $this->getParameter('app.kevacoin.room.namespaces.pinned')
-                        )
-                    )
-                ];
+                // Require valid kevachat meta
+                if ($this->_post($post))
+                {
+                    $total++;
+                }
             }
 
-            // Sort by name
-            array_multisort(
-                array_column(
-                    $list,
-                    'total'
-                ),
-                SORT_DESC,
-                $list
-            );
-
-            // Cache rooms to memcached as kevaListNamespaces hides rooms with pending posts
-            $memcached->set(
-                $memory,
-                $list,
-                (int) $this->getParameter('app.memcached.timeout')
-            );
+            // Add to room list
+            $list[] =
+            [
+                'namespace' => $value['namespaceId'],
+                'total'     => $total,
+                'pinned'    => in_array(
+                    $value['namespaceId'],
+                    (array) explode(
+                        '|',
+                        $this->getParameter('app.kevacoin.room.namespaces.pinned')
+                    )
+                )
+            ];
         }
+
+        // Sort by name
+        array_multisort(
+            array_column(
+                $list,
+                'total'
+            ),
+            SORT_DESC,
+            $list
+        );
 
         // RSS
         if ('rss' === $request->get('feed'))
