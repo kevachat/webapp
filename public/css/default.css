@@ -160,7 +160,6 @@ main ul li span > svg
 
 footer
 {
-    /*backdrop-filter: blur(100px);*/
     background-color: Canvas;
     bottom: 0;
     display: block;
@@ -176,7 +175,7 @@ footer > form
     box-sizing: border-box;
     display: block;
     margin: 16px auto;
-    max-width: var(--container-max-width);
+    max-width: calc(var(--container-max-width) + 12px);
     overflow: hidden;
     padding: 4px;
     width: 100%;
@@ -188,7 +187,6 @@ footer > form > textarea
     box-sizing: border-box;
     display: block;
     margin-bottom: 10px;
-    max-width: var(--container-max-width);
     padding: 4px;
     width: 100%;
 }
