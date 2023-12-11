@@ -42,7 +42,6 @@ hr {
 body
 {
     font-size: 12px;
-    padding: 0 16px;
 }
 
 header
@@ -101,8 +100,10 @@ main
     display: block;
     margin: 16px auto 0 auto;
     max-width: var(--container-max-width);
-    padding-top: 132px;
     padding-bottom: 164px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 132px;
 }
 
 main ul
