@@ -185,8 +185,9 @@ class AppExtension extends AbstractExtension
         string $text
     ): string
     {
+        // check string not converted before to link by "/" prefix
         return preg_replace(
-            '~(N[A-z0-9]{33})~i',
+            '~[^/](N[A-z0-9]{33})~i',
             '[$1]($1#latest)',
             $text
         );
