@@ -32,6 +32,13 @@ a:hover
     text-decoration: underline;
 }
 
+hr {
+    background-color: var(--color-default);
+    border: none;
+    color: var(--color-default);
+    height: 1px;
+}
+
 body
 {
     font-size: 12px;
@@ -41,11 +48,12 @@ body
 header
 {
     background-color: Canvas;
-    border-bottom: 1px var(--color-default) solid;
     display: block;
     left: 0;
     margin: 0 auto;
     max-width: calc(var(--container-max-width) + 2px);
+    padding-left: 4px;
+    padding-right: 4px;
     padding-top: 16px;
     position: fixed;
     right: 0;
@@ -164,6 +172,7 @@ footer
 footer > form
 {
     bottom: 16px;
+    box-sizing: border-box;
     display: block;
     margin: 16px auto;
     max-width: var(--container-max-width);
