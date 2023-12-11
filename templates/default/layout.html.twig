@@ -5,7 +5,7 @@
         <title>{% block head_title_content %}{{ 'KevaChat' | trans }}{% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="{{ url('room_index') }}css/default.css?{{ app.version }}"/>
     </head>
-    <body>
+    <body data-mode="{% if request.get('mode') %}stream{% else %}webapp{% endif %}">
         {% block header_container %}
             <header>
                 {% block header_content %}

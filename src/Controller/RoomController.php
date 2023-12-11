@@ -26,6 +26,7 @@ class RoomController extends AbstractController
         return $this->redirectToRoute(
             'room_namespace',
             [
+                'mode'      => $request->get('mode'),
                 'namespace' => $request->get('namespace') ? $request->get('namespace') : $this->getParameter('app.kevacoin.room.namespace.default'),
                 '_fragment' => 'latest'
             ]
@@ -316,6 +317,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_namespace',
                 [
+                    'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
                     'error'     => $this->getParameter('app.maintenance'),
@@ -362,6 +364,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_namespace',
                 [
+                    'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
                     'error'     => $translator->trans('Namespace not found on this node!'),
@@ -390,6 +393,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_namespace',
                 [
+                    'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
                     'error'     => $translator->trans('Namespace for read only!'),
@@ -404,6 +408,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_namespace',
                 [
+                    'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
                     'error' => sprintf(
@@ -421,6 +426,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_namespace',
                 [
+                    'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
                     'error' => sprintf(
@@ -438,6 +444,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_namespace',
                 [
+                    'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
                     'error'     => $translator->trans('Message length out of KevaCoin protocol limits'),
@@ -452,6 +459,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_namespace',
                 [
+                    'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
                     'error'     => sprintf(
@@ -470,6 +478,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_namespace',
                 [
+                    'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
                     'error'     => sprintf(
@@ -487,6 +496,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_namespace',
                 [
+                    'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
                     'error'     => sprintf(
@@ -522,6 +532,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_namespace',
                 [
+                    'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'error'     => null,
                     'message'   => null,
@@ -534,6 +545,7 @@ class RoomController extends AbstractController
         return $this->redirectToRoute(
             'room_namespace',
             [
+                'mode'      => $request->get('mode'),
                 'namespace' => $request->get('namespace'),
                 'message'   => $request->get('message'),
                 'error'     => $translator->trans('Internal error! Please feedback'),
@@ -561,6 +573,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_namespace',
                 [
+                    'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
                     'error'     => $this->getParameter('app.maintenance'),
@@ -604,8 +617,9 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_list',
                 [
+                    'mode'  => $request->get('mode'),
                     'name'  => $name,
-                    'error'     => $translator->trans('Name length out of KevaCoin protocol limits')
+                    'error' => $translator->trans('Name length out of KevaCoin protocol limits')
                 ]
             );
         }
@@ -616,6 +630,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_list',
                 [
+                    'mode'  => $request->get('mode'),
                     'name'  => $name,
                     'error' => sprintf(
                         $translator->trans('Room name does not match node requirements: %s'),
@@ -638,6 +653,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_list',
                 [
+                    'mode'  => $request->get('mode'),
                     'name'  => $name,
                     'error' => $translator->trans('Room with same name already exists on this node!')
                 ]
@@ -650,6 +666,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_list',
                 [
+                    'mode'  => $request->get('mode'),
                     'name'  => $name,
                     'error' => sprintf(
                         $translator->trans('Access denied for host %s!'),
@@ -665,6 +682,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_list',
                 [
+                    'mode'  => $request->get('mode'),
                     'name'  => $name,
                     'error' => sprintf(
                         $translator->trans('Access restricted for host %s!'),
@@ -681,6 +699,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_list',
                 [
+                    'mode'  => $request->get('mode'),
                     'name'  => $name,
                     'error' => sprintf(
                         $translator->trans('Please wait for %s seconds before add new room!'),
@@ -696,6 +715,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_list',
                 [
+                    'mode'  => $request->get('mode'),
                     'name'  => $name,
                     'error' => sprintf(
                         $translator->trans('Insufficient funds, wallet: %s'),
@@ -729,6 +749,7 @@ class RoomController extends AbstractController
             return $this->redirectToRoute(
                 'room_namespace',
                 [
+                    'mode'      => $request->get('mode'),
                     'namespace' => $namespace['namespaceId'],
                     'error'     => null,
                     'message'   => null,
@@ -741,6 +762,7 @@ class RoomController extends AbstractController
         return $this->redirectToRoute(
             'room_list',
             [
+                'mode'  => $request->get('mode'),
                 'name'  => $name,
                 'error' => $translator->trans('Internal error! Please feedback')
             ]

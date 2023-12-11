@@ -1,14 +1,14 @@
-<form name="rooms" action="{{ path('room_index') }}" method="get">
-    <input type="text" name="namespace" value="{{ form.namespace.value }}" placeholder="{{ 'join room by kevacoin namespace...' | trans }}" />
+<form name="rooms" action="{{ path('room_index', { mode : request.get('mode') }) }}" method="get">
+    <input type="text" name="namespace" value="{{ request.get('namespace') }}" placeholder="{{ 'join room by kevacoin namespace...' | trans }}" />
 </form>
 {% if list %}
     {% for i, namespace in list %}
         {% if i %}&bull;{% endif %}
         <h2>
-            {% if namespace == form.namespace.value %}
+            {% if namespace == request.get('namespace') %}
                 {{ namespace | keva_namespace_value }}
             {% else %}
-                <a href="{{ path('room_namespace', { namespace : namespace, _fragment : 'latest' }) }}">{{ namespace | keva_namespace_value }}</a>
+                <a href="{{ path('room_namespace', { mode : request.get('mode'), namespace : namespace, _fragment : 'latest' }) }}">{{ namespace | keva_namespace_value }}</a>
             {% endif %}
         </h2>
         <sup>
@@ -22,8 +22,8 @@
     &bull;
 {% endif %}
 <h2>
-    {% if form.namespace.value %}
-        <a href="{{ path('room_list') }}">{{ 'more...' | trans }}</a>
+    {% if list %}
+        <a href="{{ path('room_list', { mode : request.get('mode') }) }}">{{ 'more...' | trans }}</a>
     {% else %}
         {{ 'more...' | trans }}
     {% endif %}

@@ -1,5 +1,5 @@
 {% if enabled %}
-    <form name="post" action="{{ path('room_post', { namespace : namespace }) }}" method="post">
+    <form name="post" action="{{ path('room_post', { mode : mode, namespace : namespace }) }}" method="post">
         {% if error %}
             <output name="error" for="form-post-message">{{ error }}</output>
         {% endif %}

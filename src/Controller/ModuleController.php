@@ -120,13 +120,7 @@ class ModuleController extends AbstractController
                 'list' => array_unique(
                     $list
                 ),
-                'form' =>
-                [
-                    'namespace' =>
-                    [
-                        'value' => $request->get('namespace')
-                    ]
-                ]
+                'request' => $request
             ]
         );
     }
@@ -169,6 +163,7 @@ class ModuleController extends AbstractController
         return $this->render(
             'default/module/post.html.twig',
             [
+                'mode'      => $request->get('mode'),
                 'namespace' => $request->get('namespace'),
                 'sign'      => $request->get('sign'),
                 'error'     => $request->get('error'),
@@ -195,8 +190,7 @@ class ModuleController extends AbstractController
         return $this->render(
             'default/module/room.html.twig',
             [
-                'name'  => $request->get('name'),
-                'error' => $request->get('error')
+                'request'  => $request
             ]
         );
     }

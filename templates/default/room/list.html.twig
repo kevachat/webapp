@@ -7,7 +7,7 @@
             <li>
                 <div>
                     <strong>
-                        <a href="{{ path('room_namespace', { namespace : room.namespace, _fragment : 'latest' }) }}">{{ room.namespace | keva_namespace_value }}</a>
+                        <a href="{{ path('room_namespace', { mode : request.get('mode'), namespace : room.namespace, _fragment : 'latest' }) }}">{{ room.namespace | keva_namespace_value }}</a>
                     </strong>
                     {{ room.total }}
                     <a href="{{ path('room_namespace', { namespace : room.namespace, feed : 'rss' }) }}" title="{{ 'RSS' | trans }}" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" viewBox="0 0 16 16">

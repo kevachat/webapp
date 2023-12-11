@@ -1,7 +1,7 @@
-  <form name="room" action="{{ path('room_add') }}" method="post">
-      {% if error %}
-          <output name="error" for="form-room-name">{{ error }}</output>
+  <form name="room" action="{{ path('room_add', { mode : request.get('mode') }) }}" method="post">
+      {% if request.get('error') %}
+          <output name="error" for="form-room-name">{{ request.get('error') }}</output>
       {% endif %}
-      <input type="text" name="name" id="form-room-name" value="{{ name }}" placeholder="{{ 'enter new room name...' | trans }}" />
+      <input type="text" name="name" id="form-room-name" value="{{ request.get('name') }}" placeholder="{{ 'enter new room name...' | trans }}" />
       <button type="submit">{{ 'add' | trans }}</button>
   </form>
