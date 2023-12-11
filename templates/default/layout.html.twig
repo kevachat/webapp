@@ -6,46 +6,54 @@
         <link rel="stylesheet" type="text/css" href="{{ url('room_index') }}css/default.css?{{ app.version }}"/>
     </head>
     <body>
-        <header>
-            <strong>
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M14 0a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z"/>
-                </svg>
-                {{ app.name }}
-            </strong>
-            <sup>
-                <a href="https://github.com/kevachat/webapp" target="_blank" title="Source">{{ app.version }}</a>
-            </sup>
-            {% block header_module_info %}
-                {{
-                    render(
-                        controller(
-                            'App\\Controller\\ModuleController::info',
-                            {
-                                request : request
-                            }
-                        )
-                    )
-                }}
-            {% endblock %}
-            {% block header_module_rooms %}
-                {{
-                    render(
-                        controller(
-                            'App\\Controller\\ModuleController::rooms',
-                            {
-                                request: request
-                            }
-                        )
-                    )
-                }}
-            {% endblock %}
-        </header>
-        <main>
-            {% block main_content %}{% endblock %}
-        </main>
-        <footer>
-            {% block footer_content %}{% endblock %}
-        </footer>
+        {% block header_container %}
+            <header>
+                {% block header_content %}
+                    <strong>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M14 0a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z"/>
+                        </svg>
+                        {{ app.name }}
+                    </strong>
+                    <sup>
+                        <a href="https://github.com/kevachat/webapp" target="_blank" title="Source">{{ app.version }}</a>
+                    </sup>
+                    {% block header_module_info %}
+                        {{
+                            render(
+                                controller(
+                                    'App\\Controller\\ModuleController::info',
+                                    {
+                                        request : request
+                                    }
+                                )
+                            )
+                        }}
+                    {% endblock %}
+                    {% block header_module_rooms %}
+                        {{
+                            render(
+                                controller(
+                                    'App\\Controller\\ModuleController::rooms',
+                                    {
+                                        request: request
+                                    }
+                                )
+                            )
+                        }}
+                    {% endblock %}
+                {% endblock %}
+            </header>
+        {% endblock %}
+        {% block main_container %}
+            <main>
+                {% block main_content %}{% endblock %}
+            </main>
+        {% endblock %}
+        {% block footer_container %}
+            <footer>
+                {% block footer_content %}{% endblock %}
+            </footer>
+        {% endblock %}
     </body>
 </html>
