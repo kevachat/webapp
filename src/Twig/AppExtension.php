@@ -32,6 +32,13 @@ class AppExtension extends AbstractExtension
                 ]
             ),
             new TwigFilter(
+                'format_bytes',
+                [
+                    $this,
+                    'formatBytes'
+                ]
+            ),
+            new TwigFilter(
                 'message_to_markdown',
                 [
                     $this,
@@ -138,6 +145,28 @@ class AppExtension extends AbstractExtension
                 );
             }
         }
+    }
+
+    public function formatBytes(
+        int $bytes,
+        int $precision = 2
+    ): string
+    {
+        $size = [
+            $this->translator->trans('B'),
+            $this->translator->trans('Kb'),
+            $this->translator->trans('Mb'),
+            $this->translator->trans('Gb'),
+            $this->translator->trans('Tb'),
+            $this->translator->trans('Pb'),
+            $this->translator->trans('Eb'),
+            $this->translator->trans('Zb'),
+            $this->translator->trans('Yb')
+        ];
+
+        $factor = floor((strlen($bytes) - 1) / 3);
+
+        return sprintf("%.{$precision}f", $bytes / pow(1024, $factor)) . ' ' . @$size[$factor];
     }
 
     public function messageToMarkdown(
