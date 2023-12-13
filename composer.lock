@@ -4,8 +4,38 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e917d4dd989fd03714122ef9bbb41e65",
+    "content-hash": "0fb27de664b5580fdbb61b1f7758e99b",
     "packages": [
+        {
+            "name": "clitor-is-protocol/kevacoin",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/clitor-is-protocol/kevacoin-php.git",
+                "reference": "23e7c13e915f6fc99a67173ac8bf1771e6cd2c0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/clitor-is-protocol/kevacoin-php/zipball/23e7c13e915f6fc99a67173ac8bf1771e6cd2c0d",
+                "reference": "23e7c13e915f6fc99a67173ac8bf1771e6cd2c0d",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ClitorIsProtocol\\Kevacoin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "support": {
+                "issues": "https://github.com/clitor-is-protocol/kevacoin-php/issues",
+                "source": "https://github.com/clitor-is-protocol/kevacoin-php/tree/1.0.0"
+            },
+            "time": "2023-12-13T18:54:41+00:00"
+        },
         {
             "name": "dflydev/dot-access-data",
             "version": "v3.0.2",

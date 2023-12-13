@@ -9,6 +9,7 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "clitor-is-protocol/kevacoin": "^1.0",
         "jdenticon/jdenticon": "^1.0",
         "kevachat/kevacoin": "^1.0",
         "league/commonmark": "^2.4",
