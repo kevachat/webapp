@@ -22,7 +22,7 @@
     &bull;
 {% endif %}
 <h2>
-    {% if list %}
+    {% if request.get('namespace') %}
         <a href="{{ path('room_list', { mode : request.get('mode') }) }}">{{ 'more...' | trans }}</a>
     {% else %}
         {{ 'more...' | trans }}
