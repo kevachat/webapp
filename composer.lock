@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "clitor-is-protocol/kevacoin",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/clitor-is-protocol/kevacoin-php.git",
-                "reference": "23e7c13e915f6fc99a67173ac8bf1771e6cd2c0d"
+                "reference": "80d4dc22e4826ba40fd8c619d5654abf242ee457"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clitor-is-protocol/kevacoin-php/zipball/23e7c13e915f6fc99a67173ac8bf1771e6cd2c0d",
-                "reference": "23e7c13e915f6fc99a67173ac8bf1771e6cd2c0d",
+                "url": "https://api.github.com/repos/clitor-is-protocol/kevacoin-php/zipball/80d4dc22e4826ba40fd8c619d5654abf242ee457",
+                "reference": "80d4dc22e4826ba40fd8c619d5654abf242ee457",
                 "shasum": ""
             },
             "type": "library",
@@ -32,9 +32,9 @@
             ],
             "support": {
                 "issues": "https://github.com/clitor-is-protocol/kevacoin-php/issues",
-                "source": "https://github.com/clitor-is-protocol/kevacoin-php/tree/1.0.0"
+                "source": "https://github.com/clitor-is-protocol/kevacoin-php/tree/1.0.1"
             },
-            "time": "2023-12-13T18:54:41+00:00"
+            "time": "2023-12-13T22:39:13+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -162,16 +162,16 @@
         },
         {
             "name": "kevachat/kevacoin",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kevachat/kevacoin-php.git",
-                "reference": "44608e688f69ff1545f2a3103c4504bfb3294831"
+                "reference": "ad3aee526db3e367a368b237af0d17071a36f871"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kevachat/kevacoin-php/zipball/44608e688f69ff1545f2a3103c4504bfb3294831",
-                "reference": "44608e688f69ff1545f2a3103c4504bfb3294831",
+                "url": "https://api.github.com/repos/kevachat/kevacoin-php/zipball/ad3aee526db3e367a368b237af0d17071a36f871",
+                "reference": "ad3aee526db3e367a368b237af0d17071a36f871",
                 "shasum": ""
             },
             "type": "library",
@@ -186,9 +186,9 @@
             ],
             "support": {
                 "issues": "https://github.com/kevachat/kevacoin-php/issues",
-                "source": "https://github.com/kevachat/kevacoin-php/tree/1.5.0"
+                "source": "https://github.com/kevachat/kevacoin-php/tree/1.6.0"
             },
-            "time": "2023-12-09T18:55:04+00:00"
+            "time": "2023-12-10T06:02:53+00:00"
         },
         {
             "name": "league/commonmark",

@@ -185,12 +185,38 @@ class AppExtension extends AbstractExtension
         string $text
     ): string
     {
-        // check string not converted before to link by "/" prefix
-        return preg_replace(
-            '~[^/](N[A-z0-9]{33})~i',
-            '[$1]($1#latest)',
-            $text
-        );
+        // Search not filtered namespaces
+        if (preg_match_all('~(N[A-z0-9]{33})~i', $text, $matches))
+        {
+            if (empty($matches[1]))
+            {
+                return $text;
+            }
+
+            // Replace with _KEVA_NS_ value if defined
+            foreach ($matches[1] as $namespace)
+            {
+                $text = str_replace(
+                    $namespace,
+                    sprintf(
+                        '[%s](%s)',
+                        $this->kevaNamespaceValue(
+                            $namespace
+                        ),
+                        $this->container->get('router')->generate(
+                            'room_namespace',
+                            [
+                                'namespace' => $namespace,
+                                '_fragment' => 'latest'
+                            ]
+                        )
+                    ),
+                    $text
+                );
+            }
+        }
+
+        return $text;
     }
 
     public function kevaNamespaceValue(
