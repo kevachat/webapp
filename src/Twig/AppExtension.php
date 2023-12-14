@@ -222,26 +222,51 @@ class AppExtension extends AbstractExtension
                 return $text;
             }
 
-            // Replace with _KEVA_NS_ value if defined
             foreach ($matches[1] as $namespace)
             {
-                $text = str_replace(
-                    $namespace,
-                    sprintf(
-                        '[%s](%s)',
-                        $this->kevaNamespaceValue(
-                            $namespace
+                // Replace with _CLITOR_IS_ value
+                if ($meta = $this->_clitor($namespace))
+                {
+                    $text = str_replace(
+                        $namespace,
+                        sprintf(
+                            '[%s](%s) (%s)',
+                            $meta['file']['name'],
+                            $this->container->get('router')->generate(
+                                'view_raw',
+                                [
+                                    'namespace' => $namespace
+                                ]
+                            ),
+                            $this->formatBytes(
+                                $meta['file']['size']
+                            )
                         ),
-                        $this->container->get('router')->generate(
-                            'room_namespace',
-                            [
-                                'namespace' => $namespace,
-                                '_fragment' => 'latest'
-                            ]
-                        )
-                    ),
-                    $text
-                );
+                        $text
+                    );
+                }
+
+                // Replace with _KEVA_NS_ value
+                else
+                {
+                    $text = str_replace(
+                        $namespace,
+                        sprintf(
+                            '[%s](%s)',
+                            $this->kevaNamespaceValue(
+                                $namespace
+                            ),
+                            $this->container->get('router')->generate(
+                                'room_namespace',
+                                [
+                                    'namespace' => $namespace,
+                                    '_fragment' => 'latest'
+                                ]
+                            )
+                        ),
+                        $text
+                    );
+                }
             }
         }
 
@@ -275,6 +300,46 @@ class AppExtension extends AbstractExtension
 
         // Return original hash if no success
         return $namespace;
+    }
+
+    private function _clitor(
+        string $namespace
+    ): ?array
+    {
+        // Validate namespace supported to continue
+        if (preg_match('/^N[A-z0-9]{33}$/', $namespace))
+        {
+            // Connect kevacoin
+            $client = new \Kevachat\Kevacoin\Client(
+                $this->container->getParameter('app.kevacoin.protocol'),
+                $this->container->getParameter('app.kevacoin.host'),
+                $this->container->getParameter('app.kevacoin.port'),
+                $this->container->getParameter('app.kevacoin.username'),
+                $this->container->getParameter('app.kevacoin.password')
+            );
+
+            // Get meta data by namespace
+            if ($meta = $client->kevaGet($namespace, '_CLITOR_IS_'))
+            {
+                $reader = new \ClitorIsProtocol\Kevacoin\Reader(
+                    $meta['value']
+                );
+
+                if ($reader->valid())
+                {
+                    return
+                    [
+                        'file' =>
+                        [
+                            'name' => $reader->fileName() ? $reader->fileName() : $namespace,
+                            'size' => (int) $reader->fileSize(),
+                        ]
+                    ];
+                }
+            }
+        }
+
+        return null;
     }
 
     private function _plural(int $number, array $texts)

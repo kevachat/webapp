@@ -58,13 +58,13 @@ class ViewController extends AbstractController
                             );
                         }
 
-                        if ($length = $reader->fileLength())
+                        if ($size = $reader->fileSize())
                         {
-                            if ($length == strlen($data))
+                            if ($size == strlen($data))
                             {
                                 $response->headers->set(
                                     'Content-length',
-                                    $length
+                                    $size
                                 );
                             }
                         }
