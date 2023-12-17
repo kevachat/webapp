@@ -640,6 +640,19 @@ class RoomController extends AbstractController
             );
         }
 
+        // Validate meta NS
+        if (str_starts_with($name, '_'))
+        {
+            return $this->redirectToRoute(
+                'room_list',
+                [
+                    'mode'  => $request->get('mode'),
+                    'name'  => $name,
+                    'error' => $translator->trans('Could not create namespace in meta area')
+                ]
+            );
+        }
+
         // Check room name not added before
         $rooms = [];
 
