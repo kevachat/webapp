@@ -65,7 +65,7 @@ class RoomController extends AbstractController
             foreach ((array) $client->kevaFilter($value['namespaceId']) as $post)
             {
                 // Skip values with meta keys
-                if (false !== stripos($post['key'], '_KEVA_'))
+                if (str_starts_with($post['key'], '_'))
                 {
                     continue;
                 }
@@ -181,7 +181,7 @@ class RoomController extends AbstractController
             }
 
             // Skip values with meta keys
-            if (false !== stripos($pending['key'], '_KEVA_'))
+            if (str_starts_with($pending['key'], '_'))
             {
                 continue;
             }
@@ -215,7 +215,7 @@ class RoomController extends AbstractController
         foreach ((array) $client->kevaFilter($request->get('namespace')) as $post)
         {
             // Skip values with meta keys
-            if (false !== stripos($post['key'], '_KEVA_'))
+            if (str_starts_with($post['key'], '_'))
             {
                 continue;
             }
