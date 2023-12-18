@@ -262,7 +262,7 @@ class UserController extends AbstractController
         }
 
         // Validate username blacklist (reserved)
-        if (in_array($username, (array) explode('|', $this->getParameter('app.add.user.name.blacklist'))))
+        if (in_array(mb_strtolower($username), array_map('mb_strtolower', (array) explode('|', $this->getParameter('app.add.user.name.blacklist')))))
         {
             return $this->redirectToRoute(
                 'user_add',
@@ -498,7 +498,7 @@ class UserController extends AbstractController
         }
 
         // Validate username blacklist
-        if (in_array($username, (array) explode('|', $this->getParameter('app.add.user.name.blacklist'))))
+        if (in_array(mb_strtolower($username), array_map('mb_strtolower', (array) explode('|', $this->getParameter('app.add.user.name.blacklist')))))
         {
             return $this->redirectToRoute(
                 'user_login',
