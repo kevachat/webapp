@@ -218,7 +218,7 @@ class UserController extends AbstractController
                 'user_add',
                 [
                     'username' => $request->get('username'),
-                    'error'    => $translator->trans('Could not access user database, try again later!')
+                    'error'    => $translator->trans('Could not access user database locked by transaction, try again later!')
                 ]
             );
         }
@@ -461,7 +461,7 @@ class UserController extends AbstractController
                 'user_login',
                 [
                     'username' => $request->get('username'),
-                    'error'    => $translator->trans('Could not access user database, try again later!')
+                    'error'    => $translator->trans('Could not access user database locked by transaction, try again later!')
                 ]
             );
         }
