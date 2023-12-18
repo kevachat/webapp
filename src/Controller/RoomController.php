@@ -59,6 +59,12 @@ class RoomController extends AbstractController
 
         foreach ((array) $client->kevaListNamespaces() as $value)
         {
+            // Skip system namespaces
+            if (str_starts_with($value['displayName'], '_'))
+            {
+                continue;
+            }
+
             // Calculate room totals
             $total = 0;
 
