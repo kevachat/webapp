@@ -129,6 +129,25 @@ class ModuleController extends AbstractController
         Request $request
     ): Response
     {
+        // Check user session exist
+        $username = false;
+
+        if (!empty($request->cookies->get('KEVACHAT_SESSION')) && preg_match('/[A-z0-9]{32}/', $request->cookies->get('KEVACHAT_SESSION')))
+        {
+            // Connect memcached
+            $memcached = new \Memcached();
+            $memcached->addServer(
+                $this->getParameter('app.memcached.host'),
+                $this->getParameter('app.memcached.port')
+            );
+
+            // Check username exist for this session
+            if ($value = $memcached->get($request->cookies->get('KEVACHAT_SESSION')))
+            {
+                $username = $value;
+            }
+        }
+
         // Format quoted message
         if (preg_match('/^[A-z0-9]{64}$/', $request->get('txid')))
         {
@@ -168,8 +187,7 @@ class ModuleController extends AbstractController
                 'sign'      => $request->get('sign'),
                 'error'     => $request->get('error'),
                 'message'   => $message,
-                'ip'        => $request->getClientIp(),
-
+                'username'  => $username,
                 'enabled'   =>
                 (
                     !in_array(
