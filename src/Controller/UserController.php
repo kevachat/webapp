@@ -235,6 +235,18 @@ class UserController extends AbstractController
             );
         }
 
+        // Validate system username values
+        if (in_array(mb_strtolower($username), ['anon','anonymous']))
+        {
+            return $this->redirectToRoute(
+                'user_add',
+                [
+                    'username' => $request->get('username'),
+                    'error'    => $translator->trans('Username reserved for anonymous users!')
+                ]
+            );
+        }
+
         // Validate meta NS
         if (str_starts_with($username, '_'))
         {
