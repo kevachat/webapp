@@ -7,7 +7,10 @@
                     <div>
                         <a name="{{ post.id }}"></a>
                         {% if post.icon %}
-                            <img src="{{ post.icon }}" alt="icon" />
+                            {# <img src="{{ post.icon }}" alt="icon" /> #}
+                            <strong>
+                                @{{ post.user }}
+                            </strong>
                         {% else %}
                             <strong>
                                 @{{ 'anon' | trans }}
