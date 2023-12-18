@@ -4,7 +4,7 @@
             <output name="error" for="form-post-message">{{ error }}</output>
         {% endif %}
         <textarea name="message" id="form-post-message" placeholder="{{ 'enter your message...' | trans }}">{{ message }}</textarea>
-        {% if sign == 'anon' or sign != 'username' %}
+        {% if sign == 'anon' or sign == '' %}
             <input type="radio" name="sign" value="anon" id="form-post-sign-anon" checked="checked" />
         {% else %}
             <input type="radio" name="sign" value="anon" id="form-post-sign-anon" />

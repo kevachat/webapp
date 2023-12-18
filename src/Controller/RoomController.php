@@ -320,6 +320,7 @@ class RoomController extends AbstractController
                     'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
+                    'sign'      => $request->get('sign'),
                     'error'     => $this->getParameter('app.maintenance'),
                     '_fragment' => 'latest'
                 ]
@@ -367,6 +368,7 @@ class RoomController extends AbstractController
                     'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
+                    'sign'      => $request->get('sign'),
                     'error'     => $translator->trans('Namespace not found on this node!'),
                     '_fragment' => 'latest'
                 ]
@@ -396,6 +398,7 @@ class RoomController extends AbstractController
                     'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
+                    'sign'      => $request->get('sign'),
                     'error'     => $translator->trans('Namespace for read only!'),
                     '_fragment' => 'latest'
                 ]
@@ -411,6 +414,7 @@ class RoomController extends AbstractController
                     'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
+                    'sign'      => $request->get('sign'),
                     'error' => sprintf(
                         $translator->trans('Access denied for host %s!'),
                         $request->getClientIp()
@@ -429,6 +433,7 @@ class RoomController extends AbstractController
                     'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
+                    'sign'      => $request->get('sign'),
                     'error' => sprintf(
                         $translator->trans('Access restricted for host %s!'),
                         $request->getClientIp()
@@ -447,6 +452,7 @@ class RoomController extends AbstractController
                     'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
+                    'sign'      => $request->get('sign'),
                     'error'     => $translator->trans('Message length out of KevaCoin protocol limits'),
                     '_fragment' => 'latest'
                 ]
@@ -462,6 +468,7 @@ class RoomController extends AbstractController
                     'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
+                    'sign'      => $request->get('sign'),
                     'error'     => sprintf(
                         $translator->trans('Message does not match node requirements: %s'),
                         $this->getParameter('app.add.post.value.regex')
@@ -481,6 +488,7 @@ class RoomController extends AbstractController
                     'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
+                    'sign'      => $request->get('sign'),
                     'error'     => sprintf(
                         $translator->trans('Please wait %s seconds before post new message!'),
                         (int) $this->getParameter('app.add.post.remote.ip.delay') - (time() - $delay)
@@ -499,6 +507,7 @@ class RoomController extends AbstractController
                     'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
+                    'sign'      => $request->get('sign'),
                     'error'     => sprintf(
                         $translator->trans('Insufficient funds, wallet: %s'),
                         $this->getParameter('app.kevacoin.boost.address')
@@ -518,6 +527,16 @@ class RoomController extends AbstractController
             {
                 $username = $value;
             }
+        }
+
+        // Save sign version to cookies
+        if (in_array((string) $request->get('sign'), ['anon', 'username']))
+        {
+            setcookie(
+                'KEVACHAT_SIGN',
+                $request->get('sign'),
+                time() + $this->getParameter('app.session.default.timeout')
+            );
         }
 
         // Send message to DHT
@@ -546,6 +565,7 @@ class RoomController extends AbstractController
                 [
                     'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
+                    'sign'      => $request->get('sign'),
                     'error'     => null,
                     'message'   => null,
                     '_fragment' => 'latest'
@@ -560,6 +580,7 @@ class RoomController extends AbstractController
                 'mode'      => $request->get('mode'),
                 'namespace' => $request->get('namespace'),
                 'message'   => $request->get('message'),
+                'sign'      => $request->get('sign'),
                 'error'     => $translator->trans('Internal error! Please feedback'),
                 '_fragment' => 'latest'
             ]

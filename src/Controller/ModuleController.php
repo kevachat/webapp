@@ -179,13 +179,29 @@ class ModuleController extends AbstractController
             $message = $request->get('message');
         }
 
+        // Detect active sign version
+        if (in_array((string) $request->get('sign'), ['anon', 'username']))
+        {
+            $sign = $request->get('sign');
+        }
+
+        else if (in_array((string) $request->cookies->get('KEVACHAT_SIGN'), ['anon', 'username']))
+        {
+            $sign = $request->cookies->get('KEVACHAT_SIGN');
+        }
+
+        else
+        {
+            $sign = 'anon';
+        }
+
         return $this->render(
             'default/module/post.html.twig',
             [
                 'mode'      => $request->get('mode'),
                 'namespace' => $request->get('namespace'),
-                'sign'      => $request->get('sign'),
                 'error'     => $request->get('error'),
+                'sign'      => $sign,
                 'message'   => $message,
                 'username'  => $username,
                 'enabled'   =>

@@ -120,6 +120,7 @@ class UserController extends AbstractController
 
             // Delete cookies
             setcookie('KEVACHAT_SESSION', '', -1);
+            setcookie('KEVACHAT_SIGN', '', -1);
         }
 
         // Redirect to main page
