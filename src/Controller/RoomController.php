@@ -825,7 +825,7 @@ class RoomController extends AbstractController
     private function _post(array $data): ?object
     {
         // Validate key format allowed in settings
-        if (false === preg_match((string) $this->getParameter('app.add.post.key.regex'), $data['key'], $matches))
+        if (!preg_match((string) $this->getParameter('app.add.post.key.regex'), $data['key'], $matches))
         {
             return null;
         }
@@ -842,8 +842,14 @@ class RoomController extends AbstractController
             return null;
         }
 
+        // Legacy usernames backport
+        if (!preg_match((string) $this->getParameter('app.add.user.name.regex'), $matches[2]))
+        {
+            $matches[2] = 'anon';
+        }
+
         // Validate value format allowed in settings
-        if (false === preg_match((string) $this->getParameter('app.add.post.value.regex'), $data['value']))
+        if (!preg_match((string) $this->getParameter('app.add.post.value.regex'), $data['value']))
         {
             return null;
         }
