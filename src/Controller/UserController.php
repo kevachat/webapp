@@ -119,8 +119,8 @@ class UserController extends AbstractController
             $memcached->delete($session);
 
             // Delete cookies
-            setcookie('KEVACHAT_SESSION', '', -1);
-            setcookie('KEVACHAT_SIGN', '', -1);
+            setcookie('KEVACHAT_SESSION', '', -1, '/');
+            setcookie('KEVACHAT_SIGN', '', -1, '/');
         }
 
         // Redirect to main page
@@ -299,7 +299,7 @@ class UserController extends AbstractController
         }
 
         // Validate password length
-        if (mb_strlen($request->get('password')) <= 12)
+        if (mb_strlen($request->get('password')) <= 6)
         {
             return $this->redirectToRoute(
                 'user_add',
@@ -376,7 +376,7 @@ class UserController extends AbstractController
         }
 
         // Save session to user cookies
-        if (!setcookie('KEVACHAT_SESSION', $session, time() + $this->getParameter('app.session.default.timeout')))
+        if (!setcookie('KEVACHAT_SESSION', $session, time() + $this->getParameter('app.session.default.timeout'), '/'))
         {
             return $this->redirectToRoute(
                 'user_login',
@@ -581,7 +581,7 @@ class UserController extends AbstractController
         }
 
         // Save session to user cookies
-        if (!setcookie('KEVACHAT_SESSION', $session, time() + $this->getParameter('app.session.default.timeout')))
+        if (!setcookie('KEVACHAT_SESSION', $session, time() + $this->getParameter('app.session.default.timeout'), '/'))
         {
             return $this->redirectToRoute(
                 'user_login',

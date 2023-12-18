@@ -541,7 +541,8 @@ class RoomController extends AbstractController
             setcookie(
                 'KEVACHAT_SIGN',
                 $request->get('sign'),
-                time() + $this->getParameter('app.session.default.timeout')
+                time() + $this->getParameter('app.session.default.timeout'),
+                '/'
             );
         }
 
