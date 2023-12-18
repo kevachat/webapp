@@ -44,6 +44,8 @@ body
     font-size: 12px;
 }
 
+/* header */
+
 header
 {
     background-color: Canvas;
@@ -94,6 +96,8 @@ header > form > input[type="text"]
     padding: 4px;
     width: 100%;
 }
+
+/* main */
 
 main
 {
@@ -157,6 +161,50 @@ main ul li span > svg
     fill: var(--color-default);
     float: right;
 }
+
+main > form
+{
+    box-sizing: border-box;
+    display: block;
+    margin: 16px 0;
+    overflow: hidden;
+    width: 100%;
+}
+
+main > form > input[type="text"],
+main > form > input[type="password"],
+main > form > textarea
+{
+    box-sizing: border-box;
+    display: block;
+    margin-bottom: 10px;
+    padding: 4px;
+    width: 100%;
+}
+
+main > form > label
+{
+    clear: both;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+main > form > button
+{
+    cursor: pointer;
+    float: right;
+    padding: 2px 8px;
+}
+
+main > form > output
+{
+    color: var(--color-error);
+    display: block;
+    font-weight: bolder;
+    margin-bottom: 16px;
+}
+
+/* footer */
 
 footer
 {

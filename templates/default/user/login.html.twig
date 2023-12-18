@@ -1,0 +1,15 @@
+{% extends 'default/layout.html.twig' %}
+{% block head_title_content %}{{ 'Login' | trans }} - {{ 'KevaChat' | trans }}{% endblock %}
+{% block main_content %}
+    <form name="login" action="{{ path('user_auth') }}" method="post">
+        {% if request.get('error') %}
+            <output name="error">{{ request.get('error') }}</output>
+        {% endif %}
+        <label for="username">{{ 'Username' | trans }}</label>
+        <input type="text" name="username" id="username" value="{{ request.get('username') }}" />
+        <label for="password">{{ 'Password' | trans }}</label>
+        <input type="password" name="password" id="password" value="" />
+        <a href="{{ path('user_join') }}">{{ 'Create account' | trans }}</a>
+        <button type="submit">{{ 'login' | trans }}</button>
+    </form>
+{% endblock %}

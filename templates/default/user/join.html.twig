@@ -1,0 +1,17 @@
+{% extends 'default/layout.html.twig' %}
+{% block head_title_content %}{{ 'Join' | trans }} - {{ 'KevaChat' | trans }}{% endblock %}
+{% block main_content %}
+    <form name="join" action="{{ path('user_add') }}" method="post">
+        {% if request.get('error') %}
+            <output name="error">{{ request.get('error') }}</output>
+        {% endif %}
+        <label for="username">{{ 'Username' | trans }}</label>
+        <input type="text" name="username" id="username" value="{{ request.get('username') }}" placeholder="{{ 'Your public identity for this instance, permanently stored in blockchain' | trans }}" />
+        <label for="password">{{ 'Password' | trans }}</label>
+        <input type="password" name="password" id="password" value="" placeholder="{{ 'Bcrypt hash of this password permanently stored in blockchain' | trans }}" />
+        <label for="repeat">{{ 'Repeat password' | trans }}</label>
+        <input type="password" name="repeat" id="repeat" value="" placeholder="{{ 'Make sure your password is correct, you can not reset it later!' | trans }}" />
+        <a href="{{ path('user_login') }}">{{ 'I have account' | trans }}</a>
+        <button type="submit">{{ 'join' | trans }}</button>
+    </form>
+{% endblock %}
