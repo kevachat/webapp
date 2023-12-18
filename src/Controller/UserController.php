@@ -242,7 +242,7 @@ class UserController extends AbstractController
                 'user_add',
                 [
                     'username' => $request->get('username'),
-                    'error'    => $translator->trans('Username reserved for anonymous users!')
+                    'error'    => $translator->trans('Username reserved for anon messages!')
                 ]
             );
         }
