@@ -508,6 +508,18 @@ class RoomController extends AbstractController
             );
         }
 
+        // Check user session exist
+        $username = 'anon';
+
+        if ($request->get('sign') === 'username' && !empty($request->cookies->get('KEVACHAT_SESSION')) && preg_match('/[A-z0-9]{32}/', $request->cookies->get('KEVACHAT_SESSION')))
+        {
+            // Check username exist for this session
+            if ($value = $memcached->get($request->cookies->get('KEVACHAT_SESSION')))
+            {
+                $username = $value;
+            }
+        }
+
         // Send message to DHT
         if (
             $client->kevaPut(
@@ -515,7 +527,7 @@ class RoomController extends AbstractController
                 sprintf(
                     '%s@%s',
                     time(), // @TODO save timestamp as part of key to keep timing actual for the chat feature
-                    $request->get('sign') === 'ip' ? $request->getClientIp() : 'anon'
+                    $username
                 ),
                 $request->get('message')
             )
