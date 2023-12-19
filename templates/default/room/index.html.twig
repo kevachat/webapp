@@ -48,7 +48,7 @@
 {% endmacro %}
 {% from _self import recursive_post_tree %}
 {% extends 'default/layout.html.twig' %}
-{% block head_title_content %}{{ request.get('namespace') | keva_namespace_value }} - {{ 'KevaChat' | trans }}{% endblock %}
+{% block head_title_content %}{{ request.get('namespace') | keva_namespace_value }} - {{ app.name }}{% endblock %}
 {% block main_content %}
     {% if tree %}
         {{ recursive_post_tree(request.get('mode'), request.get('namespace'), tree) }}

@@ -1,5 +1,5 @@
 {% extends 'default/layout.html.twig' %}
-{% block head_title_content %}{{ 'Join' | trans }} - {{ 'KevaChat' | trans }}{% endblock %}
+{% block head_title_content %}{{ 'Join' | trans }} - {{ app.name }}{% endblock %}
 {% block main_content %}
     <form name="join" action="{{ path('user_add') }}" method="post">
         {% if request.get('error') %}

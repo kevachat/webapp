@@ -1,5 +1,5 @@
 {% extends 'default/layout.html.twig' %}
-{% block head_title_content %}{{ 'Rooms' | trans }} - {{ 'KevaChat' | trans }}{% endblock %}
+{% block head_title_content %}{{ 'Rooms' | trans }} - {{ app.name }}{% endblock %}
 {% block main_content %}
     {% if list | length %}
     <ul>
