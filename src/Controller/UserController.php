@@ -36,7 +36,7 @@ class UserController extends AbstractController
     }
 
     #[Route(
-        '/users',
+        '/user/list',
         name: 'user_list',
         methods:
         [

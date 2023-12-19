@@ -34,7 +34,7 @@ class RoomController extends AbstractController
     }
 
     #[Route(
-        '/rooms',
+        '/room/list',
         name: 'room_list',
         methods:
         [
