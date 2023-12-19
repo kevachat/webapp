@@ -22,10 +22,10 @@
     &bull;
 {% endif %}
 <h2>
-    {% if request.get('namespace') %}
-        <a href="{{ path('room_list', { mode : request.get('mode') }) }}">{{ 'more...' | trans }}</a>
-    {% else %}
+    {% if 'room_list' == request.get('_route') %}
         {{ 'more...' | trans }}
+    {% else %}
+        <a href="{{ path('room_list', { mode : request.get('mode') }) }}">{{ 'more...' | trans }}</a>
     {% endif %}
 </h2>
 <sup>
