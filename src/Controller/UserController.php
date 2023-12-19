@@ -76,10 +76,28 @@ class UserController extends AbstractController
                         continue;
                     }
 
+                    // Get room stats
+                    $total = 0;
+                    $rooms = [];
+
+                    foreach ($this->_rooms($client) as $room => $name)
+                    {
+                        $posts = 0;
+
+                        foreach ((array) $client->kevaFilter($room, sprintf('^[\d]+@%s$', $user['key'])) as $post)
+                        {
+                            $total++;
+                            $posts++;
+
+                            $rooms[$room] = $posts;
+                        }
+                    }
+
                     $list[] =
                     [
                         'name'   => $user['key'],
-                        'height' => $user['height'],
+                        'total'  => $total,
+                        'rooms'  => $rooms,
                     ];
                 }
             }
@@ -89,9 +107,9 @@ class UserController extends AbstractController
         array_multisort(
             array_column(
                 $list,
-                'height'
+                'total'
             ),
-            SORT_ASC,
+            SORT_DESC,
             $list
         );
 
@@ -714,6 +732,35 @@ class UserController extends AbstractController
         }
 
         return null;
+    }
+
+    private function _rooms(
+        \Kevachat\Kevacoin\Client $client
+    ): array
+    {
+        $rooms = [];
+
+        foreach ((array) $client->kevaListNamespaces() as $value)
+        {
+            if (empty($value['namespaceId']))
+            {
+                continue;
+            }
+
+            if (empty($value['displayName']))
+            {
+                continue;
+            }
+
+            if (str_starts_with($value['displayName'], '_'))
+            {
+                continue;
+            }
+
+            $rooms[$value['namespaceId']] = $value['displayName'];
+        }
+
+        return $rooms;
     }
 
     private function _hash(
