@@ -36,6 +36,96 @@ class UserController extends AbstractController
     }
 
     #[Route(
+        '/users',
+        name: 'user_list',
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function list(
+        ?Request $request
+    ): Response
+    {
+        $list = [];
+
+        // Check client connection
+        if ($client = $this->_client())
+        {
+            // Check users database accessible
+            if ($namespace = $this->_namespace($client))
+            {
+                // Collect usernames
+                foreach ((array) $client->kevaFilter($namespace) as $user)
+                {
+                    // Check record valid
+                    if (empty($user['key']) || empty($user['height']))
+                    {
+                        continue;
+                    }
+
+                    // Skip values with meta keys
+                    if (str_starts_with($user['key'], '_'))
+                    {
+                        continue;
+                    }
+
+                    // Validate username regex
+                    if (!preg_match($this->getParameter('app.add.user.name.regex'), $user['key']))
+                    {
+                        continue;
+                    }
+
+                    $list[] =
+                    [
+                        'name'   => $user['key'],
+                        'height' => $user['height'],
+                    ];
+                }
+            }
+        }
+
+        // Sort by height
+        array_multisort(
+            array_column(
+                $list,
+                'height'
+            ),
+            SORT_ASC,
+            $list
+        );
+
+        // RSS
+        if ('rss' === $request->get('feed'))
+        {
+            $response = new Response();
+
+            $response->headers->set(
+                'Content-Type',
+                'text/xml'
+            );
+
+            return $this->render(
+                'default/user/list.rss.twig',
+                [
+                    'list'    => $list,
+                    'request' => $request
+                ],
+                $response
+            );
+        }
+
+        // HTML
+        return $this->render(
+            'default/user/list.html.twig',
+            [
+                'list'    => $list,
+                'request' => $request
+            ]
+        );
+    }
+
+    #[Route(
         '/join',
         name: 'user_join',
         methods:

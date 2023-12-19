@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <atom:link href="{{ url('user_list') }}" rel="self" type="application/rss+xml"></atom:link>
+        <title>{{ 'Users' | trans }} - {{ app.name }}</title>
+        <link>{{ url('user_list') }}</link>
+        {% for user in list %}
+            <item>
+                <title>@{{ user.name }} {{ 'joined' | trans }} {{ app.name }}</title>
+                <guid>{{ url('user_list', { _fragment : user.name }) }}</guid>
+                <link>{{ url('user_list', { _fragment : user.name }) }}</link>
+                <description>{{ "Let's welcome" | trans }} @{{ user.name }}!</description>
+            </item>
+        {% endfor %}
+    </channel>
+</rss>

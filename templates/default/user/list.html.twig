@@ -1,0 +1,28 @@
+{% extends 'default/layout.html.twig' %}
+{% block head_title_content %}{{ 'Users' | trans }} - {{ app.name }}{% endblock %}
+{% block main_content %}
+    {% if list | length %}
+    <ul>
+        {% for user in list %}
+            <li>
+                <div>
+                    <strong>
+                        {{ user.name }}
+                    </strong>
+                    <i style="float:right">{# @TODO #}
+                        {#{{ 'at block' | trans }}#} {{ user.height }}
+                    </i>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <ul>
+            <li>
+                <div>
+                    {{ 'users not found or database locked by new transaction' | trans }}
+                </div>
+            </li>
+        </ul>
+    {% endif %}
+{% endblock %}
