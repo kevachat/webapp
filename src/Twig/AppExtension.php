@@ -218,7 +218,7 @@ class AppExtension extends AbstractExtension
     ): string
     {
         // Search not filtered namespaces
-        if (preg_match_all('~(N[A-z0-9]{33})~i', $text, $matches))
+        if (preg_match_all('~(N[A-z0-9]{33})~', $text, $matches))
         {
             if (empty($matches[1]))
             {
