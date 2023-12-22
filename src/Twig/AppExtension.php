@@ -185,6 +185,9 @@ class AppExtension extends AbstractExtension
             $text
         );
 
+        // @TODO no idea
+        $text = str_replace('&quot;', '"', $text);
+
         return $text;
     }
 
