@@ -34,3 +34,15 @@
         </ul>
     {% endif %}
 {% endblock %}
+{% block footer_content %}
+    {{
+        render(
+            controller(
+                'App\\Controller\\ModuleController::user',
+                {
+                    request: request
+                }
+            )
+        )
+    }}
+{% endblock %}

@@ -1,0 +1,9 @@
+<form>
+    {% if username %}
+        @{{ username }}
+        |
+        <a href="{{ path('user_logout') }}">{{ 'logout' | trans }}</a>
+    {% else %}
+        <a href="{{ path('user_join') }}">{{ 'register' | trans }}</a>
+    {% endif %}
+</form>

@@ -228,4 +228,36 @@ class ModuleController extends AbstractController
             ]
         );
     }
+
+    public function user(
+        Request $request
+    ): Response
+    {
+        // Check user session exist
+        $username = false;
+
+        if (!empty($request->cookies->get('KEVACHAT_SESSION')) && preg_match('/[A-z0-9]{32}/', $request->cookies->get('KEVACHAT_SESSION')))
+        {
+            // Connect memcached
+            $memcached = new \Memcached();
+            $memcached->addServer(
+                $this->getParameter('app.memcached.host'),
+                $this->getParameter('app.memcached.port')
+            );
+
+            // Check username exist for this session
+            if ($value = $memcached->get($request->cookies->get('KEVACHAT_SESSION')))
+            {
+                $username = $value;
+            }
+        }
+
+        return $this->render(
+            'default/module/user.html.twig',
+            [
+                'username' => $username,
+                'request'  => $request
+            ]
+        );
+    }
 }
