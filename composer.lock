@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "clitor-is-protocol/kevacoin",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/clitor-is-protocol/kevacoin-php.git",
-                "reference": "17c7dbd0147ab9505d927b71d245c3bfb46f8a56"
+                "reference": "d0f18f2956702a5a9340f540cf04600950062829"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clitor-is-protocol/kevacoin-php/zipball/17c7dbd0147ab9505d927b71d245c3bfb46f8a56",
-                "reference": "17c7dbd0147ab9505d927b71d245c3bfb46f8a56",
+                "url": "https://api.github.com/repos/clitor-is-protocol/kevacoin-php/zipball/d0f18f2956702a5a9340f540cf04600950062829",
+                "reference": "d0f18f2956702a5a9340f540cf04600950062829",
                 "shasum": ""
             },
             "type": "library",
@@ -32,9 +32,9 @@
             ],
             "support": {
                 "issues": "https://github.com/clitor-is-protocol/kevacoin-php/issues",
-                "source": "https://github.com/clitor-is-protocol/kevacoin-php/tree/1.0.2"
+                "source": "https://github.com/clitor-is-protocol/kevacoin-php/tree/1.0.3"
             },
-            "time": "2023-12-14T00:43:54+00:00"
+            "time": "2024-01-20T00:19:57+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -543,16 +543,16 @@
         },
         {
             "name": "nette/utils",
-            "version": "v4.0.3",
+            "version": "v4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "a9d127dd6a203ce6d255b2e2db49759f7506e015"
+                "reference": "d3ad0aa3b9f934602cb3e3902ebccf10be34d218"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/a9d127dd6a203ce6d255b2e2db49759f7506e015",
-                "reference": "a9d127dd6a203ce6d255b2e2db49759f7506e015",
+                "url": "https://api.github.com/repos/nette/utils/zipball/d3ad0aa3b9f934602cb3e3902ebccf10be34d218",
+                "reference": "d3ad0aa3b9f934602cb3e3902ebccf10be34d218",
                 "shasum": ""
             },
             "require": {
@@ -623,9 +623,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/utils/issues",
-                "source": "https://github.com/nette/utils/tree/v4.0.3"
+                "source": "https://github.com/nette/utils/tree/v4.0.4"
             },
-            "time": "2023-10-29T21:02:13+00:00"
+            "time": "2024-01-17T16:50:36+00:00"
         },
         {
             "name": "psr/cache",
