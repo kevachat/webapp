@@ -65,29 +65,33 @@ class RoomController extends AbstractController
                 continue;
             }
 
-            // Calculate room totals
-            $total = 0;
-
-            foreach ((array) $client->kevaFilter($value['namespaceId']) as $post)
-            {
-                // Skip values with meta keys
-                if (str_starts_with($post['key'], '_'))
-                {
-                    continue;
-                }
-
-                // Require valid kevachat meta
-                if ($this->_post($post))
-                {
-                    $total++;
-                }
-            }
-
             // Add to room list
-            $list[] =
+            $list[$value['namespaceId']] = // keep unique
             [
                 'namespace' => $value['namespaceId'],
-                'total'     => $total,
+                'total'     => $this->_total(
+                    $value['namespaceId']
+                ),
+                'pinned'    => in_array(
+                    $value['namespaceId'],
+                    (array) explode(
+                        '|',
+                        $this->getParameter('app.kevacoin.room.namespaces.pinned')
+                    )
+                )
+            ];
+        }
+
+        // Get rooms contain pending data
+        foreach ((array) $client->kevaPending() as $value)
+        {
+            // Add to room list
+            $list[$value['namespace']] = // keep unique
+            [
+                'namespace' => $value['namespace'],
+                'total'     => $this->_total(
+                    $value['namespace']
+                ),
                 'pinned'    => in_array(
                     $value['namespaceId'],
                     (array) explode(
@@ -917,5 +921,51 @@ class RoomController extends AbstractController
         }
 
         return $tree;
+    }
+
+    private function _total(string $namespace): int
+    {
+        // Connect kevacoin
+        $client = new \Kevachat\Kevacoin\Client(
+            $this->getParameter('app.kevacoin.protocol'),
+            $this->getParameter('app.kevacoin.host'),
+            $this->getParameter('app.kevacoin.port'),
+            $this->getParameter('app.kevacoin.username'),
+            $this->getParameter('app.kevacoin.password')
+        );
+
+        $raw = [];
+
+        // Get pending
+        foreach ((array) $client->kevaPending() as $pending)
+        {
+            // Ignore other namespaces
+            if ($pending['namespace'] != $namespace)
+            {
+                continue;
+            }
+
+            $raw[] = $pending;
+        }
+
+        // Get records
+        foreach ((array) $this->_kevacoin->kevaFilter($namespace) as $record)
+        {
+            $raw[] = $record;
+        }
+
+        // Count begin
+        $total = 0;
+
+        foreach ($raw as $data)
+        {
+            // Is valid post
+            if ($this->_post($data))
+            {
+                $total++;
+            }
+        }
+
+        return $total;
     }
 }
