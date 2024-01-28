@@ -949,7 +949,7 @@ class RoomController extends AbstractController
         }
 
         // Get records
-        foreach ((array) $this->_kevacoin->kevaFilter($namespace) as $record)
+        foreach ((array) $client->kevaFilter($namespace) as $record)
         {
             $raw[] = $record;
         }
