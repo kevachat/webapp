@@ -12,6 +12,8 @@ Instance require connection to the [Kevacoin](https://github.com/kevacoin-projec
 
 KevaChat following open wallet model, where community boost shared ballance for talks.
 
+* In another way, node administrators able to provide unique payment addresses to each message sent and charge commission for instance monetization. Currently, this model not implemented because of about zero conversation cost at this moment.
+
 Administrators have flexible settings of access levels explained in the `.env` file: read-only rooms, connection and post limits, etc.
 
 ## Communication
