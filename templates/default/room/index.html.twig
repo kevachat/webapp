@@ -29,10 +29,7 @@
                         {% endif %}
                         {# apply markdown whitelist filters only to prevent ping from remote includes #}
                         {{
-                            post.message | striptags
-                                         | markdown_to_html
-                                         | striptags
-                                         | message_to_markdown
+                            post.message | message_to_markdown
                                          | trim
                                          | nl2br
                                          | markdown_to_html
