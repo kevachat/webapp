@@ -38,7 +38,7 @@
                                          | markdown_to_html
                         }}
                     </div>
-                    {% if post.tree | length %}
+                    {% if post.tree is defined and post.tree | length %}
                         {{ self.recursive_post_tree(mode, namespace, post.tree) }}
                     {% endif %}
                 </li>
