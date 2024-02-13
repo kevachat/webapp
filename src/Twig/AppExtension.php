@@ -193,7 +193,7 @@ class AppExtension extends AbstractExtension
     ): string
     {
         return preg_replace(
-            '~(https?://(?:www\.)?[^\(\s\)]+)~i',
+            '/(https?:\/\/(?:www\.)?[^\(\s\)]+)/i',
             '[$1]($1)',
             $text
         );
@@ -204,7 +204,7 @@ class AppExtension extends AbstractExtension
     ): string
     {
         return preg_replace(
-            '~@([A-z0-9]{64})~i',
+            '/@([A-f0-9]{64})/i',
             '[@$1](#$1)',
             $text
         );
@@ -215,7 +215,7 @@ class AppExtension extends AbstractExtension
     ): string
     {
         // Search not filtered namespaces
-        if (preg_match_all('~(N[A-z0-9]{33})~', $text, $matches))
+        if (preg_match_all('/(^(?!\/)N[A-z0-9]{33})/', $text, $matches))
         {
             if (empty($matches[1]))
             {
