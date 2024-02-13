@@ -147,6 +147,7 @@ main ul li div a[name]
 main ul li p
 {
     padding-top: 8px;
+    line-height: 16px;
 }
 
 main ul li p > br /* tmp solution for current twig filters implementation */
