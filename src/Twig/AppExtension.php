@@ -185,9 +185,6 @@ class AppExtension extends AbstractExtension
             $text
         );
 
-        // @TODO no idea, no raw
-        $text = html_entity_decode($text);
-
         return $text;
     }
 
