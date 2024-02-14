@@ -215,14 +215,14 @@ class AppExtension extends AbstractExtension
     ): string
     {
         // Search not filtered namespaces
-        if (preg_match_all('/(^(?!\/)N[A-z0-9]{33})/', $text, $matches))
+        if (preg_match_all('/(^|\s)(N[A-z0-9]{33})/', $text, $matches))
         {
-            if (empty($matches[1]))
+            if (empty($matches[2]))
             {
                 return $text;
             }
 
-            foreach ($matches[1] as $namespace)
+            foreach ($matches[2] as $namespace)
             {
                 // Replace with _CLITOR_IS_ value
                 if ($meta = $this->_clitor($namespace))
