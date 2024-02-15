@@ -39,11 +39,11 @@ All messages related to their room `namespaces`.
 
 ## Update
 
-`cd webapp`
-`git pull`
-`composer update`
-`php bin/console doctrine:migrations:migrate`
-`APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear`
+* `cd webapp`
+* `git pull`
+* `composer update`
+* `php bin/console doctrine:migrations:migrate`
+* `APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear`
 
 ## Setup
 
