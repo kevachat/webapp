@@ -30,7 +30,7 @@ All messages related to their room `namespaces`.
 
 ## Install
 
-* `apt install git composer memcached sqlite3 php-fpm php-curl php-memcached php-sqlite3 php-mbstring`
+* `apt install git composer memcached sqlite3 php-curl php-memcached php-sqlite3 php-mbstring`
 * `git clone https://github.com/kevachat/webapp.git`
 * `cd webapp`
 * `composer update`
