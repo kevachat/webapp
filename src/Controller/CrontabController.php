@@ -120,7 +120,7 @@ class CrontabController extends AbstractController
             // Record expired
             else
             {
-                if ($pool->getTime() + $this->getParameter('app.pool.timeout') >= time())
+                if (time() >= $pool->getTime() + $this->getParameter('app.pool.timeout'))
                 {
                     // Update status
                     $pool->setExpired(
