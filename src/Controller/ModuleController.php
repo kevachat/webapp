@@ -204,6 +204,7 @@ class ModuleController extends AbstractController
                 'sign'      => $sign,
                 'message'   => $message,
                 'username'  => $username,
+                'cost'      => $this->getParameter('app.add.post.cost.kva'),
                 'enabled'   =>
                 (
                     !in_array(
@@ -224,7 +225,8 @@ class ModuleController extends AbstractController
         return $this->render(
             'default/module/room.html.twig',
             [
-                'request'  => $request
+                'request' => $request,
+                'cost'    => $this->getParameter('app.add.room.cost.kva')
             ]
         );
     }

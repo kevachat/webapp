@@ -9,6 +9,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
+use Doctrine\ORM\EntityManagerInterface;
+
+use App\Entity\Pool;
+
 class RoomController extends AbstractController
 {
     #[Route(
@@ -160,7 +164,8 @@ class RoomController extends AbstractController
         ]
     )]
     public function room(
-        Request $request
+        Request $request,
+        EntityManagerInterface $entity
     ): Response
     {
         // Connect kevacoin
@@ -174,6 +179,54 @@ class RoomController extends AbstractController
 
         // Get room feed
         $feed = [];
+
+        // Get pending from payment pool
+        foreach ($entity->getRepository(Pool::class)->findBy(
+            [
+                'namespace' => $request->get('namespace'),
+                'sent'      => 0,
+                'expired'   => 0
+            ]
+        ) as $pending)
+        {
+            // Require valid kevachat meta
+            if ($data = $this->_post(
+                [
+                    'key'   => $pending->getKey(),
+                    'value' => $pending->getValue(),
+                    'txid'  => hash( // @TODO tmp solution as required for tree building
+                        'sha256',
+                        rand()
+                    )
+                ]
+            ))
+            {
+                // Detect parent post
+                preg_match('/^@([A-z0-9]{64})\s/i', $data->message, $mention);
+                $feed[$data->id] =
+                [
+                    'id'      => $data->id,
+                    'user'    => $data->user,
+                    'icon'    => $data->icon,
+                    'time'    => $data->time,
+                    'parent'  => isset($mention[1]) ? $mention[1] : null,
+                    'message' => trim(
+                        preg_replace( // remove mention from folded message
+                            '/^@([A-z0-9]{64})\s/i',
+                            '',
+                            $data->message
+                        )
+                    ),
+                    'pending' => true,
+                    'pool'    =>
+                    [
+                        'cost'    => $pending->getCost(),
+                        'address' => $pending->getAddress(),
+                        'expires' => $pending->getTime() + $this->getParameter('app.pool.timeout')
+                    ]
+                ];
+            }
+        }
 
         // Get pending paradise
         foreach ((array) $client->kevaPending() as $pending) // @TODO relate to this room
@@ -318,7 +371,8 @@ class RoomController extends AbstractController
     )]
     public function post(
         Request $request,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        EntityManagerInterface $entity
     ): Response
     {
         // Check maintenance mode disabled
@@ -550,19 +604,55 @@ class RoomController extends AbstractController
             );
         }
 
-        // Send message to DHT
-        if (
-            $client->kevaPut(
-                $request->get('namespace'),
+        // Post has commission cost, send message to pending payment pool
+        if ($this->getParameter('app.add.post.cost.kva') > 0)
+        {
+            $time = time();
+
+            $pool = new Pool();
+
+            $pool->setTime(
+                $time
+            );
+
+            $pool->setSent(
+                0
+            );
+
+            $pool->setExpired(
+                0
+            );
+
+            $pool->setCost(
+                $this->getParameter('app.add.post.cost.kva')
+            );
+
+            $pool->setAddress(
+                $client->getNewAddress()
+            );
+
+            $pool->setNamespace(
+                $request->get('namespace')
+            );
+
+            $pool->setKey(
                 sprintf(
                     '%s@%s',
-                    time(), // @TODO save timestamp as part of key to keep timing actual for the chat feature
+                    $time,
                     $username
-                ),
+                )
+            );
+
+            $pool->setValue(
                 $request->get('message')
-            )
-        )
-        {
+            );
+
+            $entity->persist(
+                $pool
+            );
+
+            $entity->flush();
+
             // Register event time
             $memcached->set(
                 $memory,
@@ -582,6 +672,43 @@ class RoomController extends AbstractController
                     '_fragment' => 'latest'
                 ]
             );
+        }
+
+        // Post has zero cost, send message to DHT
+        else
+        {
+            if (
+                $client->kevaPut(
+                    $request->get('namespace'),
+                    sprintf(
+                        '%s@%s',
+                        time(), // @TODO save timestamp as part of key to keep timing actual for the chat feature
+                        $username
+                    ),
+                    $request->get('message')
+                )
+            )
+            {
+                // Register event time
+                $memcached->set(
+                    $memory,
+                    time(),
+                    (int) $this->getParameter('app.add.post.remote.ip.delay') // auto remove on cache expire
+                );
+
+                // Redirect back to room
+                return $this->redirectToRoute(
+                    'room_namespace',
+                    [
+                        'mode'      => $request->get('mode'),
+                        'namespace' => $request->get('namespace'),
+                        'sign'      => $request->get('sign'),
+                        'error'     => null,
+                        'message'   => null,
+                        '_fragment' => 'latest'
+                    ]
+                );
+            }
         }
 
         // Something went wrong, return error message
@@ -608,7 +735,8 @@ class RoomController extends AbstractController
     )]
     public function add(
         Request $request,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        EntityManagerInterface $entity
     ): Response
     {
         // Check maintenance mode disabled
@@ -780,6 +908,80 @@ class RoomController extends AbstractController
                     )
                 ]
             );
+        }
+
+        // Room registration has commission cost, send to pending payment pool
+        if ($this->getParameter('app.add.room.cost.kva') > 0)
+        {
+            if ($address = $client->getNewAddress())
+            {
+                $time = time();
+
+                $pool = new Pool();
+
+                $pool->setTime(
+                    $time
+                );
+
+                $pool->setSent(
+                    0
+                );
+
+                $pool->setExpired(
+                    0
+                );
+
+                $pool->setCost(
+                    $this->getParameter('app.add.room.cost.kva')
+                );
+
+                $pool->setAddress(
+                    $address
+                );
+
+                $pool->setNamespace(
+                    ''
+                );
+
+                $pool->setKey(
+                    '_KEVA_NS_'
+                );
+
+                $pool->setValue(
+                    $name
+                );
+
+                $entity->persist(
+                    $pool
+                );
+
+                $entity->flush();
+
+                // Redirect back to room
+                return $this->redirectToRoute(
+                    'room_list',
+                    [
+                        'mode'  => $request->get('mode'),
+                        'name'  => $name,
+                        'warning' => sprintf(
+                            $translator->trans('To complete, send %s KVA to %s'),
+                            $this->getParameter('app.add.room.cost.kva'),
+                            $address
+                        )
+                    ]
+                );
+            }
+
+            else
+            {
+                return $this->redirectToRoute(
+                    'room_list',
+                    [
+                        'username' => $request->get('username'),
+                        'error'    => $translator->trans('Could not init registration address!')
+                    ]
+                );
+            }
         }
 
         // Send message to DHT

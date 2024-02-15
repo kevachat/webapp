@@ -44,6 +44,13 @@ body
     font-size: 12px;
 }
 
+form > span
+{
+    float: right;
+    line-height: 24px;
+    padding: 0 8px;
+}
+
 /* header */
 
 header

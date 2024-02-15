@@ -1,7 +1,13 @@
-  <form name="room" action="{{ path('room_add', { mode : request.get('mode') }) }}" method="post">
-      {% if request.get('error') %}
-          <output name="error" for="form-room-name">{{ request.get('error') }}</output>
-      {% endif %}
-      <input type="text" name="name" id="form-room-name" value="{{ request.get('name') }}" placeholder="{{ 'enter new room name...' | trans }}" />
-      <button type="submit">{{ 'add' | trans }}</button>
-  </form>
+<form name="room" action="{{ path('room_add', { mode : request.get('mode') }) }}" method="post">
+    {% if request.get('error') %}
+        <output name="error" for="form-room-name">{{ request.get('error') }}</output>
+    {% endif %}
+    {% if request.get('warning') %}
+        <output name="warning" for="form-room-name">{{ request.get('warning') }}</output>
+    {% endif %}
+    <input type="text" name="name" id="form-room-name" value="{{ request.get('name') }}" placeholder="{{ 'enter new room name...' | trans }}" />
+    <button type="submit">{{ 'add' | trans }}</button>
+    {% if cost %}
+        <span>{{ 'cost: %s KVA' | format(cost) | trans }}</span>
+    {% endif %}
+</form>

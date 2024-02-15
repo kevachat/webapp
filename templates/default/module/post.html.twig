@@ -28,5 +28,8 @@
             <a href="{{ path('user_login') }}">{{ 'login' | trans }}</a>
         {% endif %}
         <button type="submit">{{ 'send' | trans }}</button>
+        {% if cost %}
+            <span>{{ 'cost: %s KVA' | format(cost) | trans }}</span>
+        {% endif %}
     </form>
 {% endif %}

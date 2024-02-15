@@ -9,6 +9,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
+use Doctrine\ORM\EntityManagerInterface;
+
+use App\Entity\Pool;
+
 class UserController extends AbstractController
 {
     private $_algorithm = PASSWORD_BCRYPT;
@@ -167,7 +171,8 @@ class UserController extends AbstractController
         return $this->render(
             'default/user/join.html.twig',
             [
-                'request' => $request
+                'request' => $request,
+                'cost'    => $this->getParameter('app.add.user.cost.kva')
             ]
         );
     }
@@ -247,7 +252,8 @@ class UserController extends AbstractController
     )]
     public function add(
         Request $request,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        EntityManagerInterface $entity
     ): Response
     {
         // Check maintenance mode disabled
@@ -440,6 +446,79 @@ class UserController extends AbstractController
                     'error'    => $translator->trans('Could not generate password hash!')
                 ]
             );
+        }
+
+        // User registration has commission cost, send message to pending payment pool
+        if ($this->getParameter('app.add.user.cost.kva') > 0)
+        {
+            if ($address = $client->getNewAddress())
+            {
+                $time = time();
+
+                $pool = new Pool();
+
+                $pool->setTime(
+                    $time
+                );
+
+                $pool->setSent(
+                    0
+                );
+
+                $pool->setExpired(
+                    0
+                );
+
+                $pool->setCost(
+                    $this->getParameter('app.add.user.cost.kva')
+                );
+
+                $pool->setAddress(
+                    $address
+                );
+
+                $pool->setNamespace(
+                    $namespace
+                );
+
+                $pool->setKey(
+                    $username
+                );
+
+                $pool->setValue(
+                    $hash
+                );
+
+                $entity->persist(
+                    $pool
+                );
+
+                $entity->flush();
+
+                // Redirect back to room
+                return $this->redirectToRoute(
+                    'user_add',
+                    [
+                        'username' => $request->get('username'),
+                        'warning'  => sprintf(
+                            $translator->trans('To complete registration, send %s KVA to %s'),
+                            $this->getParameter('app.add.user.cost.kva'),
+                            $address
+                        )
+                    ]
+                );
+            }
+
+            else
+            {
+                return $this->redirectToRoute(
+                    'user_add',
+                    [
+                        'username' => $request->get('username'),
+                        'error'    => $translator->trans('Could not init registration address!')
+                    ]
+                );
+            }
         }
 
         // Auth success, add user to DB

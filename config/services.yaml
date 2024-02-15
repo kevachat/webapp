@@ -36,6 +36,11 @@ parameters:
     app.add.post.remote.ip.denied: '%env(APP_ADD_POST_REMOTE_IP_DENIED)%'
     app.add.post.key.regex: '%env(APP_ADD_POST_KEY_REGEX)%'
     app.add.post.value.regex: '%env(APP_ADD_POST_VALUE_REGEX)%'
+    app.add.post.cost.kva: '%env(APP_ADD_POST_COST_KVA)%'
+    app.add.room.cost.kva: '%env(APP_ADD_ROOM_COST_KVA)%'
+    app.add.user.cost.kva: '%env(APP_ADD_USER_COST_KVA)%'
+    app.pool.confirmations: '%env(APP_POOL_CONFIRMATIONS)%'
+    app.pool.timeout: '%env(APP_POOL_TIMEOUT)%'
     app.moderator.remote.ip: '%env(APP_MODERATOR_REMOTE_IP)%'
 
 services:

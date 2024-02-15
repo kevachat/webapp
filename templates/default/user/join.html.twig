@@ -5,6 +5,9 @@
         {% if request.get('error') %}
             <output name="error">{{ request.get('error') }}</output>
         {% endif %}
+        {% if request.get('warning') %}
+            <output name="warning">{{ request.get('warning') }}</output>
+        {% endif %}
         <label for="username">{{ 'Username' | trans }}</label>
         <input type="text" name="username" id="username" value="{{ request.get('username') }}" placeholder="{{ 'Your public identity for this instance, permanently stored in blockchain' | trans }}" />
         <label for="password">{{ 'Password' | trans }}</label>
@@ -13,5 +16,8 @@
         <input type="password" name="repeat" id="repeat" value="" placeholder="{{ 'Make sure your password is correct, you can not reset it later!' | trans }}" />
         <a href="{{ path('user_login') }}">{{ 'I have account' | trans }}</a>
         <button type="submit">{{ 'join' | trans }}</button>
+        {% if cost %}
+            <span>{{ 'cost: %s KVA' | format(cost) | trans }}</span>
+        {% endif %}
     </form>
 {% endblock %}

@@ -10,8 +10,11 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "clitor-is-protocol/kevacoin": "^1.0",
+        "doctrine/doctrine-bundle": "^2.11",
+        "doctrine/doctrine-migrations-bundle": "^3.3",
+        "doctrine/orm": "^3.0",
         "jdenticon/jdenticon": "^1.0",
-        "kevachat/kevacoin": "^1.0",
+        "kevachat/kevacoin": "^1.7",
         "league/commonmark": "^2.4",
         "symfony/console": "7.0.*",
         "symfony/dotenv": "7.0.*",
@@ -23,6 +26,7 @@
         "symfony/twig-bundle": "7.0.*",
         "symfony/yaml": "7.0.*",
         "twig/extra-bundle": "^3.8",
+        "twig/intl-extra": "^3.8",
         "twig/markdown-extra": "^3.8"
     },
     "config": {
@@ -73,5 +77,8 @@
             "allow-contrib": false,
             "require": "7.0.*"
         }
+    },
+    "require-dev": {
+        "symfony/maker-bundle": "^1.54"
     }
 }

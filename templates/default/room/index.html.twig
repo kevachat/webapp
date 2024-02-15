@@ -17,15 +17,21 @@
                             </strong>
                         {% endif %}
                         &bull;
-                        <a rel="nofollow" href="{{ path('room_namespace', { mode : mode, namespace : namespace, _fragment : post.id }) }}" title="{{ post.time | date('c') }}">{{ post.time | format_ago }}</a>
-                        &bull;
-                        <a rel="nofollow" href="{{ path('room_namespace', { mode : mode, namespace : namespace, txid : post.id, _fragment : post.id }) }}">{{ 'reply' | trans }}</a>
                         {% if post.pending %}
+                            {{ post.time | format_ago }}
+                            {% if post.pool %}
+                                &bull;
+                                {{ 'pending %s KVA to %s (%s)' | trans | format(post.pool.cost, post.pool.address, post.pool.expires | format_expire ) }}
+                            {% endif %}
                             <span title="{{ 'pending in pool' | trans }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 16 16">
                                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
                                 </svg>
                             </span>
+                        {% else %}
+                            <a rel="nofollow" href="{{ path('room_namespace', { mode : mode, namespace : namespace, _fragment : post.id }) }}" title="{{ post.time | date('c') }}">{{ post.time | format_ago }}</a>
+                            &bull;
+                            <a rel="nofollow" href="{{ path('room_namespace', { mode : mode, namespace : namespace, txid : post.id, _fragment : post.id }) }}">{{ 'reply' | trans }}</a>
                         {% endif %}
                         {# apply markdown whitelist filters only to prevent ping from remote includes #}
                         {{

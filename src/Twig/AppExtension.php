@@ -32,6 +32,13 @@ class AppExtension extends AbstractExtension
                 ]
             ),
             new TwigFilter(
+                'format_expire',
+                [
+                    $this,
+                    'formatExpire'
+                ]
+            ),
+            new TwigFilter(
                 'format_bytes',
                 [
                     $this,
@@ -124,6 +131,77 @@ class AppExtension extends AbstractExtension
                 $this->translator->trans('second ago'),
                 $this->translator->trans('seconds ago'),
                 $this->translator->trans(' seconds ago')
+            ]
+        ];
+
+        foreach ($values as $key => $value)
+        {
+            $result = $diff / $key;
+
+            if ($result >= 1)
+            {
+                $round = round($result);
+
+                return sprintf(
+                    '%s %s',
+                    $round,
+                    $this->_plural(
+                        $round,
+                        $value
+                    )
+                );
+            }
+        }
+    }
+
+    public function formatExpire(
+        int $time,
+    ): string
+    {
+        $diff = $time - time();
+
+        if ($diff < 1)
+        {
+            return $this->translator->trans('expired');
+        }
+
+        $values =
+        [
+            365 * 24 * 60 * 60 =>
+            [
+                $this->translator->trans('year to expire'),
+                $this->translator->trans('years to expire'),
+                $this->translator->trans(' years to expire')
+            ],
+            30  * 24 * 60 * 60 =>
+            [
+                $this->translator->trans('month to expire'),
+                $this->translator->trans('months to expire'),
+                $this->translator->trans(' months to expire')
+            ],
+            24 * 60 * 60 =>
+            [
+                $this->translator->trans('day to expire'),
+                $this->translator->trans('days to expire'),
+                $this->translator->trans(' days to expire')
+            ],
+            60 * 60 =>
+            [
+                $this->translator->trans('hour to expire'),
+                $this->translator->trans('hours to expire'),
+                $this->translator->trans(' hours to expire')
+            ],
+            60 =>
+            [
+                $this->translator->trans('minute to expire'),
+                $this->translator->trans('minutes to expire'),
+                $this->translator->trans(' minutes to expire')
+            ],
+            1 =>
+            [
+                $this->translator->trans('second to expire'),
+                $this->translator->trans('seconds to expire'),
+                $this->translator->trans(' seconds to expire')
             ]
         ];
 
