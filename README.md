@@ -28,6 +28,11 @@ KevaChat protocol following native Kevacoin's `key`/`value` model, where `key` -
 
 All messages related to their room `namespace`.
 
+## Examples
+
+* `http://[201:23b4:991a:634d:8359:4521:5576:15b7]/kevachat/` - [Yggdrasil](https://github.com/yggdrasil-network/) instance
+  * `http://kevachat.ygg` - [Alfis DNS](https://github.com/Revertron/Alfis) alias
+
 ## Install
 
 * `apt install git composer memcached sqlite3 php-curl php-memcached php-sqlite3 php-mbstring`
