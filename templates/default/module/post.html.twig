@@ -1,7 +1,10 @@
 {% if enabled %}
     <form name="post" action="{{ path('room_post', { mode : mode, namespace : namespace }) }}" method="post">
-        {% if error %}
+        {% if error  %}
             <output name="error" for="form-post-message">{{ error }}</output>
+        {% endif %}
+        {% if warning %}
+            <output name="warning" for="form-post-message">{{ warning }}</output>
         {% endif %}
         <textarea name="message" id="form-post-message" placeholder="{{ 'enter your message...' | trans }}">{{ message }}</textarea>
         {% if sign == 'anon' or sign == '' %}

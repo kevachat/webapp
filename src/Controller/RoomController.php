@@ -181,6 +181,7 @@ class RoomController extends AbstractController
         $feed = [];
 
         // Get pending from payment pool
+        /*
         foreach ($entity->getRepository(Pool::class)->findBy(
             [
                 'namespace' => $request->get('namespace'),
@@ -227,6 +228,7 @@ class RoomController extends AbstractController
                 ];
             }
         }
+        */
 
         // Get pending paradise
         foreach ((array) $client->kevaPending() as $pending) // @TODO relate to this room
@@ -628,7 +630,7 @@ class RoomController extends AbstractController
             );
 
             $pool->setAddress(
-                $client->getNewAddress()
+                $address = $client->getNewAddress()
             );
 
             $pool->setNamespace(
@@ -667,8 +669,17 @@ class RoomController extends AbstractController
                     'mode'      => $request->get('mode'),
                     'namespace' => $request->get('namespace'),
                     'sign'      => $request->get('sign'),
-                    'error'     => null,
                     'message'   => null,
+                    'error'     => null,
+                    'warning'   => sprintf(
+                        $translator->trans('Send exactly %s KVA to %s (expires at %s)'),
+                        $this->getParameter('app.add.post.cost.kva'),
+                        $address,
+                        date(
+                            'c',
+                            $this->getParameter('app.pool.timeout') + $time
+                        )
+                    ),
                     '_fragment' => 'latest'
                 ]
             );

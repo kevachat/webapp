@@ -201,6 +201,7 @@ class ModuleController extends AbstractController
                 'mode'      => $request->get('mode'),
                 'namespace' => $request->get('namespace'),
                 'error'     => $request->get('error'),
+                'warning'   => $request->get('warning'),
                 'sign'      => $sign,
                 'message'   => $message,
                 'username'  => $username,
