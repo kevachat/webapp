@@ -2,9 +2,9 @@
     {{ 'online:' | trans }} {{ online }}
     /
     {{ 'block:' | trans }} {{ wallet.block }}
+    {% if boost.address %}
     /
     {{ 'balance:' | trans }} {{ wallet.balance }}
-    {% if boost.address %}
         /
         {{ 'boost:' | trans }}
         {% if explorer.url %}
