@@ -672,7 +672,7 @@ class RoomController extends AbstractController
                     'message'   => null,
                     'error'     => null,
                     'warning'   => sprintf(
-                        $translator->trans('Send exactly %s KVA to %s (expires at %s)'),
+                        $translator->trans('Pending %s KVA to %s (expires at %s)'),
                         $this->getParameter('app.add.post.cost.kva'),
                         $address,
                         date(
