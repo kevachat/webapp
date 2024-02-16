@@ -159,6 +159,23 @@ class UserController extends AbstractController
         ?Request $request
     ): Response
     {
+        // Connect memcached
+        $memcached = new \Memcached();
+        $memcached->addServer(
+            $this->getParameter('app.memcached.host'),
+            $this->getParameter('app.memcached.port')
+        );
+
+        // Create token
+        $token = crc32(
+            microtime(true) + rand()
+        );
+
+        $memcached->add(
+            $token,
+            time()
+        );
+
         // Check user session does not exist to continue
         if (!empty($request->cookies->get('KEVACHAT_SESSION')))
         {
@@ -172,6 +189,7 @@ class UserController extends AbstractController
             'default/user/join.html.twig',
             [
                 'request' => $request,
+                'token'   => $token,
                 'cost'    => $this->getParameter('app.add.user.cost.kva')
             ]
         );
@@ -189,6 +207,23 @@ class UserController extends AbstractController
         ?Request $request
     ): Response
     {
+        // Connect memcached
+        $memcached = new \Memcached();
+        $memcached->addServer(
+            $this->getParameter('app.memcached.host'),
+            $this->getParameter('app.memcached.port')
+        );
+
+        // Create token
+        $token = crc32(
+            microtime(true) + rand()
+        );
+
+        $memcached->add(
+            $token,
+            time()
+        );
+
         // Check user session does not exist to continue
         if (!empty($request->cookies->get('KEVACHAT_SESSION')))
         {
@@ -201,7 +236,8 @@ class UserController extends AbstractController
         return $this->render(
             'default/user/login.html.twig',
             [
-                'request' => $request
+                'request' => $request,
+                'token'   => $token
             ]
         );
     }
@@ -297,6 +333,25 @@ class UserController extends AbstractController
                 $request->getClientIp(),
             ),
         );
+
+        // Validate form token
+        if ($memcached->get($request->get('token')))
+        {
+            $memcached->delete(
+                $request->get('token')
+            );
+        }
+
+        else
+        {
+            return $this->redirectToRoute(
+                'user_add',
+                [
+                    'username' => $request->get('username'),
+                    'error'    => $translator->trans('Session token expired')
+                ]
+            );
+        }
 
         // Validate remote IP limits
         if ($delay = (int) $memcached->get($memory))
@@ -628,6 +683,25 @@ class UserController extends AbstractController
             $this->getParameter('app.memcached.host'),
             $this->getParameter('app.memcached.port')
         );
+
+        // Validate form token
+        if ($memcached->get($request->get('token')))
+        {
+            $memcached->delete(
+                $request->get('token')
+            );
+        }
+
+        else
+        {
+            return $this->redirectToRoute(
+                'user_login',
+                [
+                    'username' => $request->get('username'),
+                    'error'    => $translator->trans('Session token expired')
+                ]
+            );
+        }
 
         // Check client connection
         if (!$client = $this->_client())

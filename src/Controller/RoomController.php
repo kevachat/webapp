@@ -442,6 +442,29 @@ class RoomController extends AbstractController
         }
         */
 
+        // Validate form token
+        if ($memcached->get($request->get('token')))
+        {
+            $memcached->delete(
+                $request->get('token')
+            );
+        }
+
+        else
+        {
+            return $this->redirectToRoute(
+                'room_namespace',
+                [
+                    'mode'      => $request->get('mode'),
+                    'namespace' => $request->get('namespace'),
+                    'message'   => $request->get('message'),
+                    'sign'      => $request->get('sign'),
+                    'error'     => $translator->trans('Session token expired'),
+                    '_fragment' => 'latest'
+                ]
+            );
+        }
+
         // Validate access to the room namespace
         if
         (
@@ -793,6 +816,26 @@ class RoomController extends AbstractController
         $name = trim(
             $request->get('name')
         );
+
+        // Validate form token
+        if ($memcached->get($request->get('token')))
+        {
+            $memcached->delete(
+                $request->get('token')
+            );
+        }
+
+        else
+        {
+            return $this->redirectToRoute(
+                'room_list',
+                [
+                    'mode'  => $request->get('mode'),
+                    'name'  => $name,
+                    'error' => $translator->trans('Session token expired')
+                ]
+            );
+        }
 
         // Validate kevacoin key requirements
         if (mb_strlen($name) < 1 || mb_strlen($name) > 520)

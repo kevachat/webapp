@@ -129,18 +129,28 @@ class ModuleController extends AbstractController
         Request $request
     ): Response
     {
+        // Connect memcached
+        $memcached = new \Memcached();
+        $memcached->addServer(
+            $this->getParameter('app.memcached.host'),
+            $this->getParameter('app.memcached.port')
+        );
+
+        // Create token
+        $token = crc32(
+            microtime(true) + rand()
+        );
+
+        $memcached->add(
+            $token,
+            time()
+        );
+
         // Check user session exist
         $username = false;
 
         if (!empty($request->cookies->get('KEVACHAT_SESSION')) && preg_match('/[A-z0-9]{32}/', $request->cookies->get('KEVACHAT_SESSION')))
         {
-            // Connect memcached
-            $memcached = new \Memcached();
-            $memcached->addServer(
-                $this->getParameter('app.memcached.host'),
-                $this->getParameter('app.memcached.port')
-            );
-
             // Check username exist for this session
             if ($value = $memcached->get($request->cookies->get('KEVACHAT_SESSION')))
             {
@@ -203,6 +213,7 @@ class ModuleController extends AbstractController
                 'error'     => $request->get('error'),
                 'warning'   => $request->get('warning'),
                 'sign'      => $sign,
+                'token'     => $token,
                 'message'   => $message,
                 'username'  => $username,
                 'cost'      => $this->getParameter('app.add.post.cost.kva'),
@@ -223,10 +234,28 @@ class ModuleController extends AbstractController
         Request $request
     ): Response
     {
+        // Connect memcached
+        $memcached = new \Memcached();
+        $memcached->addServer(
+            $this->getParameter('app.memcached.host'),
+            $this->getParameter('app.memcached.port')
+        );
+
+        // Create token
+        $token = crc32(
+            microtime(true) + rand()
+        );
+
+        $memcached->add(
+            $token,
+            time()
+        );
+
         return $this->render(
             'default/module/room.html.twig',
             [
                 'request' => $request,
+                'token'   => $token,
                 'cost'    => $this->getParameter('app.add.room.cost.kva')
             ]
         );

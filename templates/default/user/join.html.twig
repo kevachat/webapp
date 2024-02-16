@@ -19,5 +19,6 @@
         {% if cost %}
             <span>{{ 'cost: %s KVA' | format(cost) | trans }}</span>
         {% endif %}
+        <input type="hidden" name="token" value="{{ token }}" />
     </form>
 {% endblock %}

@@ -11,5 +11,6 @@
         <input type="password" name="password" id="password" value="" />
         <a href="{{ path('user_join') }}">{{ 'Create account' | trans }}</a>
         <button type="submit">{{ 'login' | trans }}</button>
+        <input type="hidden" name="token" value="{{ token }}" />
     </form>
 {% endblock %}
