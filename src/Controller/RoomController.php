@@ -630,7 +630,7 @@ class RoomController extends AbstractController
         }
 
         // Post has commission cost, send message to pending payment pool
-        if ($this->getParameter('app.add.post.cost.kva') > 0)
+        if ($this->getParameter('app.add.post.cost.kva'))
         {
             $time = time();
 
@@ -965,7 +965,7 @@ class RoomController extends AbstractController
         }
 
         // Room registration has commission cost, send to pending payment pool
-        if ($this->getParameter('app.add.room.cost.kva') > 0)
+        if ($this->getParameter('app.add.room.cost.kva'))
         {
             if ($address = $client->getNewAddress())
             {

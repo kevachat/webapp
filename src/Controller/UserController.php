@@ -504,7 +504,7 @@ class UserController extends AbstractController
         }
 
         // User registration has commission cost, send message to pending payment pool
-        if ($this->getParameter('app.add.user.cost.kva') > 0)
+        if ($this->getParameter('app.add.user.cost.kva'))
         {
             if ($address = $client->getNewAddress())
             {
