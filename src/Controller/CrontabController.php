@@ -138,4 +138,45 @@ class CrontabController extends AbstractController
 
         return new Response(); // @TODO
     }
+
+    #[Route(
+        '/crontab/withdraw',
+        name: 'crontab_withdraw',
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function withdraw(): Response
+    {
+        // Connect kevacoin
+        $client = new \Kevachat\Kevacoin\Client(
+            $this->getParameter('app.kevacoin.protocol'),
+            $this->getParameter('app.kevacoin.host'),
+            $this->getParameter('app.kevacoin.port'),
+            $this->getParameter('app.kevacoin.username'),
+            $this->getParameter('app.kevacoin.password')
+        );
+
+        // Withdraw profit
+        if ($this->getParameter('app.kevacoin.withdraw.profit.address'))
+        {
+            if ($balance = $client->getBalance())
+            {
+                if ($balance - $this->getParameter('app.kevacoin.withdraw.balance.min.kva') >= $this->getParameter('app.kevacoin.withdraw.balance.max.kva'))
+                {
+                    $client->sendToAddress(
+                        $this->getParameter('app.kevacoin.withdraw.profit.address'),
+                        round(
+                            $balance - $this->getParameter('app.kevacoin.withdraw.balance.min.kva'),
+                            8
+                        ),
+                        'crontab/withdraw'
+                    );
+                }
+            }
+        }
+
+        return new Response(); // @TODO
+    }
 }
