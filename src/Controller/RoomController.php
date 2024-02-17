@@ -588,7 +588,7 @@ class RoomController extends AbstractController
         }
 
         /// Validate funds available yet
-        if (1 > $client->getBalance())
+        if ($client->getBalance())
         {
             return $this->redirectToRoute(
                 'room_namespace',
@@ -949,7 +949,7 @@ class RoomController extends AbstractController
         }
 
         // Validate funds available yet
-        if (1 > $client->getBalance())
+        if ($client->getBalance())
         {
             return $this->redirectToRoute(
                 'room_list',
