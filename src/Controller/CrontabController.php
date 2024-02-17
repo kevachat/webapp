@@ -171,7 +171,9 @@ class CrontabController extends AbstractController
                             $balance - $this->getParameter('app.kevacoin.withdraw.balance.min.kva'),
                             8
                         ),
-                        'crontab/withdraw'
+                        'crontab/withdraw',
+                        null,
+                        true
                     );
                 }
             }
