@@ -597,10 +597,7 @@ class RoomController extends AbstractController
                     'namespace' => $request->get('namespace'),
                     'message'   => $request->get('message'),
                     'sign'      => $request->get('sign'),
-                    'error'     => sprintf(
-                        $translator->trans('Insufficient funds, wallet: %s'),
-                        $this->getParameter('app.kevacoin.boost.address')
-                    ),
+                    'error'     => $translator->trans('Insufficient funds'),
                     '_fragment' => 'latest'
                 ]
             );
@@ -956,10 +953,7 @@ class RoomController extends AbstractController
                 [
                     'mode'  => $request->get('mode'),
                     'name'  => $name,
-                    'error' => sprintf(
-                        $translator->trans('Insufficient funds, wallet: %s'),
-                        $this->getParameter('app.kevacoin.boost.address')
-                    )
+                    'error' => $translator->trans('Insufficient funds')
                 ]
             );
         }

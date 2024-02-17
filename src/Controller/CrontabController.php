@@ -159,16 +159,16 @@ class CrontabController extends AbstractController
         );
 
         // Withdraw profit
-        if ($this->getParameter('app.kevacoin.withdraw.profit.address'))
+        if ($this->getParameter('app.kevacoin.profit.withdraw.address'))
         {
             if ($balance = $client->getBalance())
             {
-                if ($balance - $this->getParameter('app.kevacoin.withdraw.balance.min.kva') >= $this->getParameter('app.kevacoin.withdraw.balance.max.kva'))
+                if ($balance - $this->getParameter('app.kevacoin.profit.withdraw.balance.min.kva') >= $this->getParameter('app.kevacoin.profit.withdraw.balance.max.kva'))
                 {
                     $client->sendToAddress(
-                        $this->getParameter('app.kevacoin.withdraw.profit.address'),
+                        $this->getParameter('app.kevacoin.profit.withdraw.address'),
                         round(
-                            $balance - $this->getParameter('app.kevacoin.withdraw.balance.min.kva'),
+                            $balance - $this->getParameter('app.kevacoin.profit.withdraw.balance.min.kva'),
                             8
                         ),
                         'crontab/withdraw',
