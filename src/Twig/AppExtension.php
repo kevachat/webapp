@@ -60,6 +60,13 @@ class AppExtension extends AbstractExtension
                 ]
             ),
             new TwigFilter(
+                'account_address',
+                [
+                    $this,
+                    'accountAddress'
+                ]
+            ),
+            new TwigFilter(
                 'message_to_markdown',
                 [
                     $this,
@@ -294,6 +301,24 @@ class AppExtension extends AbstractExtension
         return $client->getBalance(
             $account,
             $confirmations
+        );
+    }
+
+    public function accountAddress(
+        string $account
+    ): ?string
+    {
+        // Connect kevacoin
+        $client = new \Kevachat\Kevacoin\Client(
+            $this->container->getParameter('app.kevacoin.protocol'),
+            $this->container->getParameter('app.kevacoin.host'),
+            $this->container->getParameter('app.kevacoin.port'),
+            $this->container->getParameter('app.kevacoin.username'),
+            $this->container->getParameter('app.kevacoin.password')
+        );
+
+        return $client->getAccountAddress(
+            $account
         );
     }
 
