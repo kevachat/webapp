@@ -61,10 +61,10 @@ class CrontabController extends AbstractController
             // Payment received, send to blockchain
             if ($client->getReceivedByAddress($pool->getAddress(), $this->getParameter('app.pool.confirmations')) >= $pool->getCost())
             {
-                // Check physical wallet balance
-                if ($client->getBalance($this->getParameter('app.kevacoin.pool.account')) <= $pool->getCost())
+                // Check physical account balance
+                if ($client->getBalance($this->getParameter('app.kevacoin.pool.account'), $this->getParameter('app.pool.confirmations')) < $pool->getCost())
                 {
-                    break; // @TODO exception
+                    continue; // wait for income full confirmed amount
                 }
 
                 // Is room request
