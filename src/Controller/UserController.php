@@ -51,78 +51,113 @@ class UserController extends AbstractController
         ?Request $request
     ): Response
     {
-        $list = [];
+        // Connect memcached
+        $memcached = new \Memcached();
+        $memcached->addServer(
+            $this->getParameter('app.memcached.host'),
+            $this->getParameter('app.memcached.port')
+        );
 
-        // Check client connection
-        if ($client = $this->_client())
+        $memory = md5(
+            sprintf(
+                '%s.UserController::list:list',
+                __DIR__,
+            ),
+        );
+
+        if (!$list = $memcached->get($memory))
         {
-            // Check users database accessible
-            if ($namespace = $this->_namespace($client))
+            $list = [];
+
+            // Check client connection
+            if ($client = $this->_client())
             {
-                // Collect usernames
-                foreach ((array) $client->kevaFilter($namespace) as $user)
+                // Check users database accessible
+                if ($namespace = $this->_namespace($client))
                 {
-                    // Check record valid
-                    if (empty($user['key']) || empty($user['height']))
+                    // Collect usernames
+                    foreach ((array) $client->kevaFilter($namespace) as $user)
                     {
-                        continue;
-                    }
-
-                    // Skip values with meta keys
-                    if (str_starts_with($user['key'], '_'))
-                    {
-                        continue;
-                    }
-
-                    // Validate username regex
-                    if (!preg_match($this->getParameter('app.add.user.name.regex'), $user['key']))
-                    {
-                        continue;
-                    }
-
-                    // Get room stats
-                    $total = 0;
-                    $rooms = [];
-
-                    foreach ($this->_rooms($client) as $room => $name)
-                    {
-                        $posts = 0;
-
-                        foreach ((array) $client->kevaFilter($room, sprintf('^[\d]+@%s$', $user['key'])) as $post)
+                        // Check record valid
+                        if (empty($user['key']) || empty($user['height']))
                         {
-                            $total++;
-                            $posts++;
-
-                            $rooms[$room] = $posts;
+                            continue;
                         }
-                    }
 
-                    $list[] =
-                    [
-                        'name'    => $user['key'],
-                        'balance' => $client->getBalance(
-                            $user['key'],
-                            $this->getParameter('app.pool.confirmations')
-                        ),
-                        'address' => $client->getAccountAddress(
-                            $user['key']
-                        ),
-                        'total'   => $total,
-                        'rooms'   => $rooms,
-                    ];
+                        // Skip values with meta keys
+                        if (str_starts_with($user['key'], '_'))
+                        {
+                            continue;
+                        }
+
+                        // Validate username regex
+                        if (!preg_match($this->getParameter('app.add.user.name.regex'), $user['key']))
+                        {
+                            continue;
+                        }
+
+                        // Get room stats
+                        $rooms = [];
+
+                        foreach ((array) $client->kevaListNamespaces() as $value)
+                        {
+                            if (empty($value['namespaceId']))
+                            {
+                                continue;
+                            }
+
+                            if (empty($value['displayName']))
+                            {
+                                continue;
+                            }
+
+                            if (str_starts_with($value['displayName'], '_'))
+                            {
+                                continue;
+                            }
+
+                            $posts = 0;
+
+                            foreach ((array) $client->kevaFilter($value['namespaceId'], sprintf('^[\d]+@%s$', $user['key'])) as $post)
+                            {
+                                $posts++;
+
+                                $rooms[$value['displayName']] = $posts;
+                            }
+                        }
+
+                        $list[] =
+                        [
+                            'name'    => $user['key'],
+                            'balance' => $client->getBalance(
+                                $user['key'],
+                                $this->getParameter('app.pool.confirmations')
+                            ),
+                            'address' => $client->getAccountAddress(
+                                $user['key']
+                            ),
+                            'rooms'   => $rooms,
+                        ];
+                    }
                 }
             }
-        }
 
-        // Sort by height
-        array_multisort(
-            array_column(
-                $list,
-                'total'
-            ),
-            SORT_DESC,
-            $list
-        );
+            // Sort by height
+            array_multisort(
+                array_column(
+                    $list,
+                    'total'
+                ),
+                SORT_DESC,
+                $list
+            );
+
+            // Cache result
+            $memcached->set(
+                $memory,
+                $list
+            );
+        }
 
         // RSS
         if ('rss' === $request->get('feed'))
@@ -880,35 +915,6 @@ class UserController extends AbstractController
         }
 
         return null;
-    }
-
-    private function _rooms(
-        \Kevachat\Kevacoin\Client $client
-    ): array
-    {
-        $rooms = [];
-
-        foreach ((array) $client->kevaListNamespaces() as $value)
-        {
-            if (empty($value['namespaceId']))
-            {
-                continue;
-            }
-
-            if (empty($value['displayName']))
-            {
-                continue;
-            }
-
-            if (str_starts_with($value['displayName'], '_'))
-            {
-                continue;
-            }
-
-            $rooms[$value['namespaceId']] = $value['displayName'];
-        }
-
-        return $rooms;
     }
 
     private function _hash(
