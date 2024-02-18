@@ -40,8 +40,7 @@ All messages related to their room `namespace`.
 * `cd webapp`
 * `composer update`
 * `php bin/console doctrine:schema:update --force`
-* `* * * * * /usr/bin/wget -q --spider http://../crontab/pool > /dev/null 2>&1` - process pool
-* `0 0 * * * /usr/bin/wget -q --spider http://../crontab/withdraw > /dev/null 2>&1` - withdraw profit
+* `* * * * * /usr/bin/wget -q --spider http://../crontab/pool > /dev/null 2>&1`
 
 ## Update
 
