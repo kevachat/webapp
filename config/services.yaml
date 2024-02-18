@@ -17,6 +17,7 @@ parameters:
     app.kevacoin.password: '%env(APP_KEVACOIN_PASSWORD)%'
     app.kevacoin.pool.account: '%env(APP_KEVACOIN_POOL_ACCOUNT)%'
     app.kevacoin.profit.address: '%env(APP_KEVACOIN_PROFIT_ADDRESS)%'
+    app.kevacoin.boost.address: '%env(APP_KEVACOIN_BOOST_ADDRESS)%'
     app.kevacoin.room.namespaces.pinned: '%env(APP_KEVACOIN_ROOM_NAMESPACES_PINNED)%'
     app.kevacoin.room.namespaces.readonly: '%env(APP_KEVACOIN_ROOM_NAMESPACES_READONLY)%'
     app.kevacoin.room.namespace.default: '%env(APP_KEVACOIN_ROOM_NAMESPACE_DEFAULT)%'

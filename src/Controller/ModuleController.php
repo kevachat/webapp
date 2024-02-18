@@ -73,7 +73,7 @@ class ModuleController extends AbstractController
                 ],
                 'boost' =>
                 [
-                    'address'  => $this->getParameter('app.kevacoin.profit.address')
+                    'address'  => $this->getParameter('app.kevacoin.boost.address')
                 ],
                 'mine' =>
                 [
