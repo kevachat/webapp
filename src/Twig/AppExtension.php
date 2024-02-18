@@ -278,7 +278,8 @@ class AppExtension extends AbstractExtension
     }
 
     public function accountBalance(
-        string $account
+        string $account,
+        ?int $confirmations = null
     ): ?float
     {
         // Connect kevacoin
@@ -291,7 +292,8 @@ class AppExtension extends AbstractExtension
         );
 
         return $client->getBalance(
-            $account
+            $account,
+            $confirmations
         );
     }
 
