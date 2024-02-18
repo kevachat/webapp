@@ -9,9 +9,9 @@
                     <strong>
                         @{{ user.name }}
                     </strong>
-                    <p>
-                        {{ 'balance' | trans }}: {{ user.balance }}
-                    </p>
+                    <span style="float:right">{# @TODO #}
+                        {{ 'balance: %s KVA' | trans | format(user.balance) }}
+                    </span>
                     <p>
                         {{ 'boost' | trans }}: {{ user.address }}
                     </p>
