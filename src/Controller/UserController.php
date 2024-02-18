@@ -97,6 +97,7 @@ class UserController extends AbstractController
                         }
 
                         // Get room stats
+                        $total = 0;
                         $rooms = [];
 
                         foreach ((array) $client->kevaListNamespaces() as $value)
@@ -120,6 +121,7 @@ class UserController extends AbstractController
 
                             foreach ((array) $client->kevaFilter($value['namespaceId'], sprintf('^[\d]+@%s$', $user['key'])) as $post)
                             {
+                                $total++;
                                 $posts++;
 
                                 $rooms[$value['displayName']] = $posts;
@@ -136,6 +138,7 @@ class UserController extends AbstractController
                             'address' => $client->getAccountAddress(
                                 $user['key']
                             ),
+                            'total'   => $total,
                             'rooms'   => $rooms,
                         ];
                     }
