@@ -639,7 +639,7 @@ class RoomController extends AbstractController
                 ) >= $this->getParameter('app.add.post.cost.kva')
             ) {
                 if (
-                    $txid = $client->kevaPut(
+                    $client->kevaPut(
                         $request->get('namespace'),
                         sprintf(
                             '%s@%s',
@@ -648,15 +648,12 @@ class RoomController extends AbstractController
                         ),
                         $request->get('message')
                     )
-                )
-                {
+                ) {
                     // Send amount to profit address
-                    $client->sendToAddress(
+                    $client->sendFrom(
+                        $username,
                         $this->getParameter('app.kevacoin.profit.address'),
-                        $this->getParameter('app.add.post.cost.kva'),
-                        $txid,
-                        null,
-                        true // subtract from amount
+                        $this->getParameter('app.add.post.cost.kva')
                     );
 
                     // Register event time
