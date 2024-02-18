@@ -9,19 +9,26 @@
                     <strong>
                         @{{ user.name }}
                     </strong>
-                    <span style="float:right">{# @TODO #}
-                        {% for namespace, total in user.rooms %}
-                            <a href="{{
-                                path('room_namespace',
-                                {
-                                    mode : request.get('mode'),
-                                    namespace : namespace, _fragment : 'latest'
-                                }) }}">{{ namespace | keva_namespace_value }}</a>
-                            {{ total }}
-                        {% endfor %}
-                    </span>
-                    <br />
-                    {{ 'balance' | trans }}: {{ user.balance }} &bull; {{ 'boost' | trans }}: {{ user.address }}
+                    <p>
+                        {{ 'balance' | trans }}: {{ user.balance }}
+                    </p>
+                    <p>
+                        {{ 'boost' | trans }}: {{ user.address }}
+                    </p>
+                    {% if user.rooms | length %}
+                        <p>
+                            {{ 'rooms' | trans }}:
+                            {% for namespace, total in user.rooms %}
+                                <a href="{{
+                                    path('room_namespace',
+                                    {
+                                        mode : request.get('mode'),
+                                        namespace : namespace, _fragment : 'latest'
+                                    }) }}">{{ namespace | keva_namespace_value }}</a>
+                                {{ total }}
+                            {% endfor %}
+                        </p>
+                    {% endif %}
                 </div>
             </li>
         {% endfor %}
