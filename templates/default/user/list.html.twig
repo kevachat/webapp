@@ -13,7 +13,7 @@
                         {{ 'balance' | trans }}: {{ user.name | account_balance | format_kva }}
                     </span>
                     <p>
-                        {{ 'boost' | trans }}: {{ user.name | account_address }}
+                        {{ 'boost' | trans }}: {{ user.address }}
                     </p>
                     {% if user.rooms | length %}
                         <p>
