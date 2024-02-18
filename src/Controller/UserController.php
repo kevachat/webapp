@@ -101,7 +101,8 @@ class UserController extends AbstractController
                     [
                         'name'    => $user['key'],
                         'balance' => $client->getBalance(
-                            $user['key']
+                            $user['key'],
+                            $this->getParameter('app.pool.confirmations')
                         ),
                         'address' => $client->getAccountAddress(
                             $user['key']
