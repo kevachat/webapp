@@ -15,6 +15,7 @@ parameters:
     app.kevacoin.port: '%env(APP_KEVACOIN_PORT)%'
     app.kevacoin.username: '%env(APP_KEVACOIN_USERNAME)%'
     app.kevacoin.password: '%env(APP_KEVACOIN_PASSWORD)%'
+    app.kevacoin.pool.account: '%env(APP_KEVACOIN_POOL_ACCOUNT)%'
     app.kevacoin.profit.account: '%env(APP_KEVACOIN_PROFIT_ACCOUNT)%'
     app.kevacoin.profit.address: '%env(APP_KEVACOIN_PROFIT_ADDRESS)%'
     app.kevacoin.profit.withdraw.address: '%env(APP_KEVACOIN_PROFIT_WITHDRAW_ADDRESS)%'

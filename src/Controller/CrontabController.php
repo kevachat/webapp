@@ -62,7 +62,7 @@ class CrontabController extends AbstractController
             if ($client->getReceivedByAddress($pool->getAddress(), $this->getParameter('app.pool.confirmations')) >= $pool->getCost())
             {
                 // Check physical wallet balance
-                if ($client->getBalance() <= $pool->getCost())
+                if ($client->getBalance($this->getParameter('app.kevacoin.pool.account')) <= $pool->getCost())
                 {
                     break; // @TODO exception
                 }
@@ -115,6 +115,18 @@ class CrontabController extends AbstractController
                         $entity->flush();
                     }
                 }
+
+                // Send this amount to profit account
+                $client->sendToAddress(
+                    $this->getParameter('app.kevacoin.profit.address'),
+                    $pool->getCost(),
+                    sprintf(
+                        '#%d',
+                        $pool->getId()
+                    ),
+                    null,
+                    true // subtract from amount
+                );
             }
 
             // Record expired
@@ -161,19 +173,17 @@ class CrontabController extends AbstractController
         // Withdraw profit
         if ($this->getParameter('app.kevacoin.profit.withdraw.address'))
         {
-            if ($balance = $client->getBalance())
+            if ($balance = $client->getBalance($this->getParameter('app.kevacoin.profit.account')))
             {
                 if ($balance - $this->getParameter('app.kevacoin.profit.withdraw.balance.min.kva') >= $this->getParameter('app.kevacoin.profit.withdraw.balance.max.kva'))
                 {
-                    $client->sendToAddress(
+                    $client->sendFrom(
+                        $this->getParameter('app.kevacoin.profit.account'),
                         $this->getParameter('app.kevacoin.profit.withdraw.address'),
                         round(
                             $balance - $this->getParameter('app.kevacoin.profit.withdraw.balance.min.kva'),
                             8
-                        ),
-                        'crontab/withdraw',
-                        null,
-                        true
+                        )
                     );
                 }
             }

@@ -650,7 +650,9 @@ class RoomController extends AbstractController
             );
 
             $pool->setAddress(
-                $address = $client->getNewAddress()
+                $address = $client->getNewAddress(
+                    $this->getParameter('app.kevacoin.pool.account')
+                )
             );
 
             $pool->setNamespace(
@@ -961,7 +963,7 @@ class RoomController extends AbstractController
         // Room registration has commission cost, send to pending payment pool
         if ($this->getParameter('app.add.room.cost.kva'))
         {
-            if ($address = $client->getNewAddress())
+            if ($address = $client->getNewAddress($this->getParameter('app.kevacoin.pool.account')))
             {
                 $time = time();
 

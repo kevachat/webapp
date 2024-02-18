@@ -506,7 +506,7 @@ class UserController extends AbstractController
         // User registration has commission cost, send message to pending payment pool
         if ($this->getParameter('app.add.user.cost.kva'))
         {
-            if ($address = $client->getNewAddress())
+            if ($address = $client->getNewAddress($this->getParameter('app.kevacoin.pool.account')))
             {
                 $time = time();
 
@@ -577,7 +577,7 @@ class UserController extends AbstractController
         }
 
         // Auth success, add user to DB
-        if (!$this->_add($client, $namespace, $username, $hash))
+        if (!$client->kevaPut($namespace, $username, $hash))
         {
             return $this->redirectToRoute(
                 'user_add',
@@ -919,19 +919,5 @@ class UserController extends AbstractController
         }
 
         return null;
-    }
-
-    private function _add(
-        \Kevachat\Kevacoin\Client $client,
-        string $namespace,
-        string $username,
-        string $hash
-    ): ?string
-    {
-        return $client->kevaPut(
-            $namespace,
-            $username,
-            $hash
-        );
     }
 }
