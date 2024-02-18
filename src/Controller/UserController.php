@@ -131,13 +131,6 @@ class UserController extends AbstractController
                         $list[] =
                         [
                             'name'    => $user['key'],
-                            'balance' => $client->getBalance(
-                                $user['key'],
-                                $this->getParameter('app.pool.confirmations')
-                            ),
-                            'address' => $client->getAccountAddress(
-                                $user['key']
-                            ),
                             'total'   => $total,
                             'rooms'   => $rooms,
                         ];

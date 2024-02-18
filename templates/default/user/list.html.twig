@@ -10,10 +10,10 @@
                         @{{ user.name }}
                     </strong>
                     <span style="float:right">{# @TODO #}
-                        {{ 'balance: %s KVA' | trans | format(user.balance) }}
+                        {{ 'balance' | trans }}: {{ user.name | account_balance | format_kva }}
                     </span>
                     <p>
-                        {{ 'boost' | trans }}: {{ user.address }}
+                        {{ 'boost' | trans }}: {{ user.name | account_address }}
                     </p>
                     {% if user.rooms | length %}
                         <p>
