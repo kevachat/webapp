@@ -626,85 +626,141 @@ class RoomController extends AbstractController
             );
         }
 
-        // Post has commission cost, send message to pending payment pool
+        // Post has commission cost
         if ($this->getParameter('app.add.post.cost.kva'))
         {
-            $time = time();
-
-            $pool = new Pool();
-
-            $pool->setTime(
-                $time
-            );
-
-            $pool->setSent(
-                0
-            );
-
-            $pool->setExpired(
-                0
-            );
-
-            $pool->setCost(
-                $this->getParameter('app.add.post.cost.kva')
-            );
-
-            $pool->setAddress(
-                $address = $client->getNewAddress(
-                    $this->getParameter('app.kevacoin.pool.account')
+            // Send message by account balance on available
+            if (
+                $username != 'anon'
+                &&
+                $client->getBalance(
+                     $username,
+                     $this->getParameter('app.pool.confirmations')
+                ) >= $this->getParameter('app.add.post.cost.kva')
+            ) {
+                if (
+                    $txid = $client->kevaPut(
+                        $request->get('namespace'),
+                        sprintf(
+                            '%s@%s',
+                            time(), // @TODO save timestamp as part of key to keep timing actual for the chat feature
+                            $username
+                        ),
+                        $request->get('message')
+                    )
                 )
-            );
-
-            $pool->setNamespace(
-                $request->get('namespace')
-            );
-
-            $pool->setKey(
-                sprintf(
-                    '%s@%s',
-                    $time,
-                    $username
-                )
-            );
-
-            $pool->setValue(
-                $request->get('message')
-            );
-
-            $entity->persist(
-                $pool
-            );
-
-            $entity->flush();
-
-            // Register event time
-            $memcached->set(
-                $memory,
-                time(),
-                (int) $this->getParameter('app.add.post.remote.ip.delay') // auto remove on cache expire
-            );
-
-            // Redirect back to room
-            return $this->redirectToRoute(
-                'room_namespace',
-                [
-                    'mode'      => $request->get('mode'),
-                    'namespace' => $request->get('namespace'),
-                    'sign'      => $request->get('sign'),
-                    'message'   => null,
-                    'error'     => null,
-                    'warning'   => sprintf(
-                        $translator->trans('Pending %s KVA to %s (expires at %s)'),
+                {
+                    // Send amount to profit address
+                    $client->sendToAddress(
+                        $this->getParameter('app.kevacoin.profit.address'),
                         $this->getParameter('app.add.post.cost.kva'),
-                        $address,
-                        date(
-                            'c',
-                            $this->getParameter('app.pool.timeout') + $time
-                        )
-                    ),
-                    '_fragment' => 'latest'
-                ]
-            );
+                        $txid,
+                        null,
+                        true // subtract from amount
+                    );
+
+                    // Register event time
+                    $memcached->set(
+                        $memory,
+                        time(),
+                        (int) $this->getParameter('app.add.post.remote.ip.delay') // auto remove on cache expire
+                    );
+
+                    // Redirect back to room
+                    return $this->redirectToRoute(
+                        'room_namespace',
+                        [
+                            'mode'      => $request->get('mode'),
+                            'namespace' => $request->get('namespace'),
+                            'sign'      => $request->get('sign'),
+                            'error'     => null,
+                            'message'   => null,
+                            '_fragment' => 'latest'
+                        ]
+                    );
+                }
+            }
+
+            // Send message to pending payment pool
+            else
+            {
+                $time = time();
+
+                $pool = new Pool();
+
+                $pool->setTime(
+                    $time
+                );
+
+                $pool->setSent(
+                    0
+                );
+
+                $pool->setExpired(
+                    0
+                );
+
+                $pool->setCost(
+                    $this->getParameter('app.add.post.cost.kva')
+                );
+
+                $pool->setAddress(
+                    $address = $client->getNewAddress(
+                        $this->getParameter('app.kevacoin.pool.account')
+                    )
+                );
+
+                $pool->setNamespace(
+                    $request->get('namespace')
+                );
+
+                $pool->setKey(
+                    sprintf(
+                        '%s@%s',
+                        $time,
+                        $username
+                    )
+                );
+
+                $pool->setValue(
+                    $request->get('message')
+                );
+
+                $entity->persist(
+                    $pool
+                );
+
+                $entity->flush();
+
+                // Register event time
+                $memcached->set(
+                    $memory,
+                    time(),
+                    (int) $this->getParameter('app.add.post.remote.ip.delay') // auto remove on cache expire
+                );
+
+                // Redirect back to room
+                return $this->redirectToRoute(
+                    'room_namespace',
+                    [
+                        'mode'      => $request->get('mode'),
+                        'namespace' => $request->get('namespace'),
+                        'sign'      => $request->get('sign'),
+                        'message'   => null,
+                        'error'     => null,
+                        'warning'   => sprintf(
+                            $translator->trans('Pending %s KVA to %s (expires at %s)'),
+                            $this->getParameter('app.add.post.cost.kva'),
+                            $address,
+                            date(
+                                'c',
+                                $this->getParameter('app.pool.timeout') + $time
+                            )
+                        ),
+                        '_fragment' => 'latest'
+                    ]
+                );
+            }
         }
 
         // Post has zero cost, send message to DHT
