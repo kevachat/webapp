@@ -49,6 +49,13 @@ class RoomController extends AbstractController
         ?Request $request
     ): Response
     {
+        // Connect memcached
+        $memcached = new \Memcached();
+        $memcached->addServer(
+            $this->getParameter('app.memcached.host'),
+            $this->getParameter('app.memcached.port')
+        );
+
         // Connect kevacoin
         $client = new \Kevachat\Kevacoin\Client(
             $this->getParameter('app.kevacoin.protocol'),
@@ -59,62 +66,78 @@ class RoomController extends AbstractController
         );
 
         // Get room list
-        $list = [];
+        $memory = md5(
+            sprintf(
+                '%s.RoomController::list:list',
+                __DIR__,
+            ),
+        );
 
-        foreach ((array) $client->kevaListNamespaces() as $value)
+        if (!$list = $memcached->get($memory))
         {
-            // Skip system namespaces
-            if (str_starts_with($value['displayName'], '_'))
+            $list = [];
+
+            foreach ((array) $client->kevaListNamespaces() as $value)
             {
-                continue;
+                // Skip system namespaces
+                if (str_starts_with($value['displayName'], '_'))
+                {
+                    continue;
+                }
+
+                // Add to room list
+                $list[$value['namespaceId']] = // keep unique
+                [
+                    'namespace' => $value['namespaceId'],
+                    'total'     => $this->_total(
+                        $value['namespaceId']
+                    ),
+                    'pinned'    => in_array(
+                        $value['namespaceId'],
+                        (array) explode(
+                            '|',
+                            $this->getParameter('app.kevacoin.room.namespaces.pinned')
+                        )
+                    )
+                ];
             }
 
-            // Add to room list
-            $list[$value['namespaceId']] = // keep unique
-            [
-                'namespace' => $value['namespaceId'],
-                'total'     => $this->_total(
-                    $value['namespaceId']
-                ),
-                'pinned'    => in_array(
-                    $value['namespaceId'],
-                    (array) explode(
-                        '|',
-                        $this->getParameter('app.kevacoin.room.namespaces.pinned')
+            // Get rooms contain pending data
+            foreach ((array) $client->kevaPending() as $value)
+            {
+                // Add to room list
+                $list[$value['namespace']] = // keep unique
+                [
+                    'namespace' => $value['namespace'],
+                    'total'     => $this->_total(
+                        $value['namespace']
+                    ),
+                    'pinned'    => in_array(
+                        $value['namespaceId'],
+                        (array) explode(
+                            '|',
+                            $this->getParameter('app.kevacoin.room.namespaces.pinned')
+                        )
                     )
-                )
-            ];
-        }
+                ];
+            }
 
-        // Get rooms contain pending data
-        foreach ((array) $client->kevaPending() as $value)
-        {
-            // Add to room list
-            $list[$value['namespace']] = // keep unique
-            [
-                'namespace' => $value['namespace'],
-                'total'     => $this->_total(
-                    $value['namespace']
+            // Sort by name
+            array_multisort(
+                array_column(
+                    $list,
+                    'total'
                 ),
-                'pinned'    => in_array(
-                    $value['namespaceId'],
-                    (array) explode(
-                        '|',
-                        $this->getParameter('app.kevacoin.room.namespaces.pinned')
-                    )
-                )
-            ];
-        }
+                SORT_DESC,
+                $list
+            );
 
-        // Sort by name
-        array_multisort(
-            array_column(
-                $list,
-                'total'
-            ),
-            SORT_DESC,
-            $list
-        );
+            // Cache result
+            $memcached->set(
+                $memory,
+                $list
+            );
+        }
 
         // RSS
         if ('rss' === $request->get('feed'))
