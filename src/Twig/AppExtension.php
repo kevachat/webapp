@@ -290,7 +290,7 @@ class AppExtension extends AbstractExtension
             $this->container->getParameter('app.kevacoin.password')
         );
 
-        return $client->getAccountAddress(
+        return $client->getBalance(
             $account
         );
     }
