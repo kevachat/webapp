@@ -99,9 +99,15 @@ class UserController extends AbstractController
 
                     $list[] =
                     [
-                        'name'   => $user['key'],
-                        'total'  => $total,
-                        'rooms'  => $rooms,
+                        'name'    => $user['key'],
+                        'balance' => $client->getBalance(
+                            $user['key']
+                        ),
+                        'address' => $client->getAccountAddress(
+                            $user['key']
+                        ),
+                        'total'   => $total,
+                        'rooms'   => $rooms,
                     ];
                 }
             }

@@ -7,19 +7,18 @@
             <li>
                 <div>
                     <strong>
-                        @{{ user.name }}
+                        @{{ user.name }} / {{ 'balance' | trans }}: {{ user.balance }} / {{ 'boost' | trans }}: {{ user.address }}
                     </strong>
-                    <span style="float:right">{# @TODO #}
-                        {% for namespace, total in user.rooms %}
-                            <a href="{{
-                                path('room_namespace',
-                                {
-                                    mode : request.get('mode'),
-                                    namespace : namespace, _fragment : 'latest'
-                                }) }}">{{ namespace | keva_namespace_value }}</a>
-                            {{ total }}
-                        {% endfor %}
-                    </span>
+                    <br />
+                    {% for namespace, total in user.rooms %}
+                        <a href="{{
+                            path('room_namespace',
+                            {
+                                mode : request.get('mode'),
+                                namespace : namespace, _fragment : 'latest'
+                            }) }}">{{ namespace | keva_namespace_value }}</a>
+                        {{ total }}
+                    {% endfor %}
                 </div>
             </li>
         {% endfor %}
