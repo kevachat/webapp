@@ -117,15 +117,10 @@ class CrontabController extends AbstractController
                 }
 
                 // Send this amount to profit account
-                $client->sendToAddress(
+                $client->sendFrom(
+                    $this->getParameter('app.kevacoin.pool.account'),
                     $this->getParameter('app.kevacoin.profit.address'),
-                    $pool->getCost(),
-                    sprintf(
-                        '#%d',
-                        $pool->getId()
-                    ),
-                    null,
-                    true // subtract from amount
+                    $pool->getCost()
                 );
             }
 
