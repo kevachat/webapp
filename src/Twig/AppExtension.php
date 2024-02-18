@@ -46,6 +46,13 @@ class AppExtension extends AbstractExtension
                 ]
             ),
             new TwigFilter(
+                'format_kva',
+                [
+                    $this,
+                    'formatKVA'
+                ]
+            ),
+            new TwigFilter(
                 'message_to_markdown',
                 [
                     $this,
@@ -245,6 +252,22 @@ class AppExtension extends AbstractExtension
         $factor = floor((strlen($bytes) - 1) / 3);
 
         return sprintf("%.{$precision}f", $bytes / pow(1024, $factor)) . ' ' . @$size[$factor];
+    }
+
+    public function formatKVA(
+        float $amount,
+        ?int $precision = 8,
+        ?string $postfix = 'KVA'
+    ): string
+    {
+        return sprintf(
+            '%s %s',
+            round(
+                $amount,
+                $precision
+            ),
+            $postfix
+        );
     }
 
     public function messageToMarkdown(
