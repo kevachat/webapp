@@ -91,7 +91,7 @@ class UserController extends AbstractController
                         }
 
                         // Validate username regex
-                        if (!preg_match($this->getParameter('app.add.user.name.regex'), $user['key']))
+                        if (!preg_match($this->getParameter('app.add.post.key.regex'), $user['key']))
                         {
                             continue;
                         }
@@ -470,7 +470,7 @@ class UserController extends AbstractController
         }
 
         // Validate username regex
-        if (!preg_match($this->getParameter('app.add.user.name.regex'), $username))
+        if (!preg_match($this->getParameter('app.add.post.key.regex'), $username))
         {
             return $this->redirectToRoute(
                 'user_add',
@@ -478,7 +478,7 @@ class UserController extends AbstractController
                     'username' => $request->get('username'),
                     'error'    => sprintf(
                         $translator->trans('Username does not match node requirements: %s!'),
-                        $this->getParameter('app.add.user.name.regex')
+                        $this->getParameter('app.add.post.key.regex')
                     )
                 ]
             );
@@ -798,7 +798,7 @@ class UserController extends AbstractController
         }
 
         // Validate username regex
-        if (!preg_match($this->getParameter('app.add.user.name.regex'), $username))
+        if (!preg_match($this->getParameter('app.add.post.key.regex'), $username))
         {
             return $this->redirectToRoute(
                 'user_login',
@@ -806,7 +806,7 @@ class UserController extends AbstractController
                     'username' => $request->get('username'),
                     'error'    => sprintf(
                         $translator->trans('Username does not match node requirements: %s!'),
-                        $this->getParameter('app.add.user.name.regex')
+                        $this->getParameter('app.add.post.key.regex')
                     )
                 ]
             );
