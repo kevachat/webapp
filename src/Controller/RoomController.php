@@ -1113,6 +1113,12 @@ class RoomController extends AbstractController
             return null;
         }
 
+        // Skip values with meta keys
+        if (str_starts_with($data['key'], '_'))
+        {
+            return null;
+        }
+
         // Legacy key format support (protocol v1 contain timestamp in prefix)
         if (preg_match('/^([\d]+)@([A-z0-9\.\:\[\]]+)/', $data['key'], $matches))
         {
