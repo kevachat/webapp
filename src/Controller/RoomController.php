@@ -92,6 +92,7 @@ class RoomController extends AbstractController
                 [
                     'namespace' => $value['namespaceId'],
                     'total'     => $this->_total(
+                        $client,
                         $value['namespaceId']
                     ),
                     'pinned'    => in_array(
@@ -112,6 +113,7 @@ class RoomController extends AbstractController
                 [
                     'namespace' => $value['namespace'],
                     'total'     => $this->_total(
+                        $client,
                         $value['namespace']
                     ),
                     'pinned'    => in_array(
