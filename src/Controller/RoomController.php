@@ -687,7 +687,7 @@ class RoomController extends AbstractController
                 $pool->setKey(
                     sprintf(
                         '%d@%s',
-                        time(),
+                        $time,
                         $username
                     ),
                 );
@@ -705,7 +705,7 @@ class RoomController extends AbstractController
                 // Register event time
                 $memcached->set(
                     $memory,
-                    time(),
+                    $time,
                     (int) $this->getParameter('app.add.post.remote.ip.delay') // auto remove on cache expire
                 );
 
