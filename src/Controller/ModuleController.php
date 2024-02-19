@@ -159,29 +159,9 @@ class ModuleController extends AbstractController
         }
 
         // Format quoted message
-        if (preg_match('/^[A-z0-9]{64}$/', $request->get('txid')))
+        if (preg_match('/^[A-f0-9]{64}$/', $request->get('txid')))
         {
-            $message = str_replace(
-                [
-                    sprintf(
-                        '@%s',
-                        $request->get('txid')
-                    )
-                ],
-                false,
-                $request->get('message')
-            );
-
-            $message = trim(
-                $message
-            );
-
-            $message = sprintf(
-                '@%s%s%s',
-                $request->get('txid'),
-                PHP_EOL,
-                $request->get('message')
-            );
+            $message = $request->get('txid') . PHP_EOL . $request->get('message');
         }
 
         else

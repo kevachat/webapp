@@ -6,16 +6,9 @@
                 <li>
                     <div>
                         <a name="{{ post.id }}"></a>
-                        {% if post.icon %}
-                            {# <img src="{{ post.icon }}" alt="icon" /> #}
-                            <strong>
-                                @{{ post.user }}
-                            </strong>
-                        {% else %}
-                            <strong>
-                                @{{ 'anon' | trans }}
-                            </strong>
-                        {% endif %}
+                        <strong>
+                            {{ 'anon' | trans }}
+                        </strong>
                         &bull;
                         {% if post.pending %}
                             {{ post.time | format_ago }}

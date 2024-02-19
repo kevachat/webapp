@@ -13,7 +13,6 @@
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.0",
-        "jdenticon/jdenticon": "^1.0",
         "kevachat/kevacoin": "dev-main",
         "league/commonmark": "^2.4",
         "symfony/console": "7.0.*",

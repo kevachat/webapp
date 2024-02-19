@@ -119,7 +119,7 @@ class UserController extends AbstractController
 
                             $posts = 0;
 
-                            foreach ((array) $client->kevaFilter($value['namespaceId'], sprintf('^[\d]+@%s$', $user['key'])) as $post)
+                            foreach ((array) $client->kevaFilter($value['namespaceId'], sprintf('^([\d]+@%s|%s)$', $user['key'], $user['key'])) as $post)
                             {
                                 $total++;
                                 $posts++;

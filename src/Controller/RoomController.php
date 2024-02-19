@@ -15,6 +15,8 @@ use App\Entity\Pool;
 
 class RoomController extends AbstractController
 {
+    private const PARENT_REGEX = '/^[>@]?([A-f0-9]{64})\s/i';
+
     #[Route(
         '/',
         name: 'room_index',
@@ -203,56 +205,6 @@ class RoomController extends AbstractController
         // Get room feed
         $feed = [];
 
-        // Get pending from payment pool
-        /*
-        foreach ($entity->getRepository(Pool::class)->findBy(
-            [
-                'namespace' => $request->get('namespace'),
-                'sent'      => 0,
-                'expired'   => 0
-            ]
-        ) as $pending)
-        {
-            // Require valid kevachat meta
-            if ($data = $this->_post(
-                [
-                    'key'   => $pending->getKey(),
-                    'value' => $pending->getValue(),
-                    'txid'  => hash( // @TODO tmp solution as required for tree building
-                        'sha256',
-                        rand()
-                    )
-                ]
-            ))
-            {
-                // Detect parent post
-                preg_match('/^@([A-z0-9]{64})\s/i', $data->message, $mention);
-                $feed[$data->id] =
-                [
-                    'id'      => $data->id,
-                    'user'    => $data->user,
-                    'icon'    => $data->icon,
-                    'time'    => $data->time,
-                    'parent'  => isset($mention[1]) ? $mention[1] : null,
-                    'message' => trim(
-                        preg_replace( // remove mention from folded message
-                            '/^@([A-z0-9]{64})\s/i',
-                            '',
-                            $data->message
-                        )
-                    ),
-                    'pending' => true,
-                    'pool'    =>
-                    [
-                        'cost'    => $pending->getCost(),
-                        'address' => $pending->getAddress(),
-                        'expires' => $pending->getTime() + $this->getParameter('app.pool.timeout')
-                    ]
-                ];
-            }
-        }
-        */
-
         // Get pending paradise
         foreach ((array) $client->kevaPending() as $pending) // @TODO relate to this room
         {
@@ -275,21 +227,20 @@ class RoomController extends AbstractController
             }
 
             // Require valid kevachat meta
-            if ($data = $this->_post($pending))
+            if ($data = $this->_post($client, $pending))
             {
                 // Detect parent post
-                preg_match('/^@([A-z0-9]{64})\s/i', $data->message, $mention);
+                preg_match(self::PARENT_REGEX, $data->message, $mention);
 
                 $feed[$data->id] =
                 [
                     'id'      => $data->id,
                     'user'    => $data->user,
-                    'icon'    => $data->icon,
                     'time'    => $data->time,
                     'parent'  => isset($mention[1]) ? $mention[1] : null,
                     'message' => trim(
                         preg_replace( // remove mention from folded message
-                            '/^@([A-z0-9]{64})\s/i',
+                            self::PARENT_REGEX,
                             '',
                             $data->message
                         )
@@ -309,21 +260,20 @@ class RoomController extends AbstractController
             }
 
             // Require valid kevachat meta
-            if ($data = $this->_post($post))
+            if ($data = $this->_post($client, $post))
             {
                 // Detect parent post
-                preg_match('/^@([A-z0-9]{64})\s/i', $data->message, $mention);
+                preg_match(self::PARENT_REGEX, $data->message, $mention);
 
                 $feed[$data->id] =
                 [
                     'id'      => $data->id,
                     'user'    => $data->user,
-                    'icon'    => $data->icon,
                     'time'    => $data->time,
                     'parent'  => isset($mention[1]) ? $mention[1] : null,
                     'message' => trim(
                         preg_replace( // remove mention from folded message
-                            '/^@([A-z0-9]{64})\s/i',
+                            self::PARENT_REGEX,
                             '',
                             $data->message
                         )
@@ -664,11 +614,7 @@ class RoomController extends AbstractController
                 if (
                     $client->kevaPut(
                         $request->get('namespace'),
-                        sprintf(
-                            '%s@%s',
-                            time(), // @TODO save timestamp as part of key to keep timing actual for the chat feature
-                            $username
-                        ),
+                        $username,
                         $request->get('message')
                     )
                 ) {
@@ -735,11 +681,7 @@ class RoomController extends AbstractController
                 );
 
                 $pool->setKey(
-                    sprintf(
-                        '%s@%s',
-                        $time,
-                        $username
-                    )
+                    $username
                 );
 
                 $pool->setValue(
@@ -789,11 +731,7 @@ class RoomController extends AbstractController
             if (
                 $client->kevaPut(
                     $request->get('namespace'),
-                    sprintf(
-                        '%s@%s',
-                        time(), // @TODO save timestamp as part of key to keep timing actual for the chat feature
-                        $username
-                    ),
+                    $username,
                     $request->get('message')
                 )
             )
@@ -1154,30 +1092,40 @@ class RoomController extends AbstractController
         );
     }
 
-    private function _post(array $data): ?object
+    private function _post(
+        \Kevachat\Kevacoin\Client $client,
+        array $data
+    ): ?object
     {
+        // Validate required data
+        if (empty($data['txid']))
+        {
+            return null;
+        }
+
+        if (empty($data['key']))
+        {
+            return null;
+        }
+
+        if (empty($data['value']))
+        {
+            return null;
+        }
+
+        // Legacy key format support (protocol v1 contain timestamp in prefix)
+        if (preg_match('/^([\d]+)@([A-z0-9\.\:\[\]]+)/', $data['key'], $matches))
+        {
+            if (!empty($matches[2]))
+            {
+                $data['key'] = $matches[2];
+            }
+        }
+
         // Validate key format allowed in settings
-        if (!preg_match((string) $this->getParameter('app.add.post.key.regex'), $data['key'], $matches))
+        if (!preg_match((string) $this->getParameter('app.add.post.key.regex'), $data['key']))
         {
             return null;
-        }
-
-        // Timestamp required in key
-        if (empty($matches[1]))
-        {
-            return null;
-        }
-
-        // Username required in key
-        if (empty($matches[2]))
-        {
-            return null;
-        }
-
-        // Legacy usernames backport
-        if (!preg_match((string) $this->getParameter('app.add.user.name.regex'), $matches[2]))
-        {
-            $matches[2] = 'anon';
         }
 
         // Validate value format allowed in settings
@@ -1186,37 +1134,25 @@ class RoomController extends AbstractController
             return null;
         }
 
-        return (object)
-        [
-            'id'      => $data['txid'],
-            'time'    => $matches[1],
-            'user'    => $matches[2],
-            'icon'    => $this->_identicon($matches[2]),
-            'message' => $data['value']
-        ];
-    }
-
-    private function _identicon(mixed $value): ?string
-    {
-        if ($value === 'anon')
+        // Get time from raw transaction
+        if (!$transaction = $client->getRawTransaction($data['txid']))
         {
             return null;
         }
 
-        $identicon = new \Jdenticon\Identicon();
+        // Make sure time available
+        if (empty($transaction['time']))
+        {
+            return null;
+        }
 
-        $identicon->setValue($value);
-
-        $identicon->setSize(12);
-
-        $identicon->setStyle(
-            [
-                'backgroundColor' => 'rgba(255, 255, 255, 0)',
-                'padding' => 0
-            ]
-        );
-
-        return $identicon->getImageDataUri('webp');
+        return (object)
+        [
+            'id'      => $data['txid'],
+            'user'    => $data['key'],
+            'message' => $data['value'],
+            'time'    => $transaction['time']
+        ];
     }
 
     private function _tree(
@@ -1251,17 +1187,11 @@ class RoomController extends AbstractController
         return $tree;
     }
 
-    private function _total(string $namespace): int
+    private function _total(
+        \Kevachat\Kevacoin\Client $client,
+        string $namespace
+    ): int
     {
-        // Connect kevacoin
-        $client = new \Kevachat\Kevacoin\Client(
-            $this->getParameter('app.kevacoin.protocol'),
-            $this->getParameter('app.kevacoin.host'),
-            $this->getParameter('app.kevacoin.port'),
-            $this->getParameter('app.kevacoin.username'),
-            $this->getParameter('app.kevacoin.password')
-        );
-
         $raw = [];
 
         // Get pending
@@ -1288,7 +1218,7 @@ class RoomController extends AbstractController
         foreach ($raw as $data)
         {
             // Is valid post
-            if ($this->_post($data))
+            if ($this->_post($client, $data))
             {
                 $total++;
             }
