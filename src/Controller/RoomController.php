@@ -1140,12 +1140,6 @@ class RoomController extends AbstractController
             return null;
         }
 
-        // Make sure time available
-        if (empty($transaction['time']))
-        {
-            return null;
-        }
-
         return (object)
         [
             'id'      => $data['txid'],
