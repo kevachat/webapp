@@ -227,7 +227,7 @@ class RoomController extends AbstractController
             }
 
             // Require valid kevachat meta
-            if ($data = $this->_post($client, $pending))
+            if ($data = $this->_post($pending))
             {
                 // Detect parent post
                 preg_match(self::PARENT_REGEX, $data->message, $mention);
@@ -260,7 +260,7 @@ class RoomController extends AbstractController
             }
 
             // Require valid kevachat meta
-            if ($data = $this->_post($client, $post))
+            if ($data = $this->_post($post))
             {
                 // Detect parent post
                 preg_match(self::PARENT_REGEX, $data->message, $mention);
@@ -614,7 +614,11 @@ class RoomController extends AbstractController
                 if (
                     $client->kevaPut(
                         $request->get('namespace'),
-                        $username,
+                        sprintf(
+                            '%d@%s',
+                            time(),
+                            $username
+                        ),
                         $request->get('message')
                     )
                 ) {
@@ -681,7 +685,11 @@ class RoomController extends AbstractController
                 );
 
                 $pool->setKey(
-                    $username
+                    sprintf(
+                        '%d@%s',
+                        time(),
+                        $username
+                    ),
                 );
 
                 $pool->setValue(
@@ -731,7 +739,11 @@ class RoomController extends AbstractController
             if (
                 $client->kevaPut(
                     $request->get('namespace'),
-                    $username,
+                    sprintf(
+                        '%d@%s',
+                        time(),
+                        $username
+                    ),
                     $request->get('message')
                 )
             )
@@ -1092,10 +1104,7 @@ class RoomController extends AbstractController
         );
     }
 
-    private function _post(
-        \Kevachat\Kevacoin\Client $client,
-        array $data
-    ): ?object
+    private function _post(array $data): ?object
     {
         // Validate required data
         if (empty($data['txid']))
@@ -1113,23 +1122,8 @@ class RoomController extends AbstractController
             return null;
         }
 
-        // Skip values with meta keys
-        if (str_starts_with($data['key'], '_'))
-        {
-            return null;
-        }
-
-        // Legacy key format support (protocol v1 contain timestamp in prefix)
-        if (preg_match('/^([\d]+)@([A-z0-9\.\:\[\]]+)/', $data['key'], $matches))
-        {
-            if (!empty($matches[2]))
-            {
-                $data['key'] = $matches[2];
-            }
-        }
-
         // Validate key format allowed in settings
-        if (!preg_match((string) $this->getParameter('app.add.post.key.regex'), $data['key']))
+        if (!preg_match((string) $this->getParameter('app.add.post.key.regex'), $data['key'], $key))
         {
             return null;
         }
@@ -1140,8 +1134,8 @@ class RoomController extends AbstractController
             return null;
         }
 
-        // Get time from raw transaction
-        if (!$transaction = $client->getRawTransaction($data['txid']))
+        // Validate timestamp@username
+        if (empty($key[1]) || empty($key[2]))
         {
             return null;
         }
@@ -1155,9 +1149,9 @@ class RoomController extends AbstractController
         return (object)
         [
             'id'      => $data['txid'],
-            'user'    => $data['key'],
-            'message' => $data['value'],
-            'time'    => $transaction['time']
+            'time'    => $key[1],
+            'user'    => $key[2],
+            'message' => $data['value']
         ];
     }
 
@@ -1224,7 +1218,7 @@ class RoomController extends AbstractController
         foreach ($raw as $data)
         {
             // Is valid post
-            if ($this->_post($client, $data))
+            if ($this->_post($data))
             {
                 $total++;
             }
