@@ -6,8 +6,8 @@
         <link>{{ url('room_namespace', { namespace : request.get('namespace'), _fragment : 'latest' }) }}</link>
         {% for post in feed %}
             <item>
-                <title>#{{ post.id }}</title>
-                <author>@{{ post.user }}</author>
+                <title>{{ post.id }}</title>
+                <author>{{ post.user }}</author>
                 <pubDate>{{ post.time | date('D, d M Y h:i:s O') }}</pubDate>
                 <guid>{{ url('room_namespace', { namespace : request.get('namespace'), _fragment : post.id }) }}</guid>
                 <link>{{ url('room_namespace', { namespace : request.get('namespace'), _fragment : post.id }) }}</link>
