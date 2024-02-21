@@ -1158,15 +1158,17 @@ class RoomController extends AbstractController
             return null;
         }
 
+        // Set default username
+        $user = $this->getParameter('app.add.user.name.anon');
+
         // Detect username (key @postfix)
         if (preg_match('/@([^@]+)$/', $data['key'], $match))
         {
-            $user = $match[1];
-        }
-
-        else
-        {
-            $user = $this->getParameter('app.add.user.name.anon');
+            // Set username on match node settings
+            if (preg_match($this->getParameter('app.add.user.name.regex'), $match[1]))
+            {
+                $user = $match[1];
+            }
         }
 
         return (object)
