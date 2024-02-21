@@ -15,6 +15,11 @@
     --color-warning: #ee784e;
     --color-error: #ff6363;
     --color-default: #999;
+
+    transition: all .1s ease-in;
+    -webkit-transition: all .2s ease-in;
+    -moz-transition: all .2s ease-in;
+    -o-transition: all .2s ease-in;
 }
 
 *::placeholder
@@ -168,6 +173,23 @@ main ul li span > svg
     cursor: default;
     fill: var(--color-default);
     float: right;
+}
+
+main ul li small
+{
+    color: var(--color-default);
+    display: inline-block;
+    opacity: 0;
+}
+
+main ul li small svg
+{
+    vertical-align: top;
+}
+
+main ul li > div:hover > small
+{
+    opacity: 1;
 }
 
 main > form

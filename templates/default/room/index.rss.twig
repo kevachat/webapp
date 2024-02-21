@@ -6,11 +6,11 @@
         <link>{{ url('room_namespace', { namespace : request.get('namespace'), _fragment : 'latest' }) }}</link>
         {% for post in feed %}
             <item>
-                <title>{{ post.id }}</title>
+                <title>{{ post.txid }}</title>
                 <author>{{ post.user }}</author>
                 <pubDate>{{ post.time | date('D, d M Y h:i:s O') }}</pubDate>
-                <guid>{{ url('room_namespace', { namespace : request.get('namespace'), _fragment : post.id }) }}</guid>
-                <link>{{ url('room_namespace', { namespace : request.get('namespace'), _fragment : post.id }) }}</link>
+                <guid>{{ url('room_namespace', { namespace : request.get('namespace'), _fragment : post.txid }) }}</guid>
+                <link>{{ url('room_namespace', { namespace : request.get('namespace'), _fragment : post.txid }) }}</link>
                 <description>{{ post.message | striptags | markdown_to_html | striptags | trim }}</description>
             </item>
         {% endfor %}

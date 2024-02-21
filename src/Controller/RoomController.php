@@ -229,14 +229,15 @@ class RoomController extends AbstractController
             }
 
             // Require valid kevachat meta
-            if ($data = $this->_post($pending))
+            if ($data = $this->_post($client, $pending))
             {
                 // Detect parent post
                 preg_match(self::PARENT_REGEX, $data->message, $mention);
 
-                $feed[$data->id] =
+                $feed[$data->txid] =
                 [
-                    'id'      => $data->id,
+                    'txid'    => $data->txid,
+                    'key'     => $data->key,
                     'user'    => $data->user,
                     'time'    => $data->time,
                     'parent'  => isset($mention[1]) ? $mention[1] : null,
@@ -255,21 +256,16 @@ class RoomController extends AbstractController
         // Get regular posts
         foreach ((array) $client->kevaFilter($request->get('namespace')) as $post)
         {
-            // Skip values with meta keys
-            if (str_starts_with($post['key'], '_'))
-            {
-                continue;
-            }
-
             // Require valid kevachat meta
-            if ($data = $this->_post($post))
+            if ($data = $this->_post($client, $post))
             {
                 // Detect parent post
                 preg_match(self::PARENT_REGEX, $data->message, $mention);
 
-                $feed[$data->id] =
+                $feed[$data->txid] =
                 [
-                    'id'      => $data->id,
+                    'txid'    => $data->txid,
+                    'key'     => $data->key,
                     'user'    => $data->user,
                     'time'    => $data->time,
                     'parent'  => isset($mention[1]) ? $mention[1] : null,
@@ -579,7 +575,7 @@ class RoomController extends AbstractController
         }
 
         // Check user session exist
-        $username = 'anon';
+        $username = $this->getParameter('app.add.user.name.anon');
 
         if ($request->get('sign') === 'username' && !empty($request->cookies->get('KEVACHAT_SESSION')) && preg_match('/[A-z0-9]{32}/', $request->cookies->get('KEVACHAT_SESSION')))
         {
@@ -606,7 +602,7 @@ class RoomController extends AbstractController
         {
             // Send message by account balance on available
             if (
-                $username != 'anon'
+                $username != $this->getParameter('app.add.user.name.anon')
                 &&
                 $client->getBalance(
                      $username,
@@ -617,9 +613,9 @@ class RoomController extends AbstractController
                     $client->kevaPut(
                         $request->get('namespace'),
                         sprintf(
-                            '%d@%s',
+                            '%d%s',
                             time(),
-                            $username
+                            $username != $this->getParameter('app.add.user.name.anon') ? sprintf('@%s', $username) : null
                         ),
                         $request->get('message')
                     )
@@ -688,9 +684,9 @@ class RoomController extends AbstractController
 
                 $pool->setKey(
                     sprintf(
-                        '%d@%s',
+                        '%d%s',
                         $time,
-                        $username
+                        $username != $this->getParameter('app.add.user.name.anon') ? sprintf('@%s', $username) : null
                     ),
                 );
 
@@ -742,9 +738,9 @@ class RoomController extends AbstractController
                 $client->kevaPut(
                     $request->get('namespace'),
                     sprintf(
-                        '%d@%s',
+                        '%d%s',
                         time(),
-                        $username
+                        $username != $this->getParameter('app.add.user.name.anon') ? sprintf('@%s', $username) : null
                     ),
                     $request->get('message')
                 )
@@ -1106,7 +1102,10 @@ class RoomController extends AbstractController
         );
     }
 
-    private function _post(array $data): ?object
+    private function _post(
+        \Kevachat\Kevacoin\Client $client,
+        array $data
+    ): ?object
     {
         // Validate required data
         if (empty($data['txid']))
@@ -1124,6 +1123,12 @@ class RoomController extends AbstractController
             return null;
         }
 
+        // Skip meta records
+        if (str_starts_with($data['key'], '_'))
+        {
+            return null;
+        }
+
         // Validate key format allowed in settings
         if (!preg_match((string) $this->getParameter('app.add.post.key.regex'), $data['key'], $key))
         {
@@ -1136,18 +1141,30 @@ class RoomController extends AbstractController
             return null;
         }
 
-        // Validate timestamp@username
-        if (empty($key[1]) || empty($key[2]))
+        // Get transaction time
+        if (!$transaction = $client->getRawTransaction($data['txid']))
         {
             return null;
         }
 
+        // Detect username (key @postfix)
+        if (preg_match('/@([^@]+)$/', $data['key'], $match))
+        {
+            $user = $match[1];
+        }
+
+        else
+        {
+            $user = $this->getParameter('app.add.user.name.anon');
+        }
+
         return (object)
         [
-            'id'      => $data['txid'],
-            'time'    => $key[1],
-            'user'    => $key[2],
-            'message' => $data['value']
+            'txid'    => $data['txid'],
+            'key'     => $data['key'],
+            'message' => $data['value'],
+            'time'    => $transaction['time'],
+            'user'    => $user
         ];
     }
 
@@ -1164,7 +1181,7 @@ class RoomController extends AbstractController
             {
                 $children = $this->_tree(
                     $feed,
-                    $post['id']
+                    $post['txid']
                 );
 
                 if ($children)
@@ -1172,10 +1189,10 @@ class RoomController extends AbstractController
                     $post['tree'] = $children;
                 }
 
-                $tree[$post['id']] = $post;
+                $tree[$post['txid']] = $post;
 
                 unset(
-                    $feed[$post['id']]
+                    $feed[$post['txid']]
                 );
             }
         }
@@ -1214,7 +1231,7 @@ class RoomController extends AbstractController
         foreach ($raw as $data)
         {
             // Is valid post
-            if ($this->_post($data))
+            if ($this->_post($client, $data))
             {
                 $total++;
             }

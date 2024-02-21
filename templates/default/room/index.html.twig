@@ -5,7 +5,7 @@
             {% for post in tree %}
                 <li>
                     <div>
-                        <a name="{{ post.id }}"></a>
+                        <a name="{{ post.txid }}"></a>
                         <strong>
                             {{ post.user }}
                         </strong>
@@ -22,10 +22,16 @@
                                 </svg>
                             </span>
                         {% else %}
-                            <a rel="nofollow" href="{{ path('room_namespace', { mode : mode, namespace : namespace, _fragment : post.id }) }}" title="{{ post.time | date('c') }}">{{ post.time | format_ago }}</a>
+                            <a rel="nofollow" href="{{ path('room_namespace', { mode : mode, namespace : namespace, _fragment : post.txid }) }}" title="{{ post.time | date('c') }}">{{ post.time | format_ago }}</a>
                             &bull;
-                            <a rel="nofollow" href="{{ path('room_namespace', { mode : mode, namespace : namespace, txid : post.id, _fragment : post.id }) }}">{{ 'reply' | trans }}</a>
+                            <a rel="nofollow" href="{{ path('room_namespace', { mode : mode, namespace : namespace, txid : post.txid, _fragment : post.txid }) }}">{{ 'reply' | trans }}</a>
                         {% endif %}
+                        <small>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2M2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                            </svg>
+                            {{ post.key }}
+                        </small>
                         {# apply markdown whitelist filters only to prevent ping from remote includes #}
                         {{
                             post.message | message_to_markdown

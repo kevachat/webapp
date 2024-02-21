@@ -26,6 +26,7 @@ parameters:
     app.kevacoin.mine.solo.url: '%env(APP_KEVACOIN_MINE_SOLO_URL)%'
     app.session.default.timeout: '%env(APP_SESSION_DEFAULT_TIMEOUT)%'
     app.session.online.timeout: '%env(APP_SESSION_ONLINE_TIMEOUT)%'
+    app.add.user.name.anon: '%env(APP_ADD_USER_NAME_ANON)%'
     app.add.user.name.regex: '%env(APP_ADD_USER_NAME_REGEX)%'
     app.add.user.name.blacklist: '%env(APP_ADD_USER_NAME_BLACKLIST)%'
     app.add.user.remote.ip.delay: '%env(APP_ADD_USER_REMOTE_IP_DELAY)%'
