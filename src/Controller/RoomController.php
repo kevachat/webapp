@@ -1174,7 +1174,7 @@ class RoomController extends AbstractController
             'txid'    => $data['txid'],
             'key'     => $data['key'],
             'message' => $data['value'],
-            'time'    => $transaction['time'],
+            'time'    => isset($transaction['time']) ? $transaction['time'] : time(),
             'user'    => $user
         ];
     }
