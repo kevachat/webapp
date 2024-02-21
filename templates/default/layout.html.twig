@@ -5,7 +5,7 @@
         <title>{% block head_title_content %}{{ app.name }}{% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="{{ url('room_index') }}css/default.css?{{ app.version }}"/>
     </head>
-    <body data-mode="{% if request.get('mode') %}stream{% else %}webapp{% endif %}">
+    <body>
         {% block header_container %}
             <header>
                 {% block header_content %}

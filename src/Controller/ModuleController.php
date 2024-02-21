@@ -188,7 +188,6 @@ class ModuleController extends AbstractController
         return $this->render(
             'default/module/post.html.twig',
             [
-                'mode'      => $request->get('mode'),
                 'namespace' => $request->get('namespace'),
                 'error'     => $request->get('error'),
                 'warning'   => $request->get('warning'),

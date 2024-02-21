@@ -64,12 +64,6 @@ Application package contain settings preset, just few steps required to launch:
 * Create at least one room namespace with Web UI or CLI `kevacoin-cli keva_namespace "sandbox"`
 * Provide at least one namespace for default chat room to `env`.`APP_KEVACOIN_ROOM_NAMESPACE_DEFAULT` (for homepage redirects)
 
-## Modes
-
-KevaChat supported following `mode` in `GET` requests:
-
-* `stream` - useful for iframe integrations on external websites to create news feed or support chats
-
 ## Contribution
 
 Project created by people for people: MIT License to use it for other needs e.g. new fork, chat instance or KevaCoin blockchain explorer.

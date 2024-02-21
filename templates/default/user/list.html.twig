@@ -20,11 +20,7 @@
                             {{ 'rooms' | trans }}:
                             {% for namespace, total in user.rooms %}
                                 <a href="{{
-                                    path('room_namespace',
-                                    {
-                                        mode : request.get('mode'),
-                                        namespace : namespace, _fragment : 'latest'
-                                    }) }}">{{ namespace | keva_namespace_value }}</a>
+                                    path('room_namespace', { namespace : namespace, _fragment : 'latest' }) }}">{{ namespace | keva_namespace_value }}</a>
                                 {{ total }}
                             {% endfor %}
                         </p>

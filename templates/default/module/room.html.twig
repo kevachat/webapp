@@ -1,4 +1,4 @@
-<form name="room" action="{{ path('room_add', { mode : request.get('mode') }) }}" method="post">
+<form name="room" action="{{ path('room_add') }}" method="post">
     {% if request.get('error') %}
         <output name="error" for="form-room-name">{{ request.get('error') }}</output>
     {% endif %}

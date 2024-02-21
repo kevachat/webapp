@@ -1,4 +1,4 @@
-<form name="rooms" action="{{ path('room_index', { mode : request.get('mode') }) }}" method="get">
+<form name="rooms" action="{{ path('room_index') }}" method="get">
     <input type="text" name="namespace" value="{{ request.get('namespace') }}" placeholder="{{ 'join room by kevacoin namespace...' | trans }}" />
 </form>
 {% if list %}
@@ -8,7 +8,7 @@
             {% if namespace == request.get('namespace') %}
                 {{ namespace | keva_namespace_value }}
             {% else %}
-                <a href="{{ path('room_namespace', { mode : request.get('mode'), namespace : namespace, _fragment : 'latest' }) }}">{{ namespace | keva_namespace_value }}</a>
+                <a href="{{ path('room_namespace', { namespace : namespace, _fragment : 'latest' }) }}">{{ namespace | keva_namespace_value }}</a>
             {% endif %}
         </h2>
         <sup>
@@ -26,7 +26,7 @@
         {% if 'room_list' == request.get('_route') %}
             {{ 'rooms' | trans }}
         {% else %}
-            <a href="{{ path('room_list', { mode : request.get('mode') }) }}">{{ 'rooms' | trans }}</a>
+            <a href="{{ path('room_list') }}">{{ 'rooms' | trans }}</a>
         {% endif %}
     </i>
 </h2>
@@ -41,7 +41,7 @@
         {% if 'user_list' == request.get('_route') %}
             {{ 'users' | trans }}
         {% else %}
-            <a href="{{ path('user_list', { mode : request.get('mode') }) }}">{{ 'users' | trans }}</a>
+            <a href="{{ path('user_list') }}">{{ 'users' | trans }}</a>
         {% endif %}
     </i>
 </h2>

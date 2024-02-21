@@ -288,19 +288,3 @@ footer > form > output
     font-weight: bolder;
     margin-bottom: 16px;
 }
-
-/* apply mode corrections */
-body[data-mode="stream"] > header
-{
-    display: none;
-}
-
-body[data-mode="stream"] > main
-{
-    padding-top: 0;
-}
-
-body[data-mode="stream"] > main ul li div a[name]
-{
-    top: -16px;
-}

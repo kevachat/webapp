@@ -1,4 +1,4 @@
-{% macro recursive_post_tree(mode, namespace, writable, tree) %}
+{% macro recursive_post_tree(namespace, writable, tree) %}
     {% import _self as self %}
     {% if tree | length %}
         <ul>
@@ -22,10 +22,10 @@
                                 </svg>
                             </span>
                         {% else %}
-                            <a rel="nofollow" href="{{ path('room_namespace', { mode : mode, namespace : namespace, _fragment : post.txid }) }}" title="{{ post.time | date('c') }}">{{ post.time | format_ago }}</a>
+                            <a rel="nofollow" href="{{ path('room_namespace', { namespace : namespace, _fragment : post.txid }) }}" title="{{ post.time | date('c') }}">{{ post.time | format_ago }}</a>
                             {% if writable %}
                                 &bull;
-                                <a rel="nofollow" href="{{ path('room_namespace', { mode : mode, namespace : namespace, txid : post.txid, _fragment : post.txid }) }}">{{ 'reply' | trans }}</a>
+                                <a rel="nofollow" href="{{ path('room_namespace', { namespace : namespace, txid : post.txid, _fragment : post.txid }) }}">{{ 'reply' | trans }}</a>
                             {% endif %}
                         {% endif %}
                         <small>
@@ -43,7 +43,7 @@
                         }}
                     </div>
                     {% if post.tree is defined and post.tree | length %}
-                        {{ self.recursive_post_tree(mode, namespace, writable, post.tree) }}
+                        {{ self.recursive_post_tree(namespace, writable, post.tree) }}
                     {% endif %}
                 </li>
             {% endfor %}
@@ -55,7 +55,7 @@
 {% block head_title_content %}{{ request.get('namespace') | keva_namespace_value }} - {{ app.name }}{% endblock %}
 {% block main_content %}
     {% if tree %}
-        {{ recursive_post_tree(request.get('mode'), request.get('namespace'), writable, tree) }}
+        {{ recursive_post_tree(request.get('namespace'), writable, tree) }}
         <a name="latest"></a>
     {% else %}
         <ul>
