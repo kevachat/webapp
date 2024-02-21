@@ -25,9 +25,9 @@ Basic social features like identicons, replies, mentions, RSS subscriptions etc 
 
 ## Protocol
 
-KevaChat protocol following native Kevacoin's `key`/`value` model, where `key` - is the `timestamp@username` and `value` - is message.
+KevaChat protocol following native Kevacoin's `key`/`value` model, where `key` optionally contain `@username` postfix and `value` - contain message.
 
-All messages related to their room `namespace`.
+All publications related to their room `namespace`.
 
 ## Examples
 
