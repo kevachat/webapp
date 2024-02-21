@@ -319,13 +319,30 @@ class RoomController extends AbstractController
             );
         }
 
+        // Get own room list
+        $rooms = [];
+        foreach ((array) $client->kevaListNamespaces() as $value)
+        {
+            $rooms[] = $value['namespaceId'];
+        }
+
         // HTML
         return $this->render(
             'default/room/index.html.twig',
             [
-                'feed'    => $feed,
-                'tree'    => $tree,
-                'request' => $request
+                'feed'     => $feed,
+                'tree'     => $tree,
+                'writable' => in_array(
+                    $request->get('namespace'),
+                    $rooms
+                ) && !in_array(
+                    $request->get('namespace'),
+                    explode(
+                        '|',
+                        $this->getParameter('app.kevacoin.room.namespaces.readonly')
+                    )
+                ),
+                'request'  => $request
             ]
         );
     }

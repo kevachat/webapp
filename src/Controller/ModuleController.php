@@ -129,27 +129,6 @@ class ModuleController extends AbstractController
         Request $request
     ): Response
     {
-        // Connect kevacoin
-        $client = new \Kevachat\Kevacoin\Client(
-            $this->getParameter('app.kevacoin.protocol'),
-            $this->getParameter('app.kevacoin.host'),
-            $this->getParameter('app.kevacoin.port'),
-            $this->getParameter('app.kevacoin.username'),
-            $this->getParameter('app.kevacoin.password')
-        );
-
-        // Check room own
-        $rooms = [];
-        foreach ((array) $client->kevaListNamespaces() as $value)
-        {
-            $rooms[] = $value['namespaceId'];
-        }
-
-        if (!in_array($request->get('namespace'), $rooms))
-        {
-            return new Response();
-        }
-
         // Connect memcached
         $memcached = new \Memcached();
         $memcached->addServer(
