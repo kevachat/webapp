@@ -222,12 +222,6 @@ class RoomController extends AbstractController
                 continue;
             }
 
-            // Skip values with meta keys
-            if (str_starts_with($pending['key'], '_'))
-            {
-                continue;
-            }
-
             // Require valid kevachat meta
             if ($data = $this->_post($client, $pending))
             {
