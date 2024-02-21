@@ -6,7 +6,7 @@ KevaChat is distributed chat platform for open, uncensored and privacy respectab
 
 ## Tech
 
-Instance require connection to the [Kevacoin](https://github.com/kevacoin-project/) wallet, `memcached` server, [clitor-is-protocol](https://github.com/clitor-is-protocol) for multimedia support and [Symfony](https://github.com/symfony/symfony) for web interface.
+Instance require connection to the [KevaCoin](https://github.com/kevacoin-project/) wallet, `memcached` server, [clitor-is-protocol](https://github.com/clitor-is-protocol) for multimedia support and [Symfony](https://github.com/symfony/symfony) for web interface.
 
 ## Model
 
@@ -25,7 +25,7 @@ Basic social features like identicons, replies, mentions, RSS subscriptions etc 
 
 ## Protocol
 
-KevaChat protocol following native Kevacoin's `key`/`value` model, where `key` optionally contain `@username` postfix and `value` - contain message.
+KevaChat protocol following native KevaCoin's `key`/`value` model, where `key` optionally contain `@username` postfix and `value` - contain message.
 
 All publications related to their room `namespace`.
 
@@ -56,7 +56,7 @@ All publications related to their room `namespace`.
 Application package contain settings preset, just few steps required to launch:
 
 * Make sure `memcached` server enabled
-* Setup Kevacoin server connection with `rpcuser`/`rpcpassword` in `~/.kevacoin/kevacoin.conf`
+* Setup KevaCoin server connection with `rpcuser`/`rpcpassword` in `~/.kevacoin/kevacoin.conf`
 * Copy `rpcuser` to `env`.`APP_KEVACOIN_USERNAME` and `rpcpassword` to `env`.`APP_KEVACOIN_PASSWORD`
 * Generate new address using CLI `kevacoin-cli getnewaddress` and copy to `env`.`APP_KEVACOIN_BOOST_ADDRESS`
 * Send few coins to this address and wait for new block to continue
@@ -72,7 +72,7 @@ KevaChat supported following `mode` in `GET` requests:
 
 ## Contribution
 
-Project created by people for people: MIT License to use it for other needs e.g. new fork, chat instance or Kevacoin blockchain explorer.
+Project created by people for people: MIT License to use it for other needs e.g. new fork, chat instance or KevaCoin blockchain explorer.
 
 Join the development and make your feedback!
 
