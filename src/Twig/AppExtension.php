@@ -326,6 +326,33 @@ class AppExtension extends AbstractExtension
         string $text
     ): string
     {
+        $lines = [];
+
+        foreach (explode(PHP_EOL, $text) as $line)
+        {
+            $lines[] = preg_replace(
+                [
+                    '/^(\s?)([#]{1,6})(.*)/',
+                    '/^(\s?)([*]+)(.*)/',
+                    '/^(\s?)([`]+)(.*)/',
+                    '/^(\s?)([\d]+\.)(.*)/',
+                    '/^(\s?)(>)(.*)/',
+                    '/(\s?)(!)(.*)/',
+                    '/(\s?)(\[)(.*)/',
+                    '/(\s?)(\])(.*)/',
+                    '/(\s?)(\()(.*)/',
+                    '/(\s?)(\))(.*)/',
+                ],
+                '$1\\\$2$3',
+                $line
+            );
+        }
+
+        $text = implode(
+            PHP_EOL,
+            $lines
+        );
+
         $text = $this->urlToMarkdown(
             $text
         );
